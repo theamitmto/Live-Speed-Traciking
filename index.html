@@ -1146,10 +1146,14 @@
         isAlarmEnabled: true,
         watchId: null,
         timerId: null,
+        animFrameId: null,
+        wakeLock: null,
         tripSeconds: 0,
         totalDistMeters: 0,
         maxSpeedKmh: 0,
-        currentSpeedKmh: 0,
+        rawTargetSpeedKmh: 0,   // Target speed from GPS
+        smoothedSpeedKmh: 0,    // Physics filtered speed
+        displayedSpeed: 0,      // 60fps interpolated speed for dial & needle
         currentLat: null,
         currentLon: null,
         lastPoint: null,
@@ -1348,20 +1352,42 @@
           });
       }
 
-      // 9. Update Speedometer Display & Needle
-      function updateSpeedVisuals(rawKmh) {
-        const factor = state.useMiles ? 0.621371 : 1.0;
-        const displaySpeed = rawKmh * factor;
+      // 9. 60FPS Ultra-Smooth Physics Rendering Loop (Zero-Lag Lerp)
+      function startPhysicsLoop() {
+        if (state.animFrameId) cancelAnimationFrame(state.animFrameId);
 
+        function renderFrame() {
+          // Linear interpolation (Lerp): glides towards target smoothly
+          const target = state.smoothedSpeedKmh;
+          const diff = target - state.displayedSpeed;
+          
+          if (Math.abs(diff) > 0.04) {
+            state.displayedSpeed += diff * 0.18; // Responsive 60fps damping factor
+          } else {
+            state.displayedSpeed = target;
+          }
+
+          renderDialUI(state.displayedSpeed);
+          state.animFrameId = requestAnimationFrame(renderFrame);
+        }
+
+        state.animFrameId = requestAnimationFrame(renderFrame);
+      }
+
+      function renderDialUI(speedKmh) {
+        const factor = state.useMiles ? 0.621371 : 1.0;
+        const displaySpeed = Math.max(0, speedKmh * factor);
+
+        // Instant digital HUD
         els.dialSpeedDigital.textContent = displaySpeed.toFixed(1);
 
-        // Needle rotation angle: -125deg at 0 to +125deg at dialMax
-        const clampedSpeed = Math.min(state.dialMax, Math.max(0, displaySpeed));
+        // Needle rotation angle (-125deg at 0 to +125deg at dialMax)
+        const clampedSpeed = Math.min(state.dialMax, displaySpeed);
         const angle = -125 + (clampedSpeed / state.dialMax) * 250;
-        els.needlePivot.setAttribute("transform", `translate(160, 185) rotate(${angle.toFixed(1)})`);
+        els.needlePivot.setAttribute("transform", `translate(160, 185) rotate(${angle.toFixed(2)})`);
 
         // Motion badge
-        if (rawKmh > 1.2) {
+        if (displaySpeed > 1.2) {
           els.motionBadge.textContent = "MOVING";
           els.motionBadge.className = "glass-motion-chip moving";
         } else {
@@ -1369,7 +1395,7 @@
           els.motionBadge.className = "glass-motion-chip";
         }
 
-        // Speed Limit Alarm Check
+        // Speed Limit Alarm Trigger
         const limitVal = parseFloat(els.inputLimitVal.value) || 60;
         if (state.isAlarmEnabled && displaySpeed > limitVal) {
           els.cockpitCard.classList.add('overspeed-alert');
@@ -1384,12 +1410,12 @@
           els.limitBadge.textContent = "SAFE";
           els.limitBadge.className = "glass-limit-chip";
           if (state.isTracking && !state.isPaused) {
-            els.liveMsgStatus.textContent = "🛰️ Live GPS Connected: High-precision velocity streaming";
+            els.liveMsgStatus.textContent = "🛰️ Real-Time Telemetry: Zero-Lag Stream Active";
           }
         }
       }
 
-      // 10. Hardware GPS Watcher Callback
+      // 10. Hardware GPS Watcher with Noise Rejection & Spike Filter
       function handleGPS(pos) {
         if (!pos || !pos.coords || state.isPaused) return;
         const coords = pos.coords;
@@ -1399,17 +1425,17 @@
         state.currentLon = coords.longitude;
         reverseGeocode(coords.latitude, coords.longitude);
 
-        // Accuracy and Status Indicators
+        // Satellite Accuracy Quality
         const acc = Math.round(coords.accuracy || 0);
         els.valAccuracy.textContent = acc;
 
         els.gpsStatePill.classList.add('active');
         els.gpsStateLabel.textContent = "LIVE";
 
-        if (acc <= 15) {
+        if (acc <= 12) {
           els.gpsSignalText.textContent = "EXCELLENT";
           els.signalBars.className = "signal-ladder signal-active";
-        } else if (acc <= 35) {
+        } else if (acc <= 30) {
           els.gpsSignalText.textContent = "GOOD";
           els.signalBars.className = "signal-ladder signal-active";
         } else {
@@ -1434,41 +1460,59 @@
           els.barAltitude.style.width = `${pct}%`;
         }
 
-        // 100% REAL HARDWARE GPS SPEED
-        let speedKmh = 0;
+        // --- SPEED CALCULATION & NOISE SPIKE SUPPRESSION ---
+        let instantaneousKmh = 0;
+
+        // Prioritize hardware Doppler velocity if available
         if (typeof coords.speed === 'number' && !isNaN(coords.speed) && coords.speed >= 0) {
-          speedKmh = coords.speed * 3.6;
+          instantaneousKmh = coords.speed * 3.6;
         } else if (state.lastPoint) {
-          const dM = calcHaversine(state.lastPoint.lat, state.lastPoint.lon, coords.latitude, coords.longitude);
-          const dS = (now - state.lastPoint.time) / 1000;
-          if (dS > 0.2 && dM > 0.6) {
-            speedKmh = (dM / dS) * 3.6;
+          const deltaMeters = calcHaversine(state.lastPoint.lat, state.lastPoint.lon, coords.latitude, coords.longitude);
+          const deltaSecs = (now - state.lastPoint.time) / 1000;
+          if (deltaSecs > 0.25 && deltaMeters > 0.9) {
+            instantaneousKmh = (deltaMeters / deltaSecs) * 3.6;
           }
         }
 
-        // Filter out stationary noise
-        if (speedKmh < 1.2) speedKmh = 0;
-        state.currentSpeedKmh = Math.round(speedKmh * 10) / 10;
+        // Deadband filter: Discard low-speed jitter when stationary (parking, stops, red lights)
+        if (instantaneousKmh < 1.8) {
+          instantaneousKmh = 0;
+        }
 
-        // Total Distance Accumulation
+        // Outlier spike limiter: reject impossible teleports (> 220 km/h sudden jump)
+        if (instantaneousKmh > 230) {
+          instantaneousKmh = state.smoothedSpeedKmh;
+        }
+
+        state.rawTargetSpeedKmh = instantaneousKmh;
+
+        // Exponential Moving Average (EMA) to prevent sharp up/down bouncing:
+        // When accelerating fast, respond immediately (alpha = 0.65). When decelerating, glide down naturally (alpha = 0.45).
+        const alpha = (instantaneousKmh > state.smoothedSpeedKmh) ? 0.65 : 0.45;
+        state.smoothedSpeedKmh = (alpha * instantaneousKmh) + ((1 - alpha) * state.smoothedSpeedKmh);
+
+        if (state.smoothedSpeedKmh < 0.2) state.smoothedSpeedKmh = 0;
+
+        // Distance accumulation (only count valid displacement above noise floor)
         if (state.lastPoint) {
-          const deltaD = calcHaversine(state.lastPoint.lat, state.lastPoint.lon, coords.latitude, coords.longitude);
-          if (deltaD > 0.8 && deltaD < 300) {
-            state.totalDistMeters += deltaD;
+          const deltaDist = calcHaversine(state.lastPoint.lat, state.lastPoint.lon, coords.latitude, coords.longitude);
+          if (deltaDist > 1.2 && deltaDist < 250) {
+            state.totalDistMeters += deltaDist;
           }
         }
         state.lastPoint = { lat: coords.latitude, lon: coords.longitude, time: now };
 
-        // Top Speed & Avg Samples
-        if (state.currentSpeedKmh > state.maxSpeedKmh) {
-          state.maxSpeedKmh = state.currentSpeedKmh;
+        // Max Speed & Running Average
+        if (state.smoothedSpeedKmh > state.maxSpeedKmh) {
+          state.maxSpeedKmh = Math.round(state.smoothedSpeedKmh * 10) / 10;
         }
-        if (state.currentSpeedKmh > 0) {
-          state.speedSamples.push(state.currentSpeedKmh);
+        if (state.smoothedSpeedKmh > 0) {
+          state.speedSamples.push(state.smoothedSpeedKmh);
+          if (state.speedSamples.length > 500) state.speedSamples.shift();
         }
 
-        // G-Force Calculation
-        const curMs = state.currentSpeedKmh / 3.6;
+        // G-Force Calculation with clamped damping
+        const curMs = state.smoothedSpeedKmh / 3.6;
         if (state.lastSpeedTime) {
           const dt = (now - state.lastSpeedTime) / 1000;
           if (dt > 0.2) {
@@ -1483,7 +1527,6 @@
         state.lastSpeedMs = curMs;
         state.lastSpeedTime = now;
 
-        updateSpeedVisuals(state.currentSpeedKmh);
         updateTelemetryDashboard();
       }
 
@@ -1530,9 +1573,28 @@
         return `${m}:${s}`;
       }
 
+      // Request Screen WakeLock to prevent browser throttling in background
+      async function requestScreenWake() {
+        try {
+          if ('wakeLock' in navigator) {
+            state.wakeLock = await navigator.wakeLock.request('screen');
+          }
+        } catch (err) {}
+      }
+
+      function releaseScreenWake() {
+        try {
+          if (state.wakeLock) {
+            state.wakeLock.release();
+            state.wakeLock = null;
+          }
+        } catch (err) {}
+      }
+
       // 12. Start & Stop Telemetry Controls
       function startTelemetry() {
         unlockAudio();
+        requestScreenWake();
 
         if (!("geolocation" in navigator)) {
           openModal("GPS Unsupported", "Your browser does not have geolocation sensor support.");
@@ -1542,13 +1604,18 @@
         state.isTracking = true;
         state.isPaused = false;
         state.lastPoint = null;
+        state.rawTargetSpeedKmh = 0;
+        state.smoothedSpeedKmh = 0;
+        state.displayedSpeed = 0;
 
         els.btnMainTelemetry.classList.add('active');
         els.mainBtnIcon.textContent = "⏹";
         els.mainBtnLabel.textContent = "Stop Telemetry";
         els.btnPauseTelemetry.style.display = 'inline-block';
         els.btnPauseTelemetry.textContent = "Pause";
-        els.liveMsgStatus.textContent = "🛰️ Connecting to hardware GPS satellites...";
+        els.liveMsgStatus.textContent = "🛰️ Connecting to high-precision hardware GPS...";
+
+        startPhysicsLoop();
 
         if (state.timerId) clearInterval(state.timerId);
         state.timerId = setInterval(() => {
@@ -1566,12 +1633,14 @@
         state.watchId = navigator.geolocation.watchPosition(handleGPS, handleGPSError, {
           enableHighAccuracy: true,
           maximumAge: 0,
-          timeout: 10000
+          timeout: 8000
         });
       }
 
       function stopTelemetry() {
         stopSiren();
+        releaseScreenWake();
+
         if (state.watchId !== null) {
           navigator.geolocation.clearWatch(state.watchId);
           state.watchId = null;
@@ -1580,6 +1649,10 @@
           clearInterval(state.timerId);
           state.timerId = null;
         }
+        if (state.animFrameId) {
+          cancelAnimationFrame(state.animFrameId);
+          state.animFrameId = null;
+        }
 
         if (state.totalDistMeters > 5) {
           saveTrip();
@@ -1587,7 +1660,9 @@
 
         state.isTracking = false;
         state.isPaused = false;
-        state.currentSpeedKmh = 0;
+        state.rawTargetSpeedKmh = 0;
+        state.smoothedSpeedKmh = 0;
+        state.displayedSpeed = 0;
 
         els.btnMainTelemetry.classList.remove('active');
         els.mainBtnIcon.textContent = "▶";
@@ -1599,7 +1674,7 @@
         els.signalBars.className = "signal-ladder";
         els.liveMsgStatus.textContent = "Tracking stopped. Speedometer reset to 0.";
 
-        updateSpeedVisuals(0);
+        renderDialUI(0);
       }
 
       // 13. Trip History Storage
@@ -1663,7 +1738,7 @@
         });
 
         renderDialTicks();
-        updateSpeedVisuals(state.currentSpeedKmh);
+        renderDialUI(state.displayedSpeed);
         updateTelemetryDashboard();
       });
 
@@ -1694,10 +1769,13 @@
         state.maxSpeedKmh = 0;
         state.speedSamples = [];
         state.laps = 0;
+        state.rawTargetSpeedKmh = 0;
+        state.smoothedSpeedKmh = 0;
+        state.displayedSpeed = 0;
         els.lapVal.textContent = '0';
         els.cardDuration.textContent = '00:00';
         updateTelemetryDashboard();
-        updateSpeedVisuals(0);
+        renderDialUI(0);
       });
 
       els.btnOpenMaps.addEventListener('click', () => {
@@ -1749,7 +1827,7 @@
       // 15. Initial Boot
       initTheme();
       refreshLogsCount();
-      updateSpeedVisuals(0);
+      renderDialUI(0);
       updateTelemetryDashboard();
 
     })();
