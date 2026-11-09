@@ -1,845 +1,966 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Apex Telemetry Pro | The Amit MTO Edition</title>
-  
-  <!-- Tailwind CSS & Fonts -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
-  
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'monospace'],
-          },
-          colors: {
-            carbon: {
-              900: '#0b0f17',
-              850: '#111827',
-              800: '#161f30',
-              700: '#1e293b',
-            },
-            accent: {
-              blue: '#2563eb',
-              cyan: '#06b6d4',
-              orange: '#f97316',
-              amber: '#f59e0b',
-              emerald: '#10b981',
-              rose: '#f43f5e',
-            }
-          }
-        }
-      }
-    }
-  </script>
-
+  <title>The Amit MTO - Telemetry Cockpit</title>
   <style>
+    /* Pure Zero-Dependency Automotive CSS */
+    :root {
+      --bg-main: #020617;
+      --card-bg: rgba(15, 23, 42, 0.92);
+      --card-border: rgba(51, 65, 85, 0.7);
+      --accent: #2563eb;
+      --accent-glow: rgba(37, 99, 235, 0.35);
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
+      --danger: #ef4444;
+      --success: #10b981;
+    }
+    .light {
+      --bg-main: #f1f5f9;
+      --card-bg: rgba(255, 255, 255, 0.96);
+      --card-border: rgba(203, 213, 225, 0.9);
+      --accent: #2563eb;
+      --accent-glow: rgba(37, 99, 235, 0.2);
+      --text-main: #0f172a;
+      --text-sub: #64748b;
+    }
     * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
     }
-    input, button {
-      user-select: auto;
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
-    
-    /* Roller Odometer styling */
-    .odometer-box {
-      background: linear-gradient(180deg, #05080e 0%, #151d2c 50%, #05080e 100%);
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.8), 0 1px 2px rgba(255,255,255,0.08);
+
+    /* Executive Top Header */
+    header {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 10px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
     }
-    
-    /* Glassmorphism surfaces */
-    .glass-panel {
+    .light header {
       background: rgba(255, 255, 255, 0.88);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(226, 232, 240, 0.85);
     }
-    .dark .glass-panel {
-      background: rgba(17, 24, 39, 0.82);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+    .header-inner {
+      max-width: 440px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #2563eb, #6366f1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 18px;
+      box-shadow: 0 4px 14px var(--accent-glow);
+    }
+    .brand-title {
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.8px;
+      line-height: 1.1;
+      color: var(--text-main);
+      text-transform: uppercase;
+    }
+    .brand-sub {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-sub);
+    }
+    .header-ctrls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ctrl-pill-btn {
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .light .ctrl-pill-btn {
+      background: rgba(241, 245, 249, 0.8);
+    }
+    .ctrl-pill-btn:active {
+      transform: scale(0.95);
     }
 
+    /* Main Dashboard Layout */
+    main {
+      width: 100%;
+      max-width: 440px;
+      margin: 0 auto;
+      padding: 12px 14px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
     .cockpit-card {
-      transition: all 0.25s ease;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 32px;
+      padding: 18px 16px;
+      box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.4);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
     }
-    .cockpit-card:hover {
-      border-color: rgba(37, 99, 235, 0.4);
+    .cockpit-card.overspeed-alarm {
+      border-color: var(--danger) !important;
+      box-shadow: 0 0 35px rgba(239, 68, 68, 0.45), 0 0 0 2px var(--danger) !important;
+      animation: dangerPulse 0.5s infinite alternate;
     }
-
-    /* Professional Needle Physics */
-    #needleArmGroup {
-      transform-origin: 160px 185px;
-      transition: transform 0.28s cubic-bezier(0.18, 0.89, 0.32, 1.15);
-      will-change: transform;
-    }
-
-    /* Overspeed Alarm Warning Glow */
-    .overspeed-active {
-      animation: sirenFlash 0.45s infinite alternate !important;
-      border-color: #ef4444 !important;
-    }
-    @keyframes sirenFlash {
-      0% { box-shadow: 0 0 15px rgba(239,68,68,0.4); background: rgba(254, 242, 242, 0.95); }
-      100% { box-shadow: 0 0 40px rgba(239,68,68,0.85); background: rgba(254, 226, 226, 0.98); }
-    }
-    .dark .overspeed-active {
-      animation: sirenFlashDark 0.45s infinite alternate !important;
-    }
-    @keyframes sirenFlashDark {
-      0% { box-shadow: 0 0 20px rgba(239,68,68,0.5); background: rgba(31, 15, 18, 0.95); }
-      100% { box-shadow: 0 0 45px rgba(239,68,68,0.9); background: rgba(55, 18, 22, 0.98); }
+    @keyframes dangerPulse {
+      0% { background: var(--card-bg); }
+      100% { background: rgba(239, 68, 68, 0.08); }
     }
 
-    ::-webkit-scrollbar {
-      width: 5px;
-      height: 5px;
+    /* Sub-bar: GPS Live Signal & Time */
+    .cockpit-sub-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
     }
-    ::-webkit-scrollbar-track {
-      background: transparent;
+    .gps-state-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid var(--card-border);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: var(--text-sub);
     }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(148, 163, 184, 0.4);
-      border-radius: 10px;
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #94a3b8;
+    }
+    .gps-state-pill.live .pulse-dot {
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+    }
+    .gps-state-pill.live {
+      color: #10b981;
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+    .clock-badge {
+      font-family: "SF Mono", "Courier New", monospace;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-sub);
+      background: rgba(30, 41, 59, 0.6);
+      padding: 4px 9px;
+      border-radius: 20px;
+      border: 1px solid var(--card-border);
+    }
+
+    /* Analog Dial SVG */
+    .analog-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 320px;
+      margin: 0 auto;
+    }
+    .analog-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      overflow: visible;
+    }
+    .needle-element {
+      transition: transform 0.28s cubic-bezier(0.1, 0.9, 0.2, 1);
+    }
+
+    /* Dial Status Row */
+    .dial-status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 12px;
+      margin-top: 4px;
+    }
+    .status-pill {
+      font-size: 9px;
+      font-weight: 900;
+      padding: 3px 10px;
+      border-radius: 8px;
+      letter-spacing: 0.5px;
+    }
+    .motion-idle {
+      background: rgba(51, 65, 85, 0.4);
+      color: var(--text-sub);
+    }
+    .motion-moving {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+    .alert-safe {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+    .alert-danger {
+      background: #ef4444 !important;
+      color: #ffffff !important;
+      animation: alertBlink 0.5s infinite alternate;
+    }
+    @keyframes alertBlink {
+      0% { opacity: 0.85; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1.05); }
+    }
+
+    /* Location Card */
+    .loc-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(30, 41, 59, 0.4);
+      border: 1px solid var(--card-border);
+      padding: 8px 12px;
+      border-radius: 16px;
+      margin-top: 10px;
+      gap: 8px;
+    }
+    .loc-info {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .btn-map-link {
+      background: rgba(37, 99, 235, 0.15);
+      border: 1px solid rgba(37, 99, 235, 0.35);
+      color: #60a5fa;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 4px 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    /* Control Inputs Grid */
+    .inputs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .input-box {
+      background: rgba(30, 41, 59, 0.4);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 8px 10px;
+    }
+    .input-box-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 9px;
+      font-weight: 800;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .toggle-alert-btn {
+      border: none;
+      font-size: 8px;
+      font-weight: 900;
+      padding: 2px 6px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .toggle-alert-btn.on { background: rgba(16, 185, 129, 0.25); color: #10b981; }
+    .toggle-alert-btn.off { background: rgba(100, 116, 139, 0.25); color: #94a3b8; }
+    .num-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .num-input-wrap input {
+      width: 58px;
+      background: rgba(2, 6, 23, 0.6);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      border-radius: 8px;
+      padding: 4px 6px;
+      font-size: 12px;
+      font-weight: 900;
+      font-family: monospace;
+      outline: none;
+    }
+    .num-input-wrap span {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--text-sub);
+    }
+
+    /* 2x2 Cockpit Mini Meters */
+    .cockpit-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .meter-tile {
+      background: rgba(30, 41, 59, 0.35);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 8px 10px;
+    }
+    .meter-head {
+      display: flex;
+      justify-content: space-between;
+      font-size: 8.5px;
+      font-weight: 800;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .meter-val {
+      font-size: 9.5px;
+      font-weight: 900;
+      color: var(--text-main);
+      font-family: monospace;
+    }
+    .bar-track {
+      width: 100%;
+      height: 6px;
+      background: rgba(51, 65, 85, 0.4);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+    .bar-fill {
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    .fill-alt { background: linear-gradient(90deg, #6366f1, #3b82f6); }
+    .fill-goal { background: linear-gradient(90deg, #0284c7, #10b981); }
+
+    /* Core Metrics 2x2 */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .metric-card {
+      background: rgba(30, 41, 59, 0.3);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 9px 12px;
+    }
+    .metric-label {
+      font-size: 8.5px;
+      font-weight: 800;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .metric-number {
+      font-size: 16px;
+      font-weight: 900;
+      color: var(--text-main);
+      font-family: "SF Mono", monospace;
+      margin-top: 2px;
+    }
+    .metric-number small {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-sub);
+    }
+
+    /* Accuracy & Signal Bar */
+    .signal-strip {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(30, 41, 59, 0.4);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 6px 14px;
+      font-size: 10px;
+      margin-top: 10px;
+    }
+    .sig-bars {
+      display: inline-flex;
+      gap: 2px;
+      align-items: flex-end;
+      height: 11px;
+      vertical-align: middle;
+      margin-left: 4px;
+    }
+    .sig-bars span {
+      width: 3px;
+      background: #475569;
+      border-radius: 1px;
+    }
+    .sig-bars .b1 { height: 3px; }
+    .sig-bars .b2 { height: 6px; }
+    .sig-bars .b3 { height: 8px; }
+    .sig-bars .b4 { height: 11px; }
+    .sig-active span { background: #10b981 !important; }
+
+    /* Action Buttons */
+    .action-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .btn-main-tele {
+      flex: 1;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: none;
+      font-size: 14px;
+      font-weight: 900;
+      color: #fff;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      box-shadow: 0 8px 24px -4px var(--accent-glow);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.15s ease, background 0.25s ease;
+    }
+    .btn-main-tele:active {
+      transform: scale(0.97);
+    }
+    .btn-main-tele.active {
+      background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+      box-shadow: 0 8px 24px -2px rgba(239, 68, 68, 0.5) !important;
+    }
+    .btn-pause-tele {
+      display: none;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: none;
+      font-size: 12px;
+      font-weight: 800;
+      color: #fff;
+      background: #eab308;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+    .btn-pause-tele:active {
+      transform: scale(0.97);
+    }
+    .live-msg-status {
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-sub);
+      margin-top: 8px;
+      min-height: 16px;
+    }
+
+    /* Sub Actions */
+    .sub-action-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--card-border);
+    }
+    .btn-sub {
+      padding: 8px 4px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 800;
+      border: 1px solid var(--card-border);
+      background: rgba(30, 41, 59, 0.4);
+      color: var(--text-main);
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+    .btn-sub:active {
+      transform: scale(0.95);
+    }
+
+    /* Footer */
+    footer {
+      width: 100%;
+      border-top: 1px solid var(--card-border);
+      background: rgba(15, 23, 42, 0.7);
+      padding: 10px 16px;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-sub);
+    }
+    .footer-inner {
+      max-width: 440px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* STRICT MODAL STYLING - NEVER DISPLAY BY DEFAULT */
+    .modal-overlay {
+      display: none !important;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      background: rgba(2, 6, 23, 0.8) !important;
+      backdrop-filter: blur(6px) !important;
+      -webkit-backdrop-filter: blur(6px) !important;
+      z-index: 9999 !important;
+      justify-content: center !important;
+      align-items: center !important;
+      padding: 16px !important;
+    }
+    .modal-overlay.active {
+      display: flex !important;
+    }
+    .modal-sheet {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 20px;
+      width: 100%;
+      max-width: 360px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+      text-align: left;
+    }
+    .modal-sheet h3 {
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+    .modal-sheet p {
+      font-size: 12px;
+      color: var(--text-sub);
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+    .btn-modal-action {
+      width: 100%;
+      padding: 11px;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
     }
   </style>
 </head>
-<body class="bg-slate-100 dark:bg-carbon-900 text-slate-800 dark:text-slate-100 min-h-screen font-sans antialiased transition-colors duration-300 flex flex-col justify-between">
+<body>
 
-  <!-- ==================== HEADER ==================== -->
-  <header class="sticky top-0 z-40 w-full glass-panel border-b border-slate-200/80 dark:border-slate-800/80 shadow-sm transition-colors duration-300">
-    <div class="max-w-6xl mx-auto px-4 py-2.5 sm:py-3 flex items-center justify-between gap-3">
-      
-      <!-- Brand & Status -->
-      <div class="flex items-center gap-3">
-        <div class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-tr from-accent-blue via-indigo-600 to-accent-cyan p-0.5 shadow-md shadow-blue-500/20">
-          <div class="w-full h-full bg-white dark:bg-carbon-900 rounded-[10px] flex items-center justify-center font-black text-accent-blue dark:text-cyan-400 text-lg">
-            ⚡
-          </div>
-          <span class="absolute -top-1 -right-1 flex h-3 w-3">
-            <span id="headerGpsPing" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 hidden"></span>
-            <span id="headerGpsDot" class="relative inline-flex rounded-full h-3 w-3 bg-slate-400 dark:bg-slate-600"></span>
-          </span>
-        </div>
-
+  <!-- Top Executive Header -->
+  <header>
+    <div class="header-inner">
+      <div class="brand-group">
+        <div class="brand-icon">⚡</div>
         <div>
-          <div class="flex items-center gap-2">
-            <span class="text-xs font-black tracking-widest uppercase bg-gradient-to-r from-orange-500 to-amber-500 bg-clip-text text-transparent">THE AMIT MTO</span>
-          </div>
-          <h1 class="text-sm sm:text-base font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
-            Telemetry Cockpit
-          </h1>
+          <div class="brand-title">THE AMIT MTO</div>
+          <div class="brand-sub">Cockpit Dashboard</div>
         </div>
       </div>
-
-      <!-- Quick Controls (Clean Header) -->
-      <div class="flex items-center gap-2 sm:gap-3">
-        <!-- Unit Toggle -->
-        <button id="headerUnitBtn" class="px-2.5 sm:px-3 py-1.5 rounded-xl text-[11px] font-extrabold border bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-blue-400 transition">
-          <span id="unitBtnLabel">KM/H</span>
-        </button>
-
-        <!-- Dark/Light Theme -->
-        <button id="themeToggleBtn" aria-label="Toggle Theme" class="p-2 rounded-xl border bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-blue-500 transition">
-          <span id="themeIcon">🌙</span>
-        </button>
+      <div class="header-ctrls">
+        <button id="btnUnitToggle" type="button" class="ctrl-pill-btn">KM/H</button>
+        <button id="btnThemeToggle" type="button" class="ctrl-pill-btn">☀️</button>
       </div>
-
     </div>
   </header>
 
-  <!-- ==================== MAIN CONTENT CONTAINER ==================== -->
-  <main class="flex-grow w-full max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-6 flex flex-col items-center justify-center">
+  <!-- Cockpit Main Display -->
+  <main>
+    <div class="cockpit-card" id="cockpitCard">
 
-    <!-- Central Cockpit Wrapper -->
-    <div id="telemetryCard" class="w-full max-w-md sm:max-w-lg glass-panel rounded-3xl sm:rounded-[36px] p-4 sm:p-6 shadow-xl sm:shadow-2xl transition-all duration-300 relative border border-slate-200 dark:border-slate-800">
-      
-      <!-- Top Status Row with Shifted GPS Sensor & Live Clock -->
-      <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-200/70 dark:border-slate-800/70">
-        <!-- Left: Real GPS Sensor Status -->
-        <div class="flex items-center gap-1.5">
-          <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-[10px] font-extrabold border border-emerald-300/60 dark:border-emerald-700/60 bg-emerald-50/80 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>REAL GPS</span>
-          </div>
-          <div id="gpsStatusBadge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-[10px] font-bold bg-slate-100 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700/80">
-            <span id="statusCircle" class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
-            <span id="gpsStatusText">STANDBY</span>
-          </div>
+      <!-- Live GPS Fix & Local Time Sub-bar -->
+      <div class="cockpit-sub-bar">
+        <div class="gps-state-pill" id="gpsStatePill">
+          <span class="pulse-dot"></span>
+          <span id="gpsStateLabel">STANDBY</span>
         </div>
-
-        <!-- Right: Shifted Live Clock & Motion / Alert Status -->
-        <div class="flex items-center gap-2">
-          <div class="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 font-mono text-[10px] font-bold text-slate-700 dark:text-slate-300">
-            <span class="text-slate-400 text-[9px]">⏱️</span>
-            <span id="headerLiveClock">--:--:--</span>
-          </div>
-          <span id="motionStatusBadge" class="text-[10px] font-black px-2 py-0.5 rounded-md bg-slate-200/70 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-            IDLE
-          </span>
-          <span id="speedLimitAlertPill" class="text-[10px] font-black px-2 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-700/60">
-            SAFE
-          </span>
-        </div>
+        <div class="clock-badge" id="liveClockVal">00:00:00</div>
       </div>
 
-      <!-- ================= MAIN ANALOG SPEEDOMETER GAUGE ================= -->
-      <div class="relative w-full max-w-[340px] mx-auto my-2 select-none">
-        
-        <!-- Gauge SVG -->
-        <svg id="analogGaugeSvg" class="w-full h-auto drop-shadow-md" viewBox="0 0 320 280">
+      <!-- ANALOG SPEEDOMETER (EXACT PHYSICAL NEEDLE GAUGE) -->
+      <div class="analog-wrapper">
+        <svg class="analog-svg" viewBox="0 0 320 280">
           <defs>
-            <!-- Needle Glow Filter -->
-            <filter id="needleGlowFilter" x="-40%" y="-40%" width="180%" height="180%">
-              <feDropShadow dx="0" dy="2" stdDeviation="3.5" flood-color="#ef4444" flood-opacity="0.6"/>
-            </filter>
-
-            <!-- Gradient for dial track -->
-            <linearGradient id="apexGaugeGradient" x1="0%" y1="100%" x2="100%" y2="100%">
+            <linearGradient id="gaugeGradient" x1="0%" y1="100%" x2="100%" y2="100%">
               <stop offset="0%" stop-color="#10b981" />
-              <stop offset="35%" stop-color="#06b6d4" />
-              <stop offset="65%" stop-color="#eab308" />
-              <stop offset="85%" stop-color="#f97316" />
+              <stop offset="45%" stop-color="#3b82f6" />
+              <stop offset="75%" stop-color="#eab308" />
               <stop offset="100%" stop-color="#ef4444" />
             </linearGradient>
+            <filter id="needleGlow" x="-30%" y="-30%" width="160%" height="160%">
+              <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#ef4444" flood-opacity="0.8"/>
+            </filter>
+          </defs>
 
-            <!-- Center needle hub radial finish -->
-        <radialGradient id="hubCenterGradient" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#64748b"/>
-          <stop offset="60%" stop-color="#1e293b"/>
-          <stop offset="100%" stop-color="#090d16"/>
-        </radialGradient>
-      </defs>
+          <!-- Outer Background Track -->
+          <path d="M 45 220 A 120 120 0 1 1 275 220" fill="none" stroke="#1e293b" stroke-width="20" stroke-linecap="round" />
+          <!-- Rainbow Gradient Gauge Arc -->
+          <path d="M 45 220 A 120 120 0 1 1 275 220" fill="none" stroke="url(#gaugeGradient)" stroke-width="20" stroke-linecap="round" />
 
-      <!-- Gauge Background Track -->
-      <path d="M 45 220 A 120 120 0 1 1 275 220" 
-            fill="none" 
-            stroke="currentColor" 
-            class="text-slate-200 dark:text-slate-800" 
-            stroke-width="18" 
-            stroke-linecap="round" />
+          <!-- Dynamic SVG Dial Ticks & Digits -->
+          <g id="dialTicksGroup"></g>
 
-      <!-- Gauge Graduated Arc -->
-      <path id="gaugeProgressArc" d="M 45 220 A 120 120 0 1 1 275 220" 
-            fill="none" 
-            stroke="url(#apexGaugeGradient)" 
-            stroke-width="18" 
-            stroke-linecap="round"
-            opacity="0.9" />
+          <!-- Unit Label & Digital Speed -->
+          <text x="160" y="112" text-anchor="middle" font-size="13" font-weight="900" fill="#94a3b8" id="dialUnitText" letter-spacing="1">KM/H</text>
+          <text x="160" y="152" text-anchor="middle" font-size="42" font-weight="900" fill="#f8fafc" font-family="'SF Mono', monospace" id="dialSpeedDigital">0.0</text>
 
-      <!-- Dynamic Tick Marks & Numbers (Generated by JavaScript) -->
-      <g id="ticksContainer"></g>
+          <!-- Roller-Style Odometer Box -->
+          <g transform="translate(105, 224)">
+            <rect width="110" height="24" rx="6" fill="#020617" stroke="#334155" stroke-width="1.5"/>
+            <text x="55" y="17" text-anchor="middle" font-size="12" font-weight="900" fill="#f8fafc" font-family="'SF Mono', monospace" letter-spacing="2" id="valOdometer">0000.00</text>
+          </g>
 
-      <!-- Dial Center Unit (KM/H or MPH) -->
-      <text x="160" y="112" text-anchor="middle" class="fill-slate-500 dark:fill-slate-400 text-[13px] font-black tracking-widest uppercase">
-        <tspan id="gaugeUnitText">KM/H</tspan>
-      </text>
+          <!-- Physical Red Pointer Needle (Rotates -125deg to +125deg) -->
+          <g id="needlePivot" class="needle-element" transform="translate(160, 185) rotate(-125)">
+            <polygon points="-3,-10 0,-115 3,-10" fill="#ef4444" filter="url(#needleGlow)" />
+            <circle cx="0" cy="0" r="16" fill="#ef4444" />
+            <circle cx="0" cy="0" r="7" fill="#ffffff" />
+          </g>
+        </svg>
 
-      <!-- Big Digital HUD Speed Display -->
-      <text x="160" y="152" text-anchor="middle" class="fill-slate-900 dark:fill-white font-mono font-black text-4xl sm:text-[44px] tracking-tight tabular-nums">
-        <tspan id="gaugeDigitalSpeed">0.0</tspan>
-      </text>
-
-      <!-- Rolling Analog-Style Odometer Counter -->
-      <g transform="translate(100, 222)">
-        <rect width="120" height="26" rx="6" class="odometer-box stroke-slate-700/60" stroke-width="1.5"/>
-        <text x="60" y="17.5" text-anchor="middle" id="gaugeOdometerValue" class="fill-slate-100 font-mono font-bold text-xs tracking-[2.5px]">0000.00</text>
-      </g>
-
-      <!-- ================= SPEEDOMETER NEEDLE (SUWI) ================= -->
-      <!-- Pivot Center: (160, 185) | Starts pointing to 0 km/h (-125deg) -->
-      <g id="needleArmGroup" transform="translate(160, 185) rotate(-125)">
-        <!-- Needle Blade Body -->
-        <polygon points="-3.5,-16 0,-115 3.5,-16" class="fill-rose-500" filter="url(#needleGlowFilter)" />
-        
-        <!-- Center High-Precision White Core Line on Needle -->
-        <line x1="0" y1="-16" x2="0" y2="-112" stroke="#ffffff" stroke-width="1.2" opacity="0.85" />
-        
-        <!-- Needle Counter-Balance Tail -->
-        <polygon points="-2.5,0 0,22 2.5,0" fill="#dc2626" />
-        
-        <!-- Center Needle Cap / Hub -->
-        <circle cx="0" cy="0" r="16" fill="url(#hubCenterGradient)" stroke="#ef4444" stroke-width="2.5" />
-        <circle cx="0" cy="0" r="6" fill="#f43f5e" />
-      </g>
-    </svg>
-
-        <!-- Speed Dial Range Labels -->
-        <div class="flex items-center justify-between text-[11px] font-bold px-6 text-slate-400 dark:text-slate-500 -mt-2">
-          <span>0</span>
-          <span class="text-slate-400 font-normal">SPEED TELEMETRY</span>
-          <span id="maxDialScaleLabel">160</span>
+        <div class="dial-status-row">
+          <span class="status-pill motion-idle" id="motionBadge">IDLE</span>
+          <span class="status-pill alert-safe" id="limitBadge">SAFE</span>
         </div>
       </div>
 
-      <!-- Real-time Location Banner -->
-      <div class="flex items-center justify-between gap-2 p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/70 text-xs mb-3">
-        <div class="flex items-center gap-2 truncate">
-          <span class="text-base text-rose-500 animate-bounce">📍</span>
-          <span id="liveLocationAddress" class="truncate font-semibold text-slate-700 dark:text-slate-300">Searching GPS fix...</span>
+      <!-- Real GPS Location Address -->
+      <div class="loc-bar">
+        <div class="loc-info">
+          <span>📍</span>
+          <span id="locAddressText">Tap 'Start Telemetry' for GPS lock</span>
         </div>
-        <button id="openMapsBtn" class="shrink-0 px-2 py-1 rounded-lg text-[10px] font-bold text-blue-600 dark:text-cyan-400 bg-blue-50 dark:bg-blue-950/50 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition">
-          Map ↗
-        </button>
+        <button id="btnOpenMaps" type="button" class="btn-map-link">Map ↗</button>
       </div>
 
-      <!-- User Settings Bar (Speed Limit Alert & Target Distance) -->
-      <div class="grid grid-cols-2 gap-2 mb-3">
-        <!-- Speed Limit Setter -->
-        <div class="cockpit-card p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 flex flex-col justify-between">
-          <div class="flex items-center justify-between">
-            <span class="text-[9px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">SPEED ALARM</span>
-            <button id="toggleAlertSwitch" class="px-1.5 py-0.5 rounded text-[8.5px] font-extrabold uppercase bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
-              ON
-            </button>
+      <!-- Settings & Alert Panel -->
+      <div class="inputs-grid">
+        <div class="input-box">
+          <div class="input-box-head">
+            <span>Speed Alarm</span>
+            <button id="btnAlarmToggle" class="toggle-alert-btn on">ON</button>
           </div>
-          <div class="flex items-center gap-1 mt-1.5">
-            <input type="number" id="inputSpeedLimit" value="60" min="10" max="220" class="w-16 px-2 py-1 rounded-lg bg-white dark:bg-carbon-900 border border-slate-300 dark:border-slate-700 text-xs font-mono font-black text-slate-900 dark:text-white outline-none focus:border-blue-500">
-            <span class="text-[10px] font-bold text-slate-500 unit-label">km/h</span>
+          <div class="num-input-wrap">
+            <input type="number" id="inputLimitVal" value="60" min="5" max="220">
+            <span class="unit-span">km/h</span>
           </div>
         </div>
-
-        <!-- Target Distance Setter -->
-        <div class="cockpit-card p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 flex flex-col justify-between">
-          <div class="flex items-center justify-between">
-            <span class="text-[9px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">TRIP TARGET</span>
-            <span id="targetCompletionText" class="text-[9px] font-bold text-blue-600 dark:text-cyan-400 font-mono">0%</span>
+        <div class="input-box">
+          <div class="input-box-head">
+            <span>Trip Target</span>
+            <span id="targetGoalPctText" style="color:#38bdf8;">0%</span>
           </div>
-          <div class="flex items-center gap-1 mt-1.5">
-            <input type="number" id="inputTargetDistance" value="5.0" step="0.5" min="0.5" max="500" class="w-16 px-2 py-1 rounded-lg bg-white dark:bg-carbon-900 border border-slate-300 dark:border-slate-700 text-xs font-mono font-black text-slate-900 dark:text-white outline-none focus:border-blue-500">
-            <span class="text-[10px] font-bold text-slate-500 dist-unit-label">km</span>
+          <div class="num-input-wrap">
+            <input type="number" id="inputTargetVal" value="5" min="1" max="500">
+            <span class="dist-span">km</span>
           </div>
         </div>
       </div>
 
-      <!-- ================= 2x2 MINI COCKPIT METERS ================= -->
-      <div class="grid grid-cols-2 gap-2 mb-3">
-        
-        <!-- G-Force Meter -->
-        <div class="cockpit-card p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60">
-          <div class="flex items-center justify-between mb-1.5">
-            <span class="text-[9px] font-black tracking-wider uppercase text-slate-500 dark:text-slate-400">ACCEL G-FORCE</span>
-            <span id="hudGForceText" class="font-mono text-xs font-bold text-blue-600 dark:text-cyan-400">0.00 g</span>
+      <!-- 2x2 Cockpit Mini Gauges -->
+      <div class="cockpit-grid">
+        <div class="meter-tile">
+          <div class="meter-head">
+            <span>G-Force</span>
+            <span id="valGForce" class="meter-val">0.00 g</span>
           </div>
-          <div class="relative w-full h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-visible mt-2">
-            <div class="absolute top-[-3px] left-1/2 w-0.5 h-3.5 bg-slate-400 dark:bg-slate-500 -translate-x-1/2"></div>
-            <div id="gForceBubble" class="absolute top-[-3px] left-1/2 w-3.5 h-3.5 rounded-full bg-blue-600 dark:bg-cyan-400 shadow-md -translate-x-1/2 transition-all duration-150"></div>
+          <div class="bar-track">
+            <div id="gForceThumb" style="position: absolute; width: 8px; height: 10px; top: -2px; left: 50%; background: #3b82f6; border-radius: 3px; transform: translateX(-50%); transition: left 0.2s;"></div>
           </div>
         </div>
-
-        <!-- Rotating Gyro-Compass -->
-        <div class="cockpit-card p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 flex items-center justify-between">
-          <div>
-            <div class="text-[9px] font-black tracking-wider uppercase text-slate-500 dark:text-slate-400">GYRO HEADING</div>
-            <div id="hudHeadingDeg" class="font-mono text-xs font-bold text-slate-800 dark:text-white mt-1">0° NORTH</div>
+        <div class="meter-tile">
+          <div class="meter-head">
+            <span>Compass</span>
+            <span id="valCompass" class="meter-val">0° N</span>
           </div>
-          <div class="relative w-9 h-9 rounded-full border-2 border-slate-300 dark:border-slate-600 flex items-center justify-center">
-            <div id="compassNeedleDisk" class="w-full h-full relative transition-transform duration-200">
-              <span class="absolute top-0.5 left-1/2 -translate-x-1/2 text-[7px] font-black text-rose-500">N</span>
-              <span class="absolute bottom-0.5 left-1/2 -translate-x-1/2 text-[7px] font-bold text-slate-400">S</span>
-              <span class="absolute right-0.5 top-1/2 -translate-y-1/2 text-[7px] font-bold text-slate-400">E</span>
-              <span class="absolute left-0.5 top-1/2 -translate-y-1/2 text-[7px] font-bold text-slate-400">W</span>
-              <div class="absolute top-2 left-1/2 w-0.5 h-2.5 bg-rose-500 -translate-x-1/2 rounded"></div>
+          <div style="display:flex; justify-content:center; align-items:center; height:12px;">
+            <div id="compassDisk" style="width:16px; height:16px; border:1px solid #64748b; border-radius:50%; position:relative; transition: transform 0.25s;">
+              <span style="position:absolute; top:-2px; left:50%; transform:translateX(-50%); font-size:8px; color:#ef4444;">▲</span>
             </div>
           </div>
         </div>
-
-        <!-- Altitude Elevation -->
-        <div class="cockpit-card p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60">
-          <div class="flex items-center justify-between mb-1">
-            <span class="text-[9px] font-black tracking-wider uppercase text-slate-500 dark:text-slate-400">ALTITUDE</span>
-            <span id="hudAltitudeText" class="font-mono text-xs font-bold text-indigo-600 dark:text-indigo-400">-- m</span>
+        <div class="meter-tile">
+          <div class="meter-head">
+            <span>Altitude</span>
+            <span id="valAltitude" class="meter-val">-- m</span>
           </div>
-          <div class="w-full h-1.5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden mt-2">
-            <div id="hudAltitudeBar" class="h-full bg-gradient-to-r from-indigo-500 to-accent-cyan rounded-full w-0 transition-all duration-300"></div>
+          <div class="bar-track">
+            <div id="barAltitude" class="bar-fill fill-alt"></div>
           </div>
         </div>
-
-        <!-- Trip Target Goal Meter -->
-        <div class="cockpit-card p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60">
-          <div class="flex items-center justify-between mb-1">
-            <span class="text-[9px] font-black tracking-wider uppercase text-slate-500 dark:text-slate-400">GOAL COMPLETION</span>
-            <span id="hudTargetPctBadge" class="font-mono text-xs font-bold text-emerald-600 dark:text-emerald-400">0%</span>
+        <div class="meter-tile">
+          <div class="meter-head">
+            <span>Goal Fill</span>
+            <span id="valGoalPct" class="meter-val">0%</span>
           </div>
-          <div class="w-full h-1.5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden mt-2">
-            <div id="hudTargetBar" class="h-full bg-gradient-to-r from-blue-500 via-emerald-400 to-emerald-500 rounded-full w-0 transition-all duration-300"></div>
+          <div class="bar-track">
+            <div id="barGoal" class="bar-fill fill-goal"></div>
           </div>
         </div>
-
       </div>
 
-      <!-- ================= COMPREHENSIVE TELEMETRY GRID ================= -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
-        <!-- Trip Distance -->
-        <div class="p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60">
-          <div class="text-[8.5px] font-black uppercase tracking-wider text-slate-400">DISTANCE</div>
-          <div class="mt-1 flex items-baseline gap-1">
-            <span id="valTripDistance" class="font-mono font-bold text-sm sm:text-base text-slate-900 dark:text-white tabular-nums">0.00</span>
-            <span class="text-[10px] font-bold text-slate-500 dist-unit-label">km</span>
-          </div>
+      <!-- Core Metrics 2x2 -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">Distance</div>
+          <div class="metric-number" id="cardDistance">0.00 <small class="dist-span">km</small></div>
         </div>
-
-        <!-- Duration Time -->
-        <div class="p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60">
-          <div class="text-[8.5px] font-black uppercase tracking-wider text-slate-400">DURATION</div>
-          <div class="mt-1">
-            <span id="valDuration" class="font-mono font-bold text-sm sm:text-base text-slate-900 dark:text-white tabular-nums">00:00</span>
-          </div>
+        <div class="metric-card">
+          <div class="metric-label">Duration</div>
+          <div class="metric-number" id="cardDuration">00:00</div>
         </div>
-
-        <!-- Top Speed -->
-        <div class="p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60">
-          <div class="text-[8.5px] font-black uppercase tracking-wider text-slate-400">TOP SPEED</div>
-          <div class="mt-1 flex items-baseline gap-1">
-            <span id="valTopSpeed" class="font-mono font-bold text-sm sm:text-base text-rose-500 dark:text-rose-400 tabular-nums">0.0</span>
-            <span class="text-[10px] font-bold text-slate-500 unit-label">km/h</span>
-          </div>
+        <div class="metric-card">
+          <div class="metric-label">Top Speed</div>
+          <div class="metric-number" id="cardTopSpeed">0.0 <small class="unit-span">km/h</small></div>
         </div>
-
-        <!-- Avg Speed -->
-        <div class="p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60">
-          <div class="text-[8.5px] font-black uppercase tracking-wider text-slate-400">AVG SPEED</div>
-          <div class="mt-1 flex items-baseline gap-1">
-            <span id="valAvgSpeed" class="font-mono font-bold text-sm sm:text-base text-slate-900 dark:text-white tabular-nums">0.0</span>
-            <span class="text-[10px] font-bold text-slate-500 unit-label">km/h</span>
-          </div>
+        <div class="metric-card">
+          <div class="metric-label">Avg Speed</div>
+          <div class="metric-number" id="cardAvgSpeed">0.0 <small class="unit-span">km/h</small></div>
         </div>
-
-        <!-- Pace -->
-        <div class="p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60">
-          <div class="text-[8.5px] font-black uppercase tracking-wider text-slate-400">PACE</div>
-          <div class="mt-1 flex items-baseline gap-1">
-            <span id="valPace" class="font-mono font-bold text-xs sm:text-sm text-slate-900 dark:text-white tabular-nums">--</span>
-            <span id="paceUnitLabel" class="text-[9px] font-bold text-slate-500">/km</span>
-          </div>
-        </div>
-
-        <!-- Calories -->
-        <div class="p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60">
-          <div class="text-[8.5px] font-black uppercase tracking-wider text-slate-400">CALORIES</div>
-          <div class="mt-1 flex items-baseline gap-1">
-            <span id="valCalories" class="font-mono font-bold text-xs sm:text-sm text-amber-500 tabular-nums">0</span>
-            <span class="text-[9px] font-bold text-slate-500">kcal</span>
-          </div>
-        </div>
-
-        <!-- GPS Accuracy -->
-        <div class="p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60">
-          <div class="text-[8.5px] font-black uppercase tracking-wider text-slate-400">ACCURACY</div>
-          <div class="mt-1 flex items-baseline gap-1">
-            <span id="valAccuracy" class="font-mono font-bold text-xs sm:text-sm text-slate-900 dark:text-white tabular-nums">--</span>
-            <span class="text-[9px] font-bold text-slate-500">m</span>
-          </div>
-        </div>
-
-        <!-- Signal Bars -->
-        <div class="p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 flex flex-col justify-between">
-          <div class="text-[8.5px] font-black uppercase tracking-wider text-slate-400">GPS SIGNAL</div>
-          <div class="flex items-end gap-1 h-4 mt-1">
-            <div id="sigBar1" class="w-1.5 h-1.5 rounded-sm bg-slate-300 dark:bg-slate-600"></div>
-            <div id="sigBar2" class="w-1.5 h-2.5 rounded-sm bg-slate-300 dark:bg-slate-600"></div>
-            <div id="sigBar3" class="w-1.5 h-3.5 rounded-sm bg-slate-300 dark:bg-slate-600"></div>
-            <div id="sigBar4" class="w-1.5 h-4.5 rounded-sm bg-slate-300 dark:bg-slate-600"></div>
-            <span id="sigText" class="text-[9px] font-bold text-slate-400 ml-1">OFF</span>
-          </div>
-        </div>
-
       </div>
 
-      <!-- Live GPS Coordinate Bar -->
-      <div class="p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 flex items-center justify-between text-xs mb-4">
-        <div class="flex items-center gap-1.5 font-mono text-[11px] text-slate-600 dark:text-slate-400">
-          <span>🌐</span>
-          <span id="liveCoordsLabel">Waiting for coordinate lock...</span>
+      <!-- Accuracy & Signal Indicator -->
+      <div class="signal-strip">
+        <div>
+          <span style="color:var(--text-sub); font-weight:800;">ACCURACY:</span>
+          <span id="valAccuracy" style="font-weight:900; font-family:monospace; margin-left:3px;">--</span> m
         </div>
-        <button id="copyCoordsBtn" class="text-[10px] font-bold text-slate-500 hover:text-blue-500 transition px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700">
-          Copy
+        <div>
+          <span style="color:var(--text-sub); font-weight:800;">GPS:</span>
+          <span id="gpsSignalText" style="font-weight:900; color:#10b981;">STANDBY</span>
+          <div class="sig-bars" id="signalBars">
+            <span class="b1"></span>
+            <span class="b2"></span>
+            <span class="b3"></span>
+            <span class="b4"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-row">
+        <button id="btnMainTelemetry" class="btn-main-tele" type="button">
+          <span id="mainBtnIcon">▶</span>
+          <span id="mainBtnLabel">Start Telemetry</span>
         </button>
+        <button id="btnPauseTelemetry" class="btn-pause-tele" type="button">Pause</button>
       </div>
+      <div class="live-msg-status" id="liveMsgStatus">Tap button to start 100% Real Hardware GPS</div>
 
-      <!-- ================= PRIMARY ACTION CONTROLS ================= -->
-      <div class="flex flex-col gap-2">
-        <div class="flex items-center gap-2">
-          <!-- Big Start / Stop Tracking Button -->
-          <button id="mainTrackBtn" class="flex-1 py-3.5 sm:py-4 px-4 rounded-2xl font-extrabold text-sm sm:text-base text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 shadow-lg shadow-blue-500/25 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
-            <span id="mainBtnIcon" class="text-lg">▶</span>
-            <span id="mainBtnText">Start Telemetry</span>
-          </button>
-
-          <!-- Pause / Resume Button -->
-          <button id="pauseTrackBtn" class="hidden py-3.5 sm:py-4 px-5 rounded-2xl font-bold text-sm text-slate-800 dark:text-white bg-amber-400 hover:bg-amber-500 shadow-md active:scale-[0.98] transition-all">
-            Pause
-          </button>
-        </div>
-
-        <!-- Status Message Banner -->
-        <p id="dashboardFeedbackMsg" class="text-center text-[11.5px] font-medium text-slate-500 dark:text-slate-400 min-h-[18px]">
-          Tap "Start Telemetry" to initialize sensor feed & GPS satellite lock.
-        </p>
-
-        <!-- Secondary Cockpit Actions Bar -->
-        <div class="grid grid-cols-4 gap-1.5 pt-1">
-          <button id="quickLapBtn" class="py-2 px-1 rounded-xl text-[10.5px] font-bold border border-rose-200 dark:border-rose-900/60 bg-rose-50/70 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 hover:bg-rose-100 transition active:scale-95">
-            ⏱️ Lap (<span id="lapCounterBadge">0</span>)
-          </button>
-          <button id="exportCsvBtn" class="py-2 px-1 rounded-xl text-[10.5px] font-bold border border-cyan-200 dark:border-cyan-900/60 bg-cyan-50/70 dark:bg-cyan-950/30 text-cyan-600 dark:text-cyan-400 hover:bg-cyan-100 transition active:scale-95">
-            📥 CSV
-          </button>
-          <button id="viewLogsBtn" class="py-2 px-1 rounded-xl text-[10.5px] font-bold border border-amber-200 dark:border-amber-900/60 bg-amber-50/70 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 hover:bg-amber-100 transition active:scale-95">
-            📊 History
-          </button>
-          <button id="resetTripBtn" class="py-2 px-1 rounded-xl text-[10.5px] font-bold border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition active:scale-95">
-            🔄 Reset
-          </button>
-        </div>
+      <!-- Sub Actions Grid -->
+      <div class="sub-action-row">
+        <button id="btnLap" type="button" class="btn-sub">⏱️ Lap (<span id="lapVal">0</span>)</button>
+        <button id="btnCsv" type="button" class="btn-sub">📥 CSV</button>
+        <button id="btnLogs" type="button" class="btn-sub">📊 Logs (<span id="logVal">0</span>)</button>
+        <button id="btnReset" type="button" class="btn-sub">🔄 Reset</button>
       </div>
 
     </div>
-
-    <!-- Active Laps Quick View (Shown when laps exist) -->
-    <div id="lapDrawerCard" class="hidden w-full max-w-md sm:max-w-lg mt-3 glass-panel rounded-2xl p-3 border border-slate-200 dark:border-slate-800">
-      <div class="flex items-center justify-between mb-2">
-        <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Recorded Lap Splits</span>
-        <button id="clearLapsBtn" class="text-[10px] text-rose-500 hover:underline">Clear Laps</button>
-      </div>
-      <div id="lapsListScroll" class="flex gap-2 overflow-x-auto pb-1 text-xs font-mono"></div>
-    </div>
-
   </main>
 
-  <!-- ==================== EXECUTIVE FOOTER ==================== -->
-  <footer class="w-full glass-panel border-t border-slate-200 dark:border-slate-800 py-4 px-4 text-xs transition-colors duration-300">
-    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-slate-500 dark:text-slate-400">
-      
-      <!-- Brand & Privacy -->
-      <div class="flex items-center gap-2">
-        <span class="font-extrabold text-slate-800 dark:text-slate-200">Apex Telemetry Pro</span>
-        <span class="text-slate-300 dark:text-slate-700">•</span>
-        <span class="text-[11px]">Crafted for <strong class="text-orange-500">The Amit MTO</strong></span>
-        <span class="text-slate-300 dark:text-slate-700 hidden sm:inline">•</span>
-        <span class="hidden sm:inline text-[11px] text-emerald-600 dark:text-emerald-400">🔒 100% Client-Side Privacy</span>
-      </div>
-
-      <!-- Quick Utilities -->
-      <div class="flex items-center gap-4 text-[11.5px] font-medium">
-        <span id="dataSavedCount" class="font-mono text-slate-600 dark:text-slate-300">0 Trips Logged</span>
-        <button id="audioTestBtn" class="hover:text-blue-500 transition">Test Siren</button>
-        <button id="quickHelpBtn" class="hover:text-blue-500 transition">Instructions</button>
-      </div>
-
+  <!-- Bottom Footer -->
+  <footer>
+    <div class="footer-inner">
+      <span>The Amit MTO</span>
+      <span style="display:flex; align-items:center; gap:5px;">
+        <span style="width:7px; height:7px; background:#10b981; border-radius:50%; display:inline-block;"></span>
+        Hardware GPS v3.2
+      </span>
     </div>
   </footer>
 
-  <!-- ==================== CUSTOM DIALOG / NOTICE MODAL (NO ALERT) ==================== -->
-  <div id="noticeModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="w-full max-w-sm glass-panel bg-white dark:bg-carbon-850 rounded-3xl p-5 border border-slate-200 dark:border-slate-700 shadow-2xl text-center">
-      <div id="noticeIcon" class="w-12 h-12 mx-auto mb-3 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-cyan-400 flex items-center justify-center text-2xl font-black">
-        ℹ️
-      </div>
-      <h3 id="noticeTitle" class="text-base font-extrabold text-slate-900 dark:text-white mb-1.5">Notice</h3>
-      <div id="noticeDesc" class="text-xs text-slate-600 dark:text-slate-300 mb-4 leading-relaxed text-left space-y-2">Message details go here.</div>
-      <div class="flex gap-2">
-        <button id="noticeRetryBtn" class="flex-1 py-2.5 rounded-xl font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white transition active:scale-95 shadow-md hidden">
-          Try Again 🔄
-        </button>
-        <button id="noticeCloseBtn" class="flex-1 py-2.5 rounded-xl font-bold text-xs bg-blue-600 hover:bg-blue-700 text-white transition active:scale-95 shadow-md shadow-blue-500/20">
-          Dismiss
-        </button>
-      </div>
+  <!-- Modal Dialog (Hidden by Default) -->
+  <div class="modal-overlay" id="genericModal">
+    <div class="modal-sheet">
+      <h3 id="modalTitle">Notice</h3>
+      <p id="modalDesc">Message details...</p>
+      <div id="modalCustomContent"></div>
+      <button id="btnModalClose" type="button" class="btn-modal-action">Close</button>
     </div>
   </div>
 
-  <!-- ==================== HISTORY MODAL DRAWER ==================== -->
-  <div id="historyModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-3">
-    <div class="w-full max-w-lg glass-panel bg-white dark:bg-carbon-850 rounded-3xl p-5 border border-slate-200 dark:border-slate-700 shadow-2xl flex flex-col max-h-[85vh]">
-      
-      <!-- Header -->
-      <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-750">
-        <div>
-          <h3 class="text-base font-black text-slate-900 dark:text-white">Trip History & Telemetry Logs</h3>
-          <p class="text-xs text-slate-500">Offline vehicle logs stored directly in your browser.</p>
-        </div>
-        <button id="closeModalBtn" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center font-bold text-sm">
-          ✕
-        </button>
-      </div>
-
-      <!-- Logs List Scroll Container -->
-      <div id="tripLogsContainer" class="flex-grow overflow-y-auto py-3 space-y-2 text-xs">
-        <!-- Populated via JS -->
-      </div>
-
-      <!-- Footer Buttons -->
-      <div class="flex items-center justify-between gap-2 pt-3 border-t border-slate-200 dark:border-slate-700">
-        <button id="exportJsonHistoryBtn" class="px-3 py-2 rounded-xl text-xs font-bold text-blue-600 dark:text-cyan-400 bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100">
-          Export JSON
-        </button>
-        <button id="clearAllHistoryBtn" class="px-3 py-2 rounded-xl text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/60 hover:bg-rose-100">
-          Delete All Logs
-        </button>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ==================== HELP / INSTRUCTIONS MODAL ==================== -->
-  <div id="helpModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-3">
-    <div class="w-full max-w-md glass-panel bg-white dark:bg-carbon-850 rounded-3xl p-5 border border-slate-200 dark:border-slate-700 shadow-2xl">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-750">
-        <h3 class="text-base font-extrabold text-slate-900 dark:text-white">Telemetry Guide</h3>
-        <button id="closeHelpBtn" class="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 flex items-center justify-center font-bold text-sm">✕</button>
-      </div>
-      <div class="py-3 text-xs text-slate-600 dark:text-slate-300 space-y-2.5">
-        <p><strong>🎯 Analog Needle (Suwi):</strong> The physical red needle automatically rotates from 0 to 160 based on your live vehicle speed.</p>
-        <p><strong>🛰️ Hardware GPS:</strong> This app uses your phone or device's built-in high-accuracy satellite location sensor.</p>
-        <p><strong>🚨 Over-Speed Siren:</strong> Set your speed threshold (e.g., 60 km/h). If you cross it, dual-frequency siren audio and red flashing visuals will engage.</p>
-        <p><strong>🔄 Units:</strong> Switch anytime between KM/H and MPH with automatic needle scaling.</p>
-      </div>
-      <button id="closeHelpOkBtn" class="w-full mt-2 py-2.5 rounded-xl bg-blue-600 text-white font-bold text-xs">
-        Got it!
-      </button>
-    </div>
-  </div>
-
-  <!-- ==================== CORE SCRIPT LOGIC ==================== -->
   <script>
     (function () {
       "use strict";
 
-      // State Management (100% Robust Real GPS Engine)
+      // 1. Elements Mapping
+      const els = {
+        cockpitCard: document.getElementById('cockpitCard'),
+        gpsStatePill: document.getElementById('gpsStatePill'),
+        gpsStateLabel: document.getElementById('gpsStateLabel'),
+        liveClockVal: document.getElementById('liveClockVal'),
+        dialTicksGroup: document.getElementById('dialTicksGroup'),
+        dialUnitText: document.getElementById('dialUnitText'),
+        dialSpeedDigital: document.getElementById('dialSpeedDigital'),
+        valOdometer: document.getElementById('valOdometer'),
+        needlePivot: document.getElementById('needlePivot'),
+        motionBadge: document.getElementById('motionBadge'),
+        limitBadge: document.getElementById('limitBadge'),
+        locAddressText: document.getElementById('locAddressText'),
+        btnOpenMaps: document.getElementById('btnOpenMaps'),
+        btnAlarmToggle: document.getElementById('btnAlarmToggle'),
+        inputLimitVal: document.getElementById('inputLimitVal'),
+        targetGoalPctText: document.getElementById('targetGoalPctText'),
+        inputTargetVal: document.getElementById('inputTargetVal'),
+        valGForce: document.getElementById('valGForce'),
+        gForceThumb: document.getElementById('gForceThumb'),
+        valCompass: document.getElementById('valCompass'),
+        compassDisk: document.getElementById('compassDisk'),
+        valAltitude: document.getElementById('valAltitude'),
+        barAltitude: document.getElementById('barAltitude'),
+        valGoalPct: document.getElementById('valGoalPct'),
+        barGoal: document.getElementById('barGoal'),
+        cardDistance: document.getElementById('cardDistance'),
+        cardDuration: document.getElementById('cardDuration'),
+        cardTopSpeed: document.getElementById('cardTopSpeed'),
+        cardAvgSpeed: document.getElementById('cardAvgSpeed'),
+        valAccuracy: document.getElementById('valAccuracy'),
+        gpsSignalText: document.getElementById('gpsSignalText'),
+        signalBars: document.getElementById('signalBars'),
+        btnMainTelemetry: document.getElementById('btnMainTelemetry'),
+        mainBtnIcon: document.getElementById('mainBtnIcon'),
+        mainBtnLabel: document.getElementById('mainBtnLabel'),
+        btnPauseTelemetry: document.getElementById('btnPauseTelemetry'),
+        liveMsgStatus: document.getElementById('liveMsgStatus'),
+        btnUnitToggle: document.getElementById('btnUnitToggle'),
+        btnThemeToggle: document.getElementById('btnThemeToggle'),
+        btnLap: document.getElementById('btnLap'),
+        lapVal: document.getElementById('lapVal'),
+        btnCsv: document.getElementById('btnCsv'),
+        btnLogs: document.getElementById('btnLogs'),
+        logVal: document.getElementById('logVal'),
+        btnReset: document.getElementById('btnReset'),
+        genericModal: document.getElementById('genericModal'),
+        modalTitle: document.getElementById('modalTitle'),
+        modalDesc: document.getElementById('modalDesc'),
+        modalCustomContent: document.getElementById('modalCustomContent'),
+        btnModalClose: document.getElementById('btnModalClose')
+      };
+
+      // 2. Application State
       const state = {
         isTracking: false,
         isPaused: false,
         useMiles: false,
-        isSpeedAlertEnabled: true,
+        isAlarmEnabled: true,
         watchId: null,
-        timerInterval: null,
-        
-        // Metrics
+        timerId: null,
         tripSeconds: 0,
-        totalDistanceMeters: 0,
+        totalDistMeters: 0,
         maxSpeedKmh: 0,
         currentSpeedKmh: 0,
         currentLat: null,
         currentLon: null,
-        currentAltitude: null,
-        currentHeading: 0,
-        currentGForce: 0,
-        
-        // Accurate Calculations
-        speedSamples: [],
-        speedBuffer: [],
-        lastValidPoint: null,
+        lastPoint: null,
         lastSpeedMs: 0,
-        lastSpeedTimestamp: null,
-        lastGeocodeTimestamp: 0,
-        goalCompletedAlerted: false,
-        laps: [],
-        
-        // Dial bounds
-        maxDialScale: 160,
+        lastSpeedTime: null,
+        speedSamples: [],
+        laps: 0,
+        lastGeocodeTime: 0,
+        dialMax: 160
       };
 
-      // Safe Element Selector Map
-      const els = {
-        themeToggleBtn: document.getElementById('themeToggleBtn'),
-        themeIcon: document.getElementById('themeIcon'),
-        headerLiveClock: document.getElementById('headerLiveClock'),
-        headerGpsDot: document.getElementById('headerGpsDot'),
-        headerGpsPing: document.getElementById('headerGpsPing'),
-        headerUnitBtn: document.getElementById('headerUnitBtn'),
-        unitBtnLabel: document.getElementById('unitBtnLabel'),
-        
-        telemetryCard: document.getElementById('telemetryCard'),
-        gpsStatusBadge: document.getElementById('gpsStatusBadge'),
-        gpsStatusText: document.getElementById('gpsStatusText'),
-        statusCircle: document.getElementById('statusCircle'),
-        motionStatusBadge: document.getElementById('motionStatusBadge'),
-        speedLimitAlertPill: document.getElementById('speedLimitAlertPill'),
-        
-        gaugeProgressArc: document.getElementById('gaugeProgressArc'),
-        ticksContainer: document.getElementById('ticksContainer'),
-        gaugeUnitText: document.getElementById('gaugeUnitText'),
-        gaugeDigitalSpeed: document.getElementById('gaugeDigitalSpeed'),
-        gaugeOdometerValue: document.getElementById('gaugeOdometerValue'),
-        needleArmGroup: document.getElementById('needleArmGroup'),
-        maxDialScaleLabel: document.getElementById('maxDialScaleLabel'),
-        
-        liveLocationAddress: document.getElementById('liveLocationAddress'),
-        openMapsBtn: document.getElementById('openMapsBtn'),
-        inputSpeedLimit: document.getElementById('inputSpeedLimit'),
-        toggleAlertSwitch: document.getElementById('toggleAlertSwitch'),
-        inputTargetDistance: document.getElementById('inputTargetDistance'),
-        targetCompletionText: document.getElementById('targetCompletionText'),
-        
-        hudGForceText: document.getElementById('hudGForceText'),
-        gForceBubble: document.getElementById('gForceBubble'),
-        hudHeadingDeg: document.getElementById('hudHeadingDeg'),
-        compassNeedleDisk: document.getElementById('compassNeedleDisk'),
-        hudAltitudeText: document.getElementById('hudAltitudeText'),
-        hudAltitudeBar: document.getElementById('hudAltitudeBar'),
-        hudTargetPctBadge: document.getElementById('hudTargetPctBadge'),
-        hudTargetBar: document.getElementById('hudTargetBar'),
-        
-        valTripDistance: document.getElementById('valTripDistance'),
-        valDuration: document.getElementById('valDuration'),
-        valTopSpeed: document.getElementById('valTopSpeed'),
-        valAvgSpeed: document.getElementById('valAvgSpeed'),
-        valPace: document.getElementById('valPace'),
-        paceUnitLabel: document.getElementById('paceUnitLabel'),
-        valCalories: document.getElementById('valCalories'),
-        valAccuracy: document.getElementById('valAccuracy'),
-        liveCoordsLabel: document.getElementById('liveCoordsLabel'),
-        copyCoordsBtn: document.getElementById('copyCoordsBtn'),
-        
-        sigBar1: document.getElementById('sigBar1'),
-        sigBar2: document.getElementById('sigBar2'),
-        sigBar3: document.getElementById('sigBar3'),
-        sigBar4: document.getElementById('sigBar4'),
-        sigText: document.getElementById('sigText'),
-        
-        mainTrackBtn: document.getElementById('mainTrackBtn'),
-        mainBtnText: document.getElementById('mainBtnText'),
-        mainBtnIcon: document.getElementById('mainBtnIcon'),
-        pauseTrackBtn: document.getElementById('pauseTrackBtn'),
-        dashboardFeedbackMsg: document.getElementById('dashboardFeedbackMsg'),
-        
-        quickLapBtn: document.getElementById('quickLapBtn'),
-        lapCounterBadge: document.getElementById('lapCounterBadge'),
-        lapDrawerCard: document.getElementById('lapDrawerCard'),
-        lapsListScroll: document.getElementById('lapsListScroll'),
-        clearLapsBtn: document.getElementById('clearLapsBtn'),
-        exportCsvBtn: document.getElementById('exportCsvBtn'),
-        viewLogsBtn: document.getElementById('viewLogsBtn'),
-        resetTripBtn: document.getElementById('resetTripBtn'),
-        
-        historyModal: document.getElementById('historyModal'),
-        closeModalBtn: document.getElementById('closeModalBtn'),
-        tripLogsContainer: document.getElementById('tripLogsContainer'),
-        exportJsonHistoryBtn: document.getElementById('exportJsonHistoryBtn'),
-        clearAllHistoryBtn: document.getElementById('clearAllHistoryBtn'),
-        dataSavedCount: document.getElementById('dataSavedCount'),
-        audioTestBtn: document.getElementById('audioTestBtn'),
-        quickHelpBtn: document.getElementById('quickHelpBtn'),
-        helpModal: document.getElementById('helpModal'),
-        closeHelpBtn: document.getElementById('closeHelpBtn'),
-        closeHelpOkBtn: document.getElementById('closeHelpOkBtn'),
-
-        // Custom in-app dialog
-        noticeModal: document.getElementById('noticeModal'),
-        noticeIcon: document.getElementById('noticeIcon'),
-        noticeTitle: document.getElementById('noticeTitle'),
-        noticeDesc: document.getElementById('noticeDesc'),
-        noticeCloseBtn: document.getElementById('noticeCloseBtn'),
-        noticeRetryBtn: document.getElementById('noticeRetryBtn'),
-      };
-
-      // Custom Modal Dialog (Safe replacement for window.alert with iOS Permission Helper)
-      function showNotice(title, descHtml, icon = "ℹ️", showRetry = false) {
-        if (!els.noticeModal) return;
-        els.noticeTitle.textContent = title;
-        els.noticeDesc.innerHTML = descHtml;
-        els.noticeIcon.textContent = icon;
-        if (els.noticeRetryBtn) {
-          if (showRetry) {
-            els.noticeRetryBtn.classList.remove('hidden');
-          } else {
-            els.noticeRetryBtn.classList.add('hidden');
-          }
-        }
-        els.noticeModal.classList.remove('hidden');
-        els.noticeModal.classList.add('flex');
-      }
-
-      if (els.noticeCloseBtn) {
-        els.noticeCloseBtn.addEventListener('click', () => {
-          els.noticeModal.classList.add('hidden');
-          els.noticeModal.classList.remove('flex');
-        });
-      }
-
-      if (els.noticeRetryBtn) {
-        els.noticeRetryBtn.addEventListener('click', () => {
-          els.noticeModal.classList.add('hidden');
-          els.noticeModal.classList.remove('flex');
-          startTracking();
-        });
-      }
-
-      // ================= AUDIO SYNTHESIZER ENGINE =================
+      // 3. Audio Siren Synthesizer
       let audioCtx = null;
       let sirenOsc = null;
       let sirenGain = null;
-      let sirenTimer = null;
-      let isSirenActive = false;
+      let sirenInterval = null;
+      let isSirenOn = false;
 
-      function unlockAudioContext() {
-        try {
-          if (!audioCtx) {
-            const AudioClass = window.AudioContext || window.webkitAudioContext;
-            if (AudioClass) audioCtx = new AudioClass();
-          }
-          if (audioCtx && audioCtx.state === 'suspended') {
-            audioCtx.resume();
-          }
-        } catch (e) {}
-      }
-
-      function playChime(freq = 750, type = 'sine', duration = 0.12) {
-        try {
-          unlockAudioContext();
-          if (!audioCtx) return;
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          osc.type = type;
-          osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-          gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          osc.start();
-          osc.stop(audioCtx.currentTime + duration);
-        } catch (e) {}
+      function unlockAudio() {
+        if (!audioCtx) {
+          const AC = window.AudioContext || window.webkitAudioContext;
+          if (AC) audioCtx = new AC();
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
       }
 
       function startSiren() {
-        if (isSirenActive) return;
+        if (isSirenOn) return;
         try {
-          unlockAudioContext();
+          unlockAudio();
           if (!audioCtx) return;
           sirenOsc = audioCtx.createOscillator();
           sirenGain = audioCtx.createGain();
           sirenOsc.type = 'sawtooth';
-          sirenGain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+          sirenGain.gain.setValueAtTime(0.12, audioCtx.currentTime);
           sirenOsc.connect(sirenGain);
           sirenGain.connect(audioCtx.destination);
           sirenOsc.start();
-          isSirenActive = true;
+          isSirenOn = true;
 
           let toggle = false;
-          sirenTimer = setInterval(() => {
+          sirenInterval = setInterval(() => {
             if (!sirenOsc || !audioCtx) return;
             toggle = !toggle;
             sirenOsc.frequency.setValueAtTime(toggle ? 980 : 660, audioCtx.currentTime);
-          }, 280);
+          }, 300);
         } catch (e) {}
       }
 
       function stopSiren() {
-        if (!isSirenActive) return;
-        if (sirenTimer) {
-          clearInterval(sirenTimer);
-          sirenTimer = null;
+        if (!isSirenOn) return;
+        if (sirenInterval) {
+          clearInterval(sirenInterval);
+          sirenInterval = null;
         }
         if (sirenOsc) {
           try {
@@ -848,13 +969,25 @@
           } catch (e) {}
           sirenOsc = null;
         }
-        isSirenActive = false;
+        isSirenOn = false;
       }
 
-      // ================= GAUGE TICKS & SCALE GENERATION =================
-      function renderGaugeTicks() {
-        if (!els.ticksContainer) return;
-        els.ticksContainer.innerHTML = '';
+      // 4. Modal Helper
+      function openModal(title, desc, customHtml = "") {
+        els.modalTitle.textContent = title;
+        els.modalDesc.textContent = desc;
+        els.modalCustomContent.innerHTML = customHtml;
+        els.genericModal.classList.add('active');
+      }
+
+      function closeModal() {
+        els.genericModal.classList.remove('active');
+      }
+      els.btnModalClose.addEventListener('click', closeModal);
+
+      // 5. Dial Ticks Builder
+      function renderDialTicks() {
+        els.dialTicksGroup.innerHTML = '';
         const cx = 160, cy = 185, r = 118;
         const startAngle = -125, endAngle = 125;
         const totalTicks = 32;
@@ -862,785 +995,477 @@
         for (let i = 0; i <= totalTicks; i++) {
           const angle = startAngle + (i / totalTicks) * (endAngle - startAngle);
           const rad = (angle - 90) * (Math.PI / 180);
-          const isMajor = i % 2 === 0;
-          const tickLen = isMajor ? 13 : 7;
-          
+          const isMajor = (i % 2 === 0);
+          const len = isMajor ? 13 : 7;
+
           const x1 = cx + (r - 2) * Math.cos(rad);
           const y1 = cy + (r - 2) * Math.sin(rad);
-          const x2 = cx + (r - 2 - tickLen) * Math.cos(rad);
-          const y2 = cy + (r - 2 - tickLen) * Math.sin(rad);
+          const x2 = cx + (r - 2 - len) * Math.cos(rad);
+          const y2 = cy + (r - 2 - len) * Math.sin(rad);
 
-          const tick = document.createElementNS("http://www.w3.org/2000/svg", "line");
-          tick.setAttribute("x1", x1);
-          tick.setAttribute("y1", y1);
-          tick.setAttribute("x2", x2);
-          tick.setAttribute("y2", y2);
-          tick.setAttribute("stroke", isMajor ? "currentColor" : "#94a3b8");
-          tick.setAttribute("class", isMajor ? "text-slate-800 dark:text-slate-200" : "");
-          tick.setAttribute("stroke-width", isMajor ? "2.2" : "1.2");
-          els.ticksContainer.appendChild(tick);
+          const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+          line.setAttribute("x1", x1);
+          line.setAttribute("y1", y1);
+          line.setAttribute("x2", x2);
+          line.setAttribute("y2", y2);
+          line.setAttribute("stroke", isMajor ? "#f8fafc" : "#64748b");
+          line.setAttribute("stroke-width", isMajor ? "2.2" : "1.2");
+          line.setAttribute("stroke-linecap", "round");
+          els.dialTicksGroup.appendChild(line);
 
           if (isMajor) {
-            const speedVal = (i / totalTicks) * state.maxDialScale;
-            const tx = cx + (r - 25) * Math.cos(rad);
-            const ty = cy + (r - 25) * Math.sin(rad) + 3.5;
+            const val = Math.round((i / totalTicks) * state.dialMax);
+            const textRad = (angle - 90) * (Math.PI / 180);
+            const tx = cx + (r - 25) * Math.cos(textRad);
+            const ty = cy + (r - 25) * Math.sin(textRad) + 3.5;
 
             const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
             text.setAttribute("x", tx);
             text.setAttribute("y", ty);
             text.setAttribute("text-anchor", "middle");
-            text.setAttribute("class", "fill-slate-700 dark:fill-slate-300 font-mono font-bold text-[9px]");
-            text.textContent = Math.round(speedVal);
-            els.ticksContainer.appendChild(text);
+            text.setAttribute("font-size", "10");
+            text.setAttribute("font-weight", "900");
+            text.setAttribute("fill", "#94a3b8");
+            text.textContent = val;
+            els.dialTicksGroup.appendChild(text);
           }
         }
       }
 
-      // ================= SPEEDOMETER NEEDLE & DIAL UPDATE =================
-      function updateMainDisplay(kmh) {
-        const safeKmh = Math.max(0, kmh);
-        state.currentSpeedKmh = safeKmh;
-        const displaySpeed = state.useMiles ? safeKmh * 0.621371 : safeKmh;
-        
-        // 1. Digital LED Readout
-        if (els.gaugeDigitalSpeed) {
-          els.gaugeDigitalSpeed.textContent = displaySpeed.toFixed(1);
-        }
-
-        // 2. Physical Needle (Suwi) Angle Calculation
-        // Angle range: -125deg at 0 speed to +125deg at maxDialScale
-        const clampedSpeed = Math.min(state.maxDialScale, Math.max(0, displaySpeed));
-        const needleAngle = -125 + (clampedSpeed / state.maxDialScale) * 250;
-        
-        if (els.needleArmGroup) {
-          els.needleArmGroup.setAttribute("transform", `translate(160, 185) rotate(${needleAngle.toFixed(2)})`);
-        }
-
-        // 3. Motion state
-        if (els.motionStatusBadge) {
-          if (safeKmh > 0.4) {
-            els.motionStatusBadge.textContent = "CRUISING";
-            els.motionStatusBadge.className = "text-[10px] font-black px-2.5 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400";
-          } else {
-            els.motionStatusBadge.textContent = "IDLE";
-            els.motionStatusBadge.className = "text-[10px] font-black px-2.5 py-0.5 rounded-md bg-slate-200/70 dark:bg-slate-800 text-slate-600 dark:text-slate-400";
-          }
-        }
-
-        // 4. Over-Speed Siren & Visual Warning
-        const userLimit = parseFloat(els.inputSpeedLimit ? els.inputSpeedLimit.value : 60) || 60;
-        if (state.isSpeedAlertEnabled && displaySpeed > userLimit) {
-          if (els.telemetryCard) els.telemetryCard.classList.add('overspeed-active');
-          if (els.speedLimitAlertPill) {
-            els.speedLimitAlertPill.textContent = "OVER LIMIT!";
-            els.speedLimitAlertPill.className = "text-[10px] font-black px-2.5 py-0.5 rounded-md bg-rose-600 text-white animate-pulse";
-          }
-          if (els.dashboardFeedbackMsg) {
-            els.dashboardFeedbackMsg.textContent = `🚨 OVER SPEED LIMIT: Exceeded ${userLimit} ${els.gaugeUnitText.textContent}!`;
-          }
-          startSiren();
-          if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-        } else {
-          stopSiren();
-          if (els.telemetryCard) els.telemetryCard.classList.remove('overspeed-active');
-          if (els.speedLimitAlertPill) {
-            els.speedLimitAlertPill.textContent = "SAFE";
-            els.speedLimitAlertPill.className = "text-[10px] font-black px-2.5 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-700/60";
-          }
-          if (state.isTracking && !state.isPaused && els.dashboardFeedbackMsg) {
-            els.dashboardFeedbackMsg.textContent = "🛰️ Live GPS Connected: Real-time telemetry streaming";
-          }
-        }
-      }
-
-      // ================= THEME & UI HELPERS =================
-      function initTheme() {
-        const isDark = localStorage.getItem('apex_theme') === 'dark' || 
-          (!('apex_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
-        if (isDark) {
-          document.documentElement.classList.add('dark');
-          if (els.themeIcon) els.themeIcon.textContent = '☀️';
-        } else {
-          document.documentElement.classList.remove('dark');
-          if (els.themeIcon) els.themeIcon.textContent = '🌙';
-        }
-      }
-
-      if (els.themeToggleBtn) {
-        els.themeToggleBtn.addEventListener('click', () => {
-          const isDark = document.documentElement.classList.toggle('dark');
-          localStorage.setItem('apex_theme', isDark ? 'dark' : 'light');
-          if (els.themeIcon) els.themeIcon.textContent = isDark ? '☀️' : '🌙';
-        });
-      }
-
-      function updateClock() {
-        if (!els.headerLiveClock) return;
-        const now = new Date();
-        els.headerLiveClock.textContent = now.toTimeString().split(' ')[0];
-      }
-      setInterval(updateClock, 1000);
-      updateClock();
-
-      // ================= UNIT CONVERSIONS =================
-      function toggleUnits() {
-        state.useMiles = !state.useMiles;
-        state.maxDialScale = state.useMiles ? 100 : 160;
-        if (els.maxDialScaleLabel) els.maxDialScaleLabel.textContent = state.maxDialScale;
-        if (els.unitBtnLabel) els.unitBtnLabel.textContent = state.useMiles ? 'MPH' : 'KM/H';
-        if (els.gaugeUnitText) els.gaugeUnitText.textContent = state.useMiles ? 'MPH' : 'KM/H';
-        
-        document.querySelectorAll('.unit-label').forEach(el => {
-          el.textContent = state.useMiles ? 'mph' : 'km/h';
-        });
-        document.querySelectorAll('.dist-unit-label').forEach(el => {
-          el.textContent = state.useMiles ? 'mi' : 'km';
-        });
-        if (els.paceUnitLabel) {
-          els.paceUnitLabel.textContent = state.useMiles ? '/mi' : '/km';
-        }
-
-        renderGaugeTicks();
-        updateMainDisplay(state.currentSpeedKmh);
-        updateTelemetryCards();
-      }
-      if (els.headerUnitBtn) els.headerUnitBtn.addEventListener('click', toggleUnits);
-
-      // ================= TELEMETRY CALCULATIONS =================
-      function formatTime(totalSecs) {
-        const m = Math.floor(totalSecs / 60).toString().padStart(2, '0');
-        const s = (totalSecs % 60).toString().padStart(2, '0');
-        return `${m}:${s}`;
-      }
-
-      function calculateDistance(lat1, lon1, lat2, lon2) {
+      // 6. Haversine Distance Formula
+      function calcHaversine(lat1, lon1, lat2, lon2) {
         const R = 6371000;
         const dLat = (lat2 - lat1) * Math.PI / 180;
         const dLon = (lon2 - lon1) * Math.PI / 180;
-        const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                   Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                  Math.sin(dLon/2) * Math.sin(dLon/2);
+                  Math.sin(dLon / 2) * Math.sin(dLon / 2);
         return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       }
 
-      function updateTelemetryCards() {
-        const distVal = state.useMiles ? (state.totalDistanceMeters / 1609.34) : (state.totalDistanceMeters / 1000);
-        if (els.valTripDistance) els.valTripDistance.textContent = distVal.toFixed(2);
-        if (els.gaugeOdometerValue) els.gaugeOdometerValue.textContent = distVal.toFixed(2).padStart(7, '0');
-
-        // Target Goal
-        const targetKm = (parseFloat(els.inputTargetDistance ? els.inputTargetDistance.value : 5) || 5) * (state.useMiles ? 1609.34 : 1000);
-        const progressPct = Math.min(100, Math.round((state.totalDistanceMeters / targetKm) * 100));
-        if (els.targetCompletionText) els.targetCompletionText.textContent = `${progressPct}%`;
-        if (els.hudTargetPctBadge) els.hudTargetPctBadge.textContent = `${progressPct}%`;
-        if (els.hudTargetBar) els.hudTargetBar.style.width = `${progressPct}%`;
-
-        if (progressPct >= 100 && !state.goalCompletedAlerted) {
-          state.goalCompletedAlerted = true;
-          playChime(1000, 'triangle', 0.4);
-          if (els.dashboardFeedbackMsg) els.dashboardFeedbackMsg.textContent = "🏆 Target Goal Completed!";
-        }
-
-        // Calories estimate
-        const kmTotal = state.totalDistanceMeters / 1000;
-        if (els.valCalories) els.valCalories.textContent = Math.round(kmTotal * 62);
-
-        // Top Speed
-        const topVal = state.useMiles ? state.maxSpeedKmh * 0.621371 : state.maxSpeedKmh;
-        if (els.valTopSpeed) els.valTopSpeed.textContent = topVal.toFixed(1);
-
-        // Average Speed
-        if (state.speedSamples.length > 0 && els.valAvgSpeed) {
-          const avg = state.speedSamples.reduce((a, b) => a + b, 0) / state.speedSamples.length;
-          const avgVal = state.useMiles ? avg * 0.621371 : avg;
-          els.valAvgSpeed.textContent = avgVal.toFixed(1);
-        }
-
-        // Running Pace
-        if (distVal > 0.05 && state.tripSeconds > 5 && els.valPace) {
-          const paceSecs = state.tripSeconds / distVal;
-          const pMins = Math.floor(paceSecs / 60);
-          const pSecs = Math.floor(paceSecs % 60).toString().padStart(2, '0');
-          els.valPace.textContent = `${pMins}:${pSecs}`;
-        } else if (els.valPace) {
-          els.valPace.textContent = "--";
-        }
-      }
-
-      // Reverse Geocoding
-      function fetchAddress(lat, lon) {
+      // 7. Reverse Geocode Area
+      function reverseGeocode(lat, lon) {
         const now = Date.now();
-        if (now - state.lastGeocodeTimestamp < 25000) return;
-        state.lastGeocodeTimestamp = now;
+        if (now - state.lastGeocodeTime < 25000) return;
+        state.lastGeocodeTime = now;
 
-        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=14&addressdetails=1`)
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=17&addressdetails=1`)
           .then(res => res.json())
           .then(data => {
-            if (data && data.address && els.liveLocationAddress) {
+            if (data && data.address) {
               const a = data.address;
-              const place = a.road || a.suburb || a.city_district || a.town || a.city || "Identified Route";
-              const city = a.city || a.state || "";
-              els.liveLocationAddress.textContent = `${place}, ${city}`;
+              const place = a.road || a.suburb || a.neighbourhood || a.village || a.town || a.city || "Located Point";
+              const city = a.city || a.state_district || a.state || "";
+              els.locAddressText.textContent = city ? `${place}, ${city}` : place;
             }
           })
           .catch(() => {
-            if (els.liveLocationAddress) els.liveLocationAddress.textContent = "GPS Satellite Signal Connected";
+            els.locAddressText.textContent = `${lat.toFixed(4)}°, ${lon.toFixed(4)}°`;
           });
       }
 
-      // ================= GPS POSITION HANDLER =================
-      function handlePosition(pos) {
-        if (state.isPaused || !pos || !pos.coords) return;
+      // 8. Update Analog Needle and Digital Readouts
+      function updateSpeedVisuals(rawKmh) {
+        const factor = state.useMiles ? 0.621371 : 1.0;
+        const displaySpeed = rawKmh * factor;
+
+        els.dialSpeedDigital.textContent = displaySpeed.toFixed(1);
+
+        // Needle rotation angle: -125deg at 0 to +125deg at dialMax
+        const clampedSpeed = Math.min(state.dialMax, Math.max(0, displaySpeed));
+        const angle = -125 + (clampedSpeed / state.dialMax) * 250;
+        els.needlePivot.setAttribute("transform", `translate(160, 185) rotate(${angle.toFixed(1)})`);
+
+        // Motion status badge
+        if (rawKmh > 1.2) {
+          els.motionBadge.textContent = "MOVING";
+          els.motionBadge.className = "status-pill motion-moving";
+        } else {
+          els.motionBadge.textContent = "IDLE";
+          els.motionBadge.className = "status-pill motion-idle";
+        }
+
+        // Speed Limit Alarm
+        const limitVal = parseFloat(els.inputLimitVal.value) || 60;
+        if (state.isAlarmEnabled && displaySpeed > limitVal) {
+          els.cockpitCard.classList.add('overspeed-alarm');
+          els.limitBadge.textContent = "OVER LIMIT!";
+          els.limitBadge.className = "status-pill alert-danger";
+          els.liveMsgStatus.textContent = `🚨 OVERSPEED: Limit ${limitVal} ${els.dialUnitText.textContent} breached!`;
+          startSiren();
+          if (navigator.vibrate) navigator.vibrate([150, 75, 150]);
+        } else {
+          stopSiren();
+          els.cockpitCard.classList.remove('overspeed-alarm');
+          els.limitBadge.textContent = "SAFE";
+          els.limitBadge.className = "status-pill alert-safe";
+          if (state.isTracking && !state.isPaused) {
+            els.liveMsgStatus.textContent = "🛰️ Live GPS Connected: High-precision velocity streaming";
+          }
+        }
+      }
+
+      // 9. Position GPS Watcher Callback
+      function handleGPS(pos) {
+        if (!pos || !pos.coords || state.isPaused) return;
         const coords = pos.coords;
         const now = pos.timestamp || Date.now();
 
         state.currentLat = coords.latitude;
         state.currentLon = coords.longitude;
-        if (els.liveCoordsLabel) els.liveCoordsLabel.textContent = `${coords.latitude.toFixed(5)}, ${coords.longitude.toFixed(5)}`;
-        if (els.valAccuracy) els.valAccuracy.textContent = Math.round(coords.accuracy || 0);
+        reverseGeocode(coords.latitude, coords.longitude);
 
-        setSignalQuality(coords.accuracy || 30);
-        fetchAddress(coords.latitude, coords.longitude);
+        // Accuracy and Status Indicators
+        const acc = Math.round(coords.accuracy || 0);
+        els.valAccuracy.textContent = acc;
 
-        // Gyro Heading
+        els.gpsStatePill.classList.add('live');
+        els.gpsStateLabel.textContent = "LIVE";
+
+        if (acc <= 15) {
+          els.gpsSignalText.textContent = "EXCELLENT";
+          els.signalBars.className = "sig-bars sig-active";
+        } else if (acc <= 35) {
+          els.gpsSignalText.textContent = "GOOD";
+          els.signalBars.className = "sig-bars sig-active";
+        } else {
+          els.gpsSignalText.textContent = "WEAK";
+          els.signalBars.className = "sig-bars";
+        }
+
+        // Compass Heading
         if (coords.heading !== null && !isNaN(coords.heading) && coords.heading >= 0) {
-          state.currentHeading = Math.round(coords.heading);
-          const cardinals = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
-          const dir = cardinals[Math.round(state.currentHeading / 45) % 8];
-          if (els.hudHeadingDeg) els.hudHeadingDeg.textContent = `${state.currentHeading}° ${dir}`;
-          if (els.compassNeedleDisk) els.compassNeedleDisk.style.transform = `rotate(-${state.currentHeading}deg)`;
+          const h = Math.round(coords.heading);
+          const dirs = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+          const dir = dirs[Math.round(h / 45) % 8];
+          els.valCompass.textContent = `${h}° ${dir}`;
+          els.compassDisk.style.transform = `rotate(-${h}deg)`;
         }
 
         // Altitude
         if (coords.altitude !== null && !isNaN(coords.altitude)) {
-          state.currentAltitude = Math.round(coords.altitude);
-          if (els.hudAltitudeText) els.hudAltitudeText.textContent = `${state.currentAltitude} m`;
-          const altPct = Math.min(100, Math.max(0, (state.currentAltitude / 1200) * 100));
-          if (els.hudAltitudeBar) els.hudAltitudeBar.style.width = `${altPct}%`;
+          const alt = Math.round(coords.altitude);
+          els.valAltitude.textContent = `${alt} m`;
+          const pct = Math.min(100, Math.max(0, (alt / 1200) * 100));
+          els.barAltitude.style.width = `${pct}%`;
         }
 
-        // Direct Real GPS Velocity Calculation
+        // 100% REAL HARDWARE SPEED
         let speedKmh = 0;
-        const hasHardwareSpeed = typeof coords.speed === 'number' && !isNaN(coords.speed) && coords.speed >= 0;
-
-        if (hasHardwareSpeed) {
-          // coords.speed is in meters/second provided directly by hardware GPS chip
+        if (typeof coords.speed === 'number' && !isNaN(coords.speed) && coords.speed >= 0) {
           speedKmh = coords.speed * 3.6;
-        } else if (state.lastValidPoint) {
-          // Fallback displacement calculation when device doesn't expose native speed
-          const d = calculateDistance(state.lastValidPoint.lat, state.lastValidPoint.lon, coords.latitude, coords.longitude);
-          const dt = (now - state.lastValidPoint.time) / 1000;
-          
-          // Filter GPS jitter: ignore drifts smaller than 1.2m or instantaneous jumps over 80 m/s
-          if (d > 1.2 && dt > 0.15 && (d / dt) < 80) {
-            speedKmh = (d / dt) * 3.6;
-          } else {
-            speedKmh = 0;
+        } else if (state.lastPoint) {
+          const dM = calcHaversine(state.lastPoint.lat, state.lastPoint.lon, coords.latitude, coords.longitude);
+          const dS = (now - state.lastPoint.time) / 1000;
+          if (dS > 0.2 && dM > 0.6) {
+            speedKmh = (dM / dS) * 3.6;
           }
         }
 
-        // Distance accumulation (only count valid physical movement, ignore stationary jitter)
-        if (state.lastValidPoint) {
-          const deltaD = calculateDistance(state.lastValidPoint.lat, state.lastValidPoint.lon, coords.latitude, coords.longitude);
-          if (deltaD > 1.2 && deltaD < 400) {
-            state.totalDistanceMeters += deltaD;
+        // Filter out stationary noise
+        if (speedKmh < 1.2) speedKmh = 0;
+        state.currentSpeedKmh = Math.round(speedKmh * 10) / 10;
+
+        // Total Distance Accumulation
+        if (state.lastPoint) {
+          const deltaD = calcHaversine(state.lastPoint.lat, state.lastPoint.lon, coords.latitude, coords.longitude);
+          if (deltaD > 0.8 && deltaD < 300) {
+            state.totalDistMeters += deltaD;
           }
         }
-        state.lastValidPoint = { lat: coords.latitude, lon: coords.longitude, time: now };
+        state.lastPoint = { lat: coords.latitude, lon: coords.longitude, time: now };
 
-        // Threshold clamp: if speed is below 0.8 km/h, treat as completely stationary
-        const currentCleanSpeed = speedKmh < 0.8 ? 0 : Math.round(speedKmh * 10) / 10;
-
-        if (currentCleanSpeed > state.maxSpeedKmh) {
-          state.maxSpeedKmh = currentCleanSpeed;
+        // Top Speed & Avg Samples
+        if (state.currentSpeedKmh > state.maxSpeedKmh) {
+          state.maxSpeedKmh = state.currentSpeedKmh;
         }
-        if (currentCleanSpeed > 0) {
-          state.speedSamples.push(currentCleanSpeed);
+        if (state.currentSpeedKmh > 0) {
+          state.speedSamples.push(state.currentSpeedKmh);
         }
 
         // G-Force Calculation
-        const currentSpeedMs = currentCleanSpeed / 3.6;
-        if (state.lastSpeedTimestamp) {
-          const dt = (now - state.lastSpeedTimestamp) / 1000;
+        const curMs = state.currentSpeedKmh / 3.6;
+        if (state.lastSpeedTime) {
+          const dt = (now - state.lastSpeedTime) / 1000;
           if (dt > 0.2) {
-            const accelMs2 = (currentSpeedMs - state.lastSpeedMs) / dt;
-            const g = accelMs2 / 9.80665;
-            state.currentGForce = Math.max(-1.5, Math.min(1.5, g));
-            if (els.hudGForceText) els.hudGForceText.textContent = `${(g >= 0 ? "+" : "")}${g.toFixed(2)} g`;
-            const bubblePct = 50 + (state.currentGForce / 1.5) * 50;
-            if (els.gForceBubble) els.gForceBubble.style.left = `${bubblePct}%`;
+            const acc = (curMs - state.lastSpeedMs) / dt;
+            const g = acc / 9.80665;
+            const clampedG = Math.max(-1.5, Math.min(1.5, g));
+            els.valGForce.textContent = `${(g >= 0 ? "+" : "")}${g.toFixed(2)} g`;
+            const bPct = 50 + (clampedG / 1.5) * 50;
+            els.gForceThumb.style.left = `${bPct}%`;
           }
         }
-        state.lastSpeedMs = currentSpeedMs;
-        state.lastSpeedTimestamp = now;
+        state.lastSpeedMs = curMs;
+        state.lastSpeedTime = now;
 
-        // Needle and HUD updates with instant real-time GPS speed
-        updateMainDisplay(currentCleanSpeed);
-        updateTelemetryCards();
+        updateSpeedVisuals(state.currentSpeedKmh);
+        updateTelemetryDashboard();
       }
 
-      function setSignalQuality(accuracy) {
-        if (!els.sigBar1) return;
-        els.sigBar1.className = "w-1.5 h-1.5 rounded-sm bg-slate-300 dark:bg-slate-600";
-        els.sigBar2.className = "w-1.5 h-2.5 rounded-sm bg-slate-300 dark:bg-slate-600";
-        els.sigBar3.className = "w-1.5 h-3.5 rounded-sm bg-slate-300 dark:bg-slate-600";
-        els.sigBar4.className = "w-1.5 h-4.5 rounded-sm bg-slate-300 dark:bg-slate-600";
-
-        if (accuracy > 50) {
-          els.sigText.textContent = "WEAK";
-          els.sigBar1.className = "w-1.5 h-1.5 rounded-sm bg-amber-500";
-          els.statusCircle.className = "w-2 h-2 rounded-full bg-amber-500 animate-pulse";
-          els.gpsStatusText.textContent = "GPS WEAK";
-        } else if (accuracy > 18) {
-          els.sigText.textContent = "GOOD";
-          els.sigBar1.className = "w-1.5 h-1.5 rounded-sm bg-emerald-500";
-          els.sigBar2.className = "w-1.5 h-2.5 rounded-sm bg-emerald-500";
-          els.sigBar3.className = "w-1.5 h-3.5 rounded-sm bg-emerald-500";
-          els.statusCircle.className = "w-2 h-2 rounded-full bg-emerald-500";
-          els.gpsStatusText.textContent = "GPS ACTIVE";
+      function handleGPSError(err) {
+        if (err && err.code === 1) {
+          els.liveMsgStatus.textContent = "Location permission denied. Please allow GPS access in settings.";
+          openModal("GPS Permission Required", "Please allow Location permission in your browser or phone settings so the speedometer can display your real speed.");
         } else {
-          els.sigText.textContent = "EXCELLENT";
-          els.sigBar1.className = "w-1.5 h-1.5 rounded-sm bg-emerald-500 shadow-sm";
-          els.sigBar2.className = "w-1.5 h-2.5 rounded-sm bg-emerald-500 shadow-sm";
-          els.sigBar3.className = "w-1.5 h-3.5 rounded-sm bg-emerald-500 shadow-sm";
-          els.sigBar4.className = "w-1.5 h-4.5 rounded-sm bg-emerald-500 shadow-sm";
-          els.statusCircle.className = "w-2 h-2 rounded-full bg-cyan-400";
-          els.gpsStatusText.textContent = "SATELLITE LOCK";
+          els.liveMsgStatus.textContent = "Searching for satellites (move to open area)...";
         }
-
-        if (els.headerGpsDot) els.headerGpsDot.className = "relative inline-flex rounded-full h-3 w-3 bg-emerald-500";
-        if (els.headerGpsPing) els.headerGpsPing.classList.remove('hidden');
       }
 
-      function handleGpsError(err) {
-        let msg = "GPS Signal error. Move to an area with open sky view.";
-        if (err.code === 1) {
-          // PERMISSION DENIED (iOS / Android Safari / Chrome)
-          msg = "GPS Permission Denied. Follow instructions below to enable.";
-          const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-          const instructions = isIOS
-            ? `
-              <p class="font-semibold text-slate-800 dark:text-slate-100">iPhone Safari par permission enable karne ke liye:</p>
-              <ol class="list-decimal list-inside space-y-1 text-slate-600 dark:text-slate-300">
-                <li>Safari ke URL bar me <strong>'aA'</strong> ya <strong>'Settings'</strong> icon par tap karein.</li>
-                <li><strong>Website Settings</strong> me jayein.</li>
-                <li><strong>Location</strong> ko <strong>'Allow'</strong> ya <strong>'Ask'</strong> select karein.</li>
-                <li>Ya iPhone Settings > Safari > Location > 'Allow' karein.</li>
-              </ol>
-            `
-            : `
-              <p class="font-semibold text-slate-800 dark:text-slate-100">Android / Chrome par permission enable karne ke liye:</p>
-              <p class="text-slate-600 dark:text-slate-300">URL bar ke left me <strong>Tune / Lock 🔒</strong> icon par tap karein aur <strong>Permissions > Location > Allow</strong> karein.</p>
-            `;
-          showNotice("GPS Permission Required", instructions, "📍", true);
-        } else if (err.code === 2) {
-          msg = "GPS position unavailable. Searching satellites in open sky...";
-        } else if (err.code === 3) {
-          msg = "GPS timeout while locking position. Still listening...";
+      // 10. Dashboard Telemetry Card Counters
+      function updateTelemetryDashboard() {
+        const factor = state.useMiles ? 0.621371 : 1.0;
+        const distUnit = state.useMiles ? 'mi' : 'km';
+        const speedUnit = state.useMiles ? 'mph' : 'km/h';
+
+        const dVal = (state.totalDistMeters / 1000) * factor;
+        els.cardDistance.innerHTML = `${dVal.toFixed(2)} <small>${distUnit}</small>`;
+        els.valOdometer.textContent = dVal.toFixed(2).padStart(7, '0');
+
+        const topVal = state.maxSpeedKmh * factor;
+        els.cardTopSpeed.innerHTML = `${topVal.toFixed(1)} <small>${speedUnit}</small>`;
+
+        let avgVal = 0;
+        if (state.speedSamples.length > 0) {
+          const sum = state.speedSamples.reduce((a, b) => a + b, 0);
+          avgVal = (sum / state.speedSamples.length) * factor;
         }
-        if (els.dashboardFeedbackMsg) els.dashboardFeedbackMsg.textContent = `⚠️ ${msg}`;
+        els.cardAvgSpeed.innerHTML = `${avgVal.toFixed(1)} <small>${speedUnit}</small>`;
+
+        // Goal Progress
+        const targetKm = (parseFloat(els.inputTargetVal.value) || 5) * 1000;
+        const goalPct = Math.min(100, Math.round((state.totalDistMeters / targetKm) * 100));
+        els.targetGoalPctText.textContent = `${goalPct}%`;
+        els.valGoalPct.textContent = `${goalPct}%`;
+        els.barGoal.style.width = `${goalPct}%`;
       }
 
-      // ================= START / STOP / PAUSE LOGIC =================
-      function startTracking() {
-        unlockAudioContext();
+      function formatDuration(sec) {
+        const m = Math.floor(sec / 60).toString().padStart(2, '0');
+        const s = (sec % 60).toString().padStart(2, '0');
+        return `${m}:${s}`;
+      }
+
+      // 11. Start & Stop Telemetry Controls
+      function startTelemetry() {
+        unlockAudio();
 
         if (!("geolocation" in navigator)) {
-          showNotice("Hardware Not Found", "<p>Your device or current browser does not support GPS Geolocation.</p>", "❌");
-          if (els.dashboardFeedbackMsg) els.dashboardFeedbackMsg.textContent = "❌ Geolocation hardware not found.";
+          openModal("GPS Unsupported", "Your browser does not have geolocation sensor support.");
           return;
         }
 
-        playChime(880, 'sine', 0.2);
         state.isTracking = true;
         state.isPaused = false;
-        state.goalCompletedAlerted = false;
+        state.lastPoint = null;
 
-        if (els.mainTrackBtn) {
-          els.mainTrackBtn.classList.replace('from-blue-600', 'from-rose-600');
-          els.mainTrackBtn.classList.replace('to-blue-700', 'to-rose-700');
-        }
-        if (els.mainBtnIcon) els.mainBtnIcon.textContent = "⏹";
-        if (els.mainBtnText) els.mainBtnText.textContent = "Stop Tracking";
-        if (els.pauseTrackBtn) {
-          els.pauseTrackBtn.classList.remove('hidden');
-          els.pauseTrackBtn.textContent = "Pause";
-        }
-        if (els.dashboardFeedbackMsg) els.dashboardFeedbackMsg.textContent = "🛰️ Connecting to GPS satellites... Standby for lock.";
+        els.btnMainTelemetry.classList.add('active');
+        els.mainBtnIcon.textContent = "⏹";
+        els.mainBtnLabel.textContent = "Stop Telemetry";
+        els.btnPauseTelemetry.style.display = 'inline-block';
+        els.btnPauseTelemetry.textContent = "Pause";
+        els.liveMsgStatus.textContent = "🛰️ Connecting to hardware GPS satellites...";
 
-        if (state.timerInterval) clearInterval(state.timerInterval);
-        state.timerInterval = setInterval(() => {
+        if (state.timerId) clearInterval(state.timerId);
+        state.timerId = setInterval(() => {
           if (!state.isPaused) {
             state.tripSeconds++;
-            if (els.valDuration) els.valDuration.textContent = formatTime(state.tripSeconds);
-            updateTelemetryCards();
+            els.cardDuration.textContent = formatDuration(state.tripSeconds);
+            updateTelemetryDashboard();
           }
         }, 1000);
 
-        // Clear any previous watcher to prevent race conditions on iOS
         if (state.watchId !== null) {
           navigator.geolocation.clearWatch(state.watchId);
-          state.watchId = null;
         }
 
-        // Single clean high-accuracy satellite stream (maximumAge: 0 prevents stale cache)
-        const geoOptions = {
+        state.watchId = navigator.geolocation.watchPosition(handleGPS, handleGPSError, {
           enableHighAccuracy: true,
           maximumAge: 0,
-          timeout: 20000
-        };
-
-        try {
-          state.watchId = navigator.geolocation.watchPosition(handlePosition, handleGpsError, geoOptions);
-        } catch (e) {
-          handleGpsError({ code: 2, message: e.message });
-        }
+          timeout: 10000
+        });
       }
 
-      function stopTracking() {
+      function stopTelemetry() {
         stopSiren();
-        playChime(440, 'sine', 0.2);
-        
         if (state.watchId !== null) {
           navigator.geolocation.clearWatch(state.watchId);
           state.watchId = null;
         }
-        if (state.timerInterval) {
-          clearInterval(state.timerInterval);
-          state.timerInterval = null;
+        if (state.timerId) {
+          clearInterval(state.timerId);
+          state.timerId = null;
         }
 
-        if (state.totalDistanceMeters > 5) {
-          saveTripToHistory();
+        if (state.totalDistMeters > 5) {
+          saveTrip();
         }
 
         state.isTracking = false;
         state.isPaused = false;
+        state.currentSpeedKmh = 0;
 
-        if (els.mainTrackBtn) {
-          els.mainTrackBtn.classList.replace('from-rose-600', 'from-blue-600');
-          els.mainTrackBtn.classList.replace('to-rose-700', 'to-blue-700');
-        }
-        if (els.mainBtnIcon) els.mainBtnIcon.textContent = "▶";
-        if (els.mainBtnText) els.mainBtnText.textContent = "Start Telemetry";
-        if (els.pauseTrackBtn) els.pauseTrackBtn.classList.add('hidden');
-        if (els.headerGpsDot) els.headerGpsDot.className = "relative inline-flex rounded-full h-3 w-3 bg-slate-400";
-        if (els.headerGpsPing) els.headerGpsPing.classList.add('hidden');
-        if (els.statusCircle) els.statusCircle.className = "w-2 h-2 rounded-full bg-slate-400";
-        if (els.gpsStatusText) els.gpsStatusText.textContent = "STANDBY";
-        if (els.sigText) els.sigText.textContent = "OFF";
-        if (els.dashboardFeedbackMsg) els.dashboardFeedbackMsg.textContent = "Tracking stopped. Needle calibrated to zero.";
+        els.btnMainTelemetry.classList.remove('active');
+        els.mainBtnIcon.textContent = "▶";
+        els.mainBtnLabel.textContent = "Start Telemetry";
+        els.btnPauseTelemetry.style.display = 'none';
+        els.gpsStatePill.classList.remove('live');
+        els.gpsStateLabel.textContent = "STANDBY";
+        els.gpsSignalText.textContent = "STANDBY";
+        els.signalBars.className = "sig-bars";
+        els.liveMsgStatus.textContent = "Tracking stopped. Speedometer reset to 0.";
 
-        // Return Needle (Suwi) smoothly to 0 position (-125deg)
-        updateMainDisplay(0);
+        updateSpeedVisuals(0);
       }
 
-      function resetDashboard() {
-        if (state.isTracking) stopTracking();
+      // 12. Trip History Storage
+      function saveTrip() {
+        const trip = {
+          date: new Date().toLocaleDateString(),
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          duration: els.cardDuration.textContent,
+          distance: els.cardDistance.textContent,
+          topSpeed: els.cardTopSpeed.textContent,
+          location: els.locAddressText.textContent
+        };
+        const logs = JSON.parse(localStorage.getItem('mto_logs') || '[]');
+        logs.unshift(trip);
+        if (logs.length > 25) logs.pop();
+        localStorage.setItem('mto_logs', JSON.stringify(logs));
+        refreshLogsCount();
+      }
 
+      function refreshLogsCount() {
+        const logs = JSON.parse(localStorage.getItem('mto_logs') || '[]');
+        els.logVal.textContent = logs.length;
+      }
+
+      // 13. Event Listeners
+      els.btnMainTelemetry.addEventListener('click', () => {
+        if (state.isTracking) {
+          stopTelemetry();
+        } else {
+          startTelemetry();
+        }
+      });
+
+      els.btnPauseTelemetry.addEventListener('click', () => {
+        state.isPaused = !state.isPaused;
+        els.btnPauseTelemetry.textContent = state.isPaused ? "Resume" : "Pause";
+        els.btnPauseTelemetry.style.background = state.isPaused ? "#10b981" : "#eab308";
+        els.liveMsgStatus.textContent = state.isPaused ? "Trip paused" : "Tracking resumed";
+        if (state.isPaused) stopSiren();
+      });
+
+      els.btnUnitToggle.addEventListener('click', () => {
+        state.useMiles = !state.useMiles;
+        state.dialMax = state.useMiles ? 100 : 160;
+        els.btnUnitToggle.textContent = state.useMiles ? 'MPH' : 'KM/H';
+        els.dialUnitText.textContent = state.useMiles ? 'MPH' : 'KM/H';
+
+        document.querySelectorAll('.unit-span').forEach(el => {
+          el.textContent = state.useMiles ? 'mph' : 'km/h';
+        });
+        document.querySelectorAll('.dist-span').forEach(el => {
+          el.textContent = state.useMiles ? 'mi' : 'km';
+        });
+
+        renderDialTicks();
+        updateSpeedVisuals(state.currentSpeedKmh);
+        updateTelemetryDashboard();
+      });
+
+      els.btnAlarmToggle.addEventListener('click', () => {
+        state.isAlarmEnabled = !state.isAlarmEnabled;
+        if (state.isAlarmEnabled) {
+          els.btnAlarmToggle.textContent = "ON";
+          els.btnAlarmToggle.className = "toggle-alert-btn on";
+        } else {
+          els.btnAlarmToggle.textContent = "OFF";
+          els.btnAlarmToggle.className = "toggle-alert-btn off";
+          stopSiren();
+          els.cockpitCard.classList.remove('overspeed-alarm');
+          els.limitBadge.textContent = "OFF";
+          els.limitBadge.className = "status-pill motion-idle";
+        }
+      });
+
+      els.btnLap.addEventListener('click', () => {
+        if (!state.isTracking) return;
+        state.laps++;
+        els.lapVal.textContent = state.laps;
+      });
+
+      els.btnReset.addEventListener('click', () => {
         state.tripSeconds = 0;
-        state.totalDistanceMeters = 0;
+        state.totalDistMeters = 0;
         state.maxSpeedKmh = 0;
         state.speedSamples = [];
-        state.speedBuffer = [];
-        state.lastValidPoint = null;
-        state.lastSpeedMs = 0;
-        state.laps = [];
-        state.goalCompletedAlerted = false;
-
-        if (els.valTripDistance) els.valTripDistance.textContent = "0.00";
-        if (els.gaugeOdometerValue) els.gaugeOdometerValue.textContent = "0000.00";
-        if (els.valDuration) els.valDuration.textContent = "00:00";
-        if (els.valTopSpeed) els.valTopSpeed.textContent = "0.0";
-        if (els.valAvgSpeed) els.valAvgSpeed.textContent = "0.0";
-        if (els.valPace) els.valPace.textContent = "--";
-        if (els.valCalories) els.valCalories.textContent = "0";
-        if (els.hudGForceText) els.hudGForceText.textContent = "0.00 g";
-        if (els.gForceBubble) els.gForceBubble.style.left = "50%";
-        if (els.lapCounterBadge) els.lapCounterBadge.textContent = "0";
-        if (els.lapDrawerCard) els.lapDrawerCard.classList.add('hidden');
-        if (els.lapsListScroll) els.lapsListScroll.innerHTML = "";
-
-        updateMainDisplay(0);
-        playChime(600, 'sine', 0.1);
-        if (els.dashboardFeedbackMsg) els.dashboardFeedbackMsg.textContent = "All dashboard metrics reset.";
-      }
-      if (els.resetTripBtn) els.resetTripBtn.addEventListener('click', resetDashboard);
-
-      if (els.mainTrackBtn) {
-        els.mainTrackBtn.addEventListener('click', () => {
-          if (!state.isTracking) {
-            startTracking();
-          } else {
-            stopTracking();
-          }
-        });
-      }
-
-      if (els.pauseTrackBtn) {
-        els.pauseTrackBtn.addEventListener('click', () => {
-          state.isPaused = !state.isPaused;
-          els.pauseTrackBtn.textContent = state.isPaused ? "Resume" : "Pause";
-          els.pauseTrackBtn.className = state.isPaused
-            ? "py-3.5 sm:py-4 px-5 rounded-2xl font-bold text-sm text-white bg-emerald-600 hover:bg-emerald-700 shadow-md transition-all"
-            : "py-3.5 sm:py-4 px-5 rounded-2xl font-bold text-sm text-slate-800 dark:text-white bg-amber-400 hover:bg-amber-500 shadow-md transition-all";
-          
-          if (els.dashboardFeedbackMsg) {
-            els.dashboardFeedbackMsg.textContent = state.isPaused ? "⏸️ Tracking paused" : "▶️ Tracking resumed";
-          }
-          if (state.isPaused) stopSiren();
-        });
-      }
-
-      // Laps
-      if (els.quickLapBtn) {
-        els.quickLapBtn.addEventListener('click', () => {
-          if (!state.isTracking) {
-            showNotice("Tracking Inactive", "Start Telemetry tracking first before recording laps.", "⏱️");
-            return;
-          }
-          playChime(1200, 'square', 0.08);
-          const lapNum = state.laps.length + 1;
-          const lapData = {
-            num: lapNum,
-            time: formatTime(state.tripSeconds),
-            distance: els.valTripDistance ? els.valTripDistance.textContent : "0.00",
-            speed: state.currentSpeedKmh.toFixed(1)
-          };
-          state.laps.push(lapData);
-          if (els.lapCounterBadge) els.lapCounterBadge.textContent = state.laps.length;
-          if (els.lapDrawerCard) els.lapDrawerCard.classList.remove('hidden');
-
-          if (els.lapsListScroll) {
-            const badge = document.createElement('div');
-            badge.className = "flex-shrink-0 px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700";
-            badge.innerHTML = `<span class="text-rose-500 font-bold">L${lapData.num}</span>: <strong>${lapData.time}</strong> (${lapData.distance}${state.useMiles ? 'mi' : 'km'})`;
-            els.lapsListScroll.prepend(badge);
-          }
-        });
-      }
-
-      if (els.clearLapsBtn) {
-        els.clearLapsBtn.addEventListener('click', () => {
-          state.laps = [];
-          if (els.lapCounterBadge) els.lapCounterBadge.textContent = "0";
-          if (els.lapsListScroll) els.lapsListScroll.innerHTML = "";
-          if (els.lapDrawerCard) els.lapDrawerCard.classList.add('hidden');
-        });
-      }
-
-      // Alert Switch
-      if (els.toggleAlertSwitch) {
-        els.toggleAlertSwitch.addEventListener('click', () => {
-          state.isSpeedAlertEnabled = !state.isSpeedAlertEnabled;
-          if (state.isSpeedAlertEnabled) {
-            els.toggleAlertSwitch.textContent = "ON";
-            els.toggleAlertSwitch.className = "px-1.5 py-0.5 rounded text-[8.5px] font-extrabold uppercase bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300";
-          } else {
-            els.toggleAlertSwitch.textContent = "OFF";
-            els.toggleAlertSwitch.className = "px-1.5 py-0.5 rounded text-[8.5px] font-extrabold uppercase bg-slate-200 text-slate-600 dark:bg-slate-700 dark:text-slate-400";
-            stopSiren();
-            if (els.telemetryCard) els.telemetryCard.classList.remove('overspeed-active');
-          }
-        });
-      }
-
-      // Maps
-      if (els.openMapsBtn) {
-        els.openMapsBtn.addEventListener('click', () => {
-          if (state.currentLat && state.currentLon) {
-            window.open(`https://www.google.com/maps?q=${state.currentLat},${state.currentLon}`, '_blank');
-          } else {
-            showNotice("Waiting for GPS", "Coordinates are not locked yet. Please start telemetry under open sky to obtain a location fix.", "📍");
-          }
-        });
-      }
-
-      // Clipboard
-      if (els.copyCoordsBtn) {
-        els.copyCoordsBtn.addEventListener('click', () => {
-          const text = els.liveCoordsLabel ? els.liveCoordsLabel.textContent : "";
-          const temp = document.createElement('textarea');
-          temp.value = text;
-          document.body.appendChild(temp);
-          temp.select();
-          document.execCommand('copy');
-          document.body.removeChild(temp);
-          els.copyCoordsBtn.textContent = "Copied!";
-          setTimeout(() => {
-            if (els.copyCoordsBtn) els.copyCoordsBtn.textContent = "Copy";
-          }, 1500);
-        });
-      }
-
-      // History
-      function getStoredHistory() {
-        try {
-          return JSON.parse(localStorage.getItem('apex_telemetry_history') || '[]');
-        } catch (e) {
-          return [];
-        }
-      }
-
-      function refreshHistoryCount() {
-        const history = getStoredHistory();
-        if (els.dataSavedCount) els.dataSavedCount.textContent = `${history.length} Trips Logged`;
-      }
-
-      function saveTripToHistory() {
-        const trip = {
-          id: Date.now(),
-          date: new Date().toLocaleString(),
-          distance: `${els.valTripDistance ? els.valTripDistance.textContent : "0.00"} ${state.useMiles ? 'mi' : 'km'}`,
-          duration: els.valDuration ? els.valDuration.textContent : "00:00",
-          topSpeed: `${els.valTopSpeed ? els.valTopSpeed.textContent : "0.0"} ${els.gaugeUnitText ? els.gaugeUnitText.textContent : "KM/H"}`,
-          avgSpeed: `${els.valAvgSpeed ? els.valAvgSpeed.textContent : "0.0"} ${els.gaugeUnitText ? els.gaugeUnitText.textContent : "KM/H"}`,
-          calories: `${els.valCalories ? els.valCalories.textContent : "0"} kcal`,
-          location: els.liveLocationAddress ? els.liveLocationAddress.textContent : "Recorded Track",
-          lapsCount: state.laps.length
-        };
-        const history = getStoredHistory();
-        history.unshift(trip);
-        if (history.length > 50) history.pop();
-        localStorage.setItem('apex_telemetry_history', JSON.stringify(history));
-        refreshHistoryCount();
-      }
-
-      function renderHistoryList() {
-        if (!els.tripLogsContainer) return;
-        const history = getStoredHistory();
-        els.tripLogsContainer.innerHTML = "";
-        if (history.length === 0) {
-          els.tripLogsContainer.innerHTML = `<div class="p-6 text-center text-slate-400">No telemetry logs found. Take a trip to record telemetry.</div>`;
-          return;
-        }
-
-        history.forEach((t, i) => {
-          const item = document.createElement('div');
-          item.className = "p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex flex-col gap-1";
-          item.innerHTML = `
-            <div class="flex items-center justify-between">
-              <span class="font-extrabold text-blue-600 dark:text-cyan-400">#${i + 1} • ${t.date}</span>
-              <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold">${t.distance}</span>
-            </div>
-            <div class="text-[11px] text-slate-500 truncate">📍 ${t.location}</div>
-            <div class="grid grid-cols-3 gap-1 pt-1 text-[10px] font-mono text-slate-600 dark:text-slate-300">
-              <span>⏱️ ${t.duration}</span>
-              <span>🚀 Top: ${t.topSpeed}</span>
-              <span>🔥 ${t.calories}</span>
-            </div>
-          `;
-          els.tripLogsContainer.appendChild(item);
-        });
-      }
-
-      if (els.viewLogsBtn) {
-        els.viewLogsBtn.addEventListener('click', () => {
-          renderHistoryList();
-          if (els.historyModal) {
-            els.historyModal.classList.remove('hidden');
-            els.historyModal.classList.add('flex');
-          }
-        });
-      }
-
-      if (els.closeModalBtn) {
-        els.closeModalBtn.addEventListener('click', () => {
-          if (els.historyModal) {
-            els.historyModal.classList.add('hidden');
-            els.historyModal.classList.remove('flex');
-          }
-        });
-      }
-
-      if (els.clearAllHistoryBtn) {
-        els.clearAllHistoryBtn.addEventListener('click', () => {
-          localStorage.removeItem('apex_telemetry_history');
-          renderHistoryList();
-          refreshHistoryCount();
-        });
-      }
-
-      // CSV & JSON Exports
-      if (els.exportCsvBtn) {
-        els.exportCsvBtn.addEventListener('click', () => {
-          const history = getStoredHistory();
-          let csv = "ID,Date,Distance,Duration,TopSpeed,AvgSpeed,Calories,Location\n";
-          if (history.length > 0) {
-            history.forEach(h => {
-              csv += `"${h.id}","${h.date}","${h.distance}","${h.duration}","${h.topSpeed}","${h.avgSpeed}","${h.calories}","${h.location.replace(/"/g, '""')}"\n`;
-            });
-          } else {
-            csv += `1,"Live Session","${els.valTripDistance ? els.valTripDistance.textContent : '0.00'}","${els.valDuration ? els.valDuration.textContent : '00:00'}","${els.valTopSpeed ? els.valTopSpeed.textContent : '0.0'}","${els.valAvgSpeed ? els.valAvgSpeed.textContent : '0.0'}","${els.valCalories ? els.valCalories.textContent : '0'}","${els.liveLocationAddress ? els.liveLocationAddress.textContent : ''}"\n`;
-          }
-          
-          const blob = new Blob([csv], { type: 'text/csv' });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `apex_telemetry_${Date.now()}.csv`;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-        });
-      }
-
-      if (els.exportJsonHistoryBtn) {
-        els.exportJsonHistoryBtn.addEventListener('click', () => {
-          const history = getStoredHistory();
-          const blob = new Blob([JSON.stringify(history, null, 2)], { type: 'application/json' });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `apex_telemetry_history_${Date.now()}.json`;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-        });
-      }
-
-      // Audio Siren Test
-      let testAudioActive = false;
-      if (els.audioTestBtn) {
-        els.audioTestBtn.addEventListener('click', () => {
-          testAudioActive = !testAudioActive;
-          if (testAudioActive) {
-            startSiren();
-            els.audioTestBtn.textContent = "Stop Siren";
-            els.audioTestBtn.classList.add('text-rose-500', 'font-bold');
-          } else {
-            stopSiren();
-            els.audioTestBtn.textContent = "Test Siren";
-            els.audioTestBtn.classList.remove('text-rose-500', 'font-bold');
-          }
-        });
-      }
-
-      // Help Modal
-      if (els.quickHelpBtn) {
-        els.quickHelpBtn.addEventListener('click', () => {
-          if (els.helpModal) {
-            els.helpModal.classList.remove('hidden');
-            els.helpModal.classList.add('flex');
-          }
-        });
-      }
-      const hideHelp = () => {
-        if (els.helpModal) {
-          els.helpModal.classList.add('hidden');
-          els.helpModal.classList.remove('flex');
-        }
-      };
-      if (els.closeHelpBtn) els.closeHelpBtn.addEventListener('click', hideHelp);
-      if (els.closeHelpOkBtn) els.closeHelpOkBtn.addEventListener('click', hideHelp);
-
-      // Safe Init
-      window.addEventListener('DOMContentLoaded', () => {
-        initTheme();
-        renderGaugeTicks();
-        refreshHistoryCount();
-        updateMainDisplay(0);
+        state.laps = 0;
+        els.lapVal.textContent = '0';
+        els.cardDuration.textContent = '00:00';
+        updateTelemetryDashboard();
+        updateSpeedVisuals(0);
       });
+
+      els.btnOpenMaps.addEventListener('click', () => {
+        if (state.currentLat && state.currentLon) {
+          window.open(`https://www.google.com/maps?q=${state.currentLat},${state.currentLon}`, '_blank');
+        } else {
+          openModal("GPS Required", "Please tap 'Start Telemetry' to get live GPS coordinates first.");
+        }
+      });
+
+      els.btnLogs.addEventListener('click', () => {
+        const logs = JSON.parse(localStorage.getItem('mto_logs') || '[]');
+        if (logs.length === 0) {
+          openModal("Saved Trips History", "No saved trip logs found yet.");
+        } else {
+          const listHtml = logs.map((l, i) => `
+            <div style="background:rgba(30,41,59,0.5); padding:8px 10px; border-radius:12px; margin-bottom:6px; font-size:11px; border:1px solid rgba(51,65,85,0.6);">
+              <div style="font-weight:900; color:#60a5fa;">#${i+1} - ${l.date} (${l.time})</div>
+              <div style="color:var(--text-main); margin:2px 0;">📍 ${l.location}</div>
+              <div style="color:var(--text-sub); font-size:10px;">Dist: ${l.distance} | Top: ${l.topSpeed} | Time: ${l.duration}</div>
+            </div>
+          `).join('');
+          openModal("Saved Trips History", "", listHtml);
+        }
+      });
+
+      els.btnCsv.addEventListener('click', () => {
+        const csv = `Metric,Value\nDistance,${els.cardDistance.textContent}\nDuration,${els.cardDuration.textContent}\nTopSpeed,${els.cardTopSpeed.textContent}\nLocation,"${els.locAddressText.textContent}"\nDate,"${new Date().toISOString()}"\n`;
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `mto_telemetry_${Date.now()}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      });
+
+      els.btnThemeToggle.addEventListener('click', () => {
+        const isDark = document.documentElement.classList.toggle('dark');
+        if (!isDark) {
+          document.documentElement.classList.add('light');
+          els.btnThemeToggle.textContent = '🌙';
+        } else {
+          document.documentElement.classList.remove('light');
+          els.btnThemeToggle.textContent = '☀️';
+        }
+      });
+
+      // Live Clock
+      setInterval(() => {
+        const d = new Date();
+        els.liveClockVal.textContent = d.toTimeString().split(' ')[0];
+      }, 1000);
+
+      // 14. Initial Boot
+      renderDialTicks();
+      refreshLogsCount();
+      updateSpeedVisuals(0);
+      updateTelemetryDashboard();
 
     })();
   </script>
