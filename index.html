@@ -547,10 +547,15 @@
         ℹ️
       </div>
       <h3 id="noticeTitle" class="text-base font-extrabold text-slate-900 dark:text-white mb-1.5">Notice</h3>
-      <p id="noticeDesc" class="text-xs text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">Message details go here.</p>
-      <button id="noticeCloseBtn" class="w-full py-2.5 rounded-xl font-bold text-xs bg-blue-600 hover:bg-blue-700 text-white transition active:scale-95 shadow-md shadow-blue-500/20">
-        Dismiss
-      </button>
+      <div id="noticeDesc" class="text-xs text-slate-600 dark:text-slate-300 mb-4 leading-relaxed text-left space-y-2">Message details go here.</div>
+      <div class="flex gap-2">
+        <button id="noticeRetryBtn" class="flex-1 py-2.5 rounded-xl font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white transition active:scale-95 shadow-md hidden">
+          Try Again 🔄
+        </button>
+        <button id="noticeCloseBtn" class="flex-1 py-2.5 rounded-xl font-bold text-xs bg-blue-600 hover:bg-blue-700 text-white transition active:scale-95 shadow-md shadow-blue-500/20">
+          Dismiss
+        </button>
+      </div>
     </div>
   </div>
 
@@ -736,14 +741,22 @@
         noticeTitle: document.getElementById('noticeTitle'),
         noticeDesc: document.getElementById('noticeDesc'),
         noticeCloseBtn: document.getElementById('noticeCloseBtn'),
+        noticeRetryBtn: document.getElementById('noticeRetryBtn'),
       };
 
-      // Custom Modal Dialog (Safe replacement for window.alert)
-      function showNotice(title, desc, icon = "ℹ️") {
+      // Custom Modal Dialog (Safe replacement for window.alert with iOS Permission Helper)
+      function showNotice(title, descHtml, icon = "ℹ️", showRetry = false) {
         if (!els.noticeModal) return;
         els.noticeTitle.textContent = title;
-        els.noticeDesc.textContent = desc;
+        els.noticeDesc.innerHTML = descHtml;
         els.noticeIcon.textContent = icon;
+        if (els.noticeRetryBtn) {
+          if (showRetry) {
+            els.noticeRetryBtn.classList.remove('hidden');
+          } else {
+            els.noticeRetryBtn.classList.add('hidden');
+          }
+        }
         els.noticeModal.classList.remove('hidden');
         els.noticeModal.classList.add('flex');
       }
@@ -752,6 +765,14 @@
         els.noticeCloseBtn.addEventListener('click', () => {
           els.noticeModal.classList.add('hidden');
           els.noticeModal.classList.remove('flex');
+        });
+      }
+
+      if (els.noticeRetryBtn) {
+        els.noticeRetryBtn.addEventListener('click', () => {
+          els.noticeModal.classList.add('hidden');
+          els.noticeModal.classList.remove('flex');
+          startTracking();
         });
       }
 
@@ -1098,32 +1119,37 @@
           if (els.hudAltitudeBar) els.hudAltitudeBar.style.width = `${altPct}%`;
         }
 
-        // Robust Speed Calculation (Device Velocity with Haversine Fallback)
+        // Direct Real GPS Velocity Calculation
         let speedKmh = 0;
-        if (coords.speed !== null && !isNaN(coords.speed) && coords.speed >= 0) {
+        const hasHardwareSpeed = typeof coords.speed === 'number' && !isNaN(coords.speed) && coords.speed >= 0;
+
+        if (hasHardwareSpeed) {
+          // coords.speed is in meters/second provided directly by hardware GPS chip
           speedKmh = coords.speed * 3.6;
         } else if (state.lastValidPoint) {
+          // Fallback displacement calculation when device doesn't expose native speed
           const d = calculateDistance(state.lastValidPoint.lat, state.lastValidPoint.lon, coords.latitude, coords.longitude);
           const dt = (now - state.lastValidPoint.time) / 1000;
-          if (d > 0.3 && dt > 0.2) {
+          
+          // Filter GPS jitter: ignore drifts smaller than 1.2m or instantaneous jumps over 80 m/s
+          if (d > 1.2 && dt > 0.15 && (d / dt) < 80) {
             speedKmh = (d / dt) * 3.6;
+          } else {
+            speedKmh = 0;
           }
         }
 
-        // Distance accumulation
+        // Distance accumulation (only count valid physical movement, ignore stationary jitter)
         if (state.lastValidPoint) {
           const deltaD = calculateDistance(state.lastValidPoint.lat, state.lastValidPoint.lon, coords.latitude, coords.longitude);
-          if (deltaD > 0.3 && deltaD < 300) {
+          if (deltaD > 1.2 && deltaD < 400) {
             state.totalDistanceMeters += deltaD;
           }
         }
         state.lastValidPoint = { lat: coords.latitude, lon: coords.longitude, time: now };
 
-        // Smoothing buffer
-        state.speedBuffer.push(speedKmh);
-        if (state.speedBuffer.length > 3) state.speedBuffer.shift();
-        const smoothedSpeed = state.speedBuffer.reduce((a, b) => a + b, 0) / state.speedBuffer.length;
-        const currentCleanSpeed = smoothedSpeed < 0.4 ? 0 : smoothedSpeed;
+        // Threshold clamp: if speed is below 0.8 km/h, treat as completely stationary
+        const currentCleanSpeed = speedKmh < 0.8 ? 0 : Math.round(speedKmh * 10) / 10;
 
         if (currentCleanSpeed > state.maxSpeedKmh) {
           state.maxSpeedKmh = currentCleanSpeed;
@@ -1148,7 +1174,7 @@
         state.lastSpeedMs = currentSpeedMs;
         state.lastSpeedTimestamp = now;
 
-        // Needle and HUD updates
+        // Needle and HUD updates with instant real-time GPS speed
         updateMainDisplay(currentCleanSpeed);
         updateTelemetryCards();
       }
@@ -1189,12 +1215,28 @@
       function handleGpsError(err) {
         let msg = "GPS Signal error. Move to an area with open sky view.";
         if (err.code === 1) {
-          msg = "Location permission was denied. Please allow GPS location in your browser settings.";
-          showNotice("GPS Permission Required", "Please allow Location/GPS access when prompted by the browser so the speedometer can read your real speed.", "📍");
+          // PERMISSION DENIED (iOS / Android Safari / Chrome)
+          msg = "GPS Permission Denied. Follow instructions below to enable.";
+          const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+          const instructions = isIOS
+            ? `
+              <p class="font-semibold text-slate-800 dark:text-slate-100">iPhone Safari par permission enable karne ke liye:</p>
+              <ol class="list-decimal list-inside space-y-1 text-slate-600 dark:text-slate-300">
+                <li>Safari ke URL bar me <strong>'aA'</strong> ya <strong>'Settings'</strong> icon par tap karein.</li>
+                <li><strong>Website Settings</strong> me jayein.</li>
+                <li><strong>Location</strong> ko <strong>'Allow'</strong> ya <strong>'Ask'</strong> select karein.</li>
+                <li>Ya iPhone Settings > Safari > Location > 'Allow' karein.</li>
+              </ol>
+            `
+            : `
+              <p class="font-semibold text-slate-800 dark:text-slate-100">Android / Chrome par permission enable karne ke liye:</p>
+              <p class="text-slate-600 dark:text-slate-300">URL bar ke left me <strong>Tune / Lock 🔒</strong> icon par tap karein aur <strong>Permissions > Location > Allow</strong> karein.</p>
+            `;
+          showNotice("GPS Permission Required", instructions, "📍", true);
         } else if (err.code === 2) {
-          msg = "GPS position unavailable. Searching satellites...";
+          msg = "GPS position unavailable. Searching satellites in open sky...";
         } else if (err.code === 3) {
-          msg = "GPS timeout while locking position. Retrying...";
+          msg = "GPS timeout while locking position. Still listening...";
         }
         if (els.dashboardFeedbackMsg) els.dashboardFeedbackMsg.textContent = `⚠️ ${msg}`;
       }
@@ -1204,7 +1246,7 @@
         unlockAudioContext();
 
         if (!("geolocation" in navigator)) {
-          showNotice("Hardware Not Found", "Your device or current browser does not have GPS Geolocation support.", "❌");
+          showNotice("Hardware Not Found", "<p>Your device or current browser does not support GPS Geolocation.</p>", "❌");
           if (els.dashboardFeedbackMsg) els.dashboardFeedbackMsg.textContent = "❌ Geolocation hardware not found.";
           return;
         }
@@ -1224,7 +1266,7 @@
           els.pauseTrackBtn.classList.remove('hidden');
           els.pauseTrackBtn.textContent = "Pause";
         }
-        if (els.dashboardFeedbackMsg) els.dashboardFeedbackMsg.textContent = "Connecting to GPS satellites... Standby for lock.";
+        if (els.dashboardFeedbackMsg) els.dashboardFeedbackMsg.textContent = "🛰️ Connecting to GPS satellites... Standby for lock.";
 
         if (state.timerInterval) clearInterval(state.timerInterval);
         state.timerInterval = setInterval(() => {
@@ -1235,21 +1277,24 @@
           }
         }, 1000);
 
-        // Geolocation with robust options (no instant failure on initial lock)
+        // Clear any previous watcher to prevent race conditions on iOS
+        if (state.watchId !== null) {
+          navigator.geolocation.clearWatch(state.watchId);
+          state.watchId = null;
+        }
+
+        // Single clean high-accuracy satellite stream (maximumAge: 0 prevents stale cache)
         const geoOptions = {
           enableHighAccuracy: true,
-          maximumAge: 1000,
+          maximumAge: 0,
           timeout: 20000
         };
 
-        if (state.watchId !== null) {
-          navigator.geolocation.clearWatch(state.watchId);
+        try {
+          state.watchId = navigator.geolocation.watchPosition(handlePosition, handleGpsError, geoOptions);
+        } catch (e) {
+          handleGpsError({ code: 2, message: e.message });
         }
-
-        // Immediate one-shot fix for fast lock
-        navigator.geolocation.getCurrentPosition(handlePosition, handleGpsError, geoOptions);
-        // Continuous satellite stream
-        state.watchId = navigator.geolocation.watchPosition(handlePosition, handleGpsError, geoOptions);
       }
 
       function stopTracking() {
