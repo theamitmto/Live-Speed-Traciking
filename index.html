@@ -135,7 +135,6 @@
         <div>
           <div class="flex items-center gap-2">
             <span class="text-xs font-black tracking-widest uppercase bg-gradient-to-r from-orange-500 to-amber-500 bg-clip-text text-transparent">THE AMIT MTO</span>
-            <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 uppercase tracking-wider">PRO ANALOG</span>
           </div>
           <h1 class="text-sm sm:text-base font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
             Telemetry Cockpit
@@ -143,20 +142,8 @@
         </div>
       </div>
 
-      <!-- Quick Controls & Clock -->
+      <!-- Quick Controls (Clean Header) -->
       <div class="flex items-center gap-2 sm:gap-3">
-        <!-- Live Clock -->
-        <div class="hidden md:flex flex-col items-end px-3 py-1 rounded-xl bg-slate-200/60 dark:bg-slate-800/60 border border-slate-300/40 dark:border-slate-700/40">
-          <span class="text-[9px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">GPS TIME (LOCAL)</span>
-          <span id="headerLiveClock" class="font-mono text-xs font-bold text-slate-800 dark:text-slate-200">--:--:--</span>
-        </div>
-
-        <!-- Real GPS Sensor Badge -->
-        <div class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-[11px] font-bold border border-emerald-300/60 dark:border-emerald-700/60 bg-emerald-50/80 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span>REAL GPS</span>
-        </div>
-
         <!-- Unit Toggle -->
         <button id="headerUnitBtn" class="px-2.5 sm:px-3 py-1.5 rounded-xl text-[11px] font-extrabold border bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-blue-400 transition">
           <span id="unitBtnLabel">KM/H</span>
@@ -177,20 +164,30 @@
     <!-- Central Cockpit Wrapper -->
     <div id="telemetryCard" class="w-full max-w-md sm:max-w-lg glass-panel rounded-3xl sm:rounded-[36px] p-4 sm:p-6 shadow-xl sm:shadow-2xl transition-all duration-300 relative border border-slate-200 dark:border-slate-800">
       
-      <!-- Top Status Row -->
-      <div class="flex items-center justify-between mb-2">
-        <!-- GPS Status Chip -->
-        <div id="gpsStatusBadge" class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-extrabold tracking-wider bg-slate-100 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700/80">
-          <span id="statusCircle" class="w-2 h-2 rounded-full bg-slate-400"></span>
-          <span id="gpsStatusText">STANDBY / READY</span>
+      <!-- Top Status Row with Shifted GPS Sensor & Live Clock -->
+      <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-200/70 dark:border-slate-800/70">
+        <!-- Left: Real GPS Sensor Status -->
+        <div class="flex items-center gap-1.5">
+          <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-[10px] font-extrabold border border-emerald-300/60 dark:border-emerald-700/60 bg-emerald-50/80 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>REAL GPS</span>
+          </div>
+          <div id="gpsStatusBadge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-[10px] font-bold bg-slate-100 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700/80">
+            <span id="statusCircle" class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+            <span id="gpsStatusText">STANDBY</span>
+          </div>
         </div>
 
-        <!-- Motion Status / Safe Speed Pill -->
+        <!-- Right: Shifted Live Clock & Motion / Alert Status -->
         <div class="flex items-center gap-2">
-          <span id="motionStatusBadge" class="text-[10px] font-black px-2.5 py-0.5 rounded-md bg-slate-200/70 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+          <div class="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 font-mono text-[10px] font-bold text-slate-700 dark:text-slate-300">
+            <span class="text-slate-400 text-[9px]">⏱️</span>
+            <span id="headerLiveClock">--:--:--</span>
+          </div>
+          <span id="motionStatusBadge" class="text-[10px] font-black px-2 py-0.5 rounded-md bg-slate-200/70 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
             IDLE
           </span>
-          <span id="speedLimitAlertPill" class="text-[10px] font-black px-2.5 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-700/60">
+          <span id="speedLimitAlertPill" class="text-[10px] font-black px-2 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-700/60">
             SAFE
           </span>
         </div>
