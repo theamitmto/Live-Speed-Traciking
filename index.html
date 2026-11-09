@@ -2,96 +2,122 @@
 <html lang="hi" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>The Amit MTO - Dual-Theme Glass Telemetry Cockpit</title>
   <style>
     /* ==========================================================
-       DUAL-THEME FROSTED GLASS SYSTEM (LIGHT & DARK FIRST-CLASS)
+       ULTRA-PREMIUM LIGHT CRYSTAL GLASS SYSTEM (PRIMARY)
+       & DEEP MIDNIGHT OBSIDIAN DUAL-MODE
        ========================================================== */
-    :root, html.dark {
+    :root, html.light {
+      --color-scheme: light;
+      --bg-ambient-1: #f0f7ff;
+      --bg-ambient-2: #f8fafc;
+      --bg-gradient: radial-gradient(circle at 50% -10%, #e0f2fe 0%, #ede9fe 40%, #f8fafc 100%);
+      
+      --orb-1: rgba(56, 189, 248, 0.45);
+      --orb-2: rgba(168, 85, 247, 0.28);
+      --orb-3: rgba(59, 130, 246, 0.32);
+
+      --glass-bg: rgba(255, 255, 255, 0.75);
+      --glass-card: rgba(255, 255, 255, 0.72);
+      --glass-inset: rgba(241, 245, 249, 0.85);
+      --glass-modal: rgba(255, 255, 255, 0.95);
+      
+      --glass-border: rgba(255, 255, 255, 0.85);
+      --glass-border-subtle: rgba(226, 232, 240, 0.8);
+      --glass-border-strong: rgba(255, 255, 255, 1);
+      --glass-specular: rgba(255, 255, 255, 0.95);
+      
+      --glass-shadow: 
+        0 20px 45px -10px rgba(15, 23, 42, 0.08),
+        0 4px 16px -2px rgba(15, 23, 42, 0.04),
+        inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.95),
+        inset 0 -1px 2px 0 rgba(226, 232, 240, 0.4);
+
+      --card-shadow: 
+        0 8px 24px -4px rgba(148, 163, 184, 0.18),
+        inset 0 1px 1px 0 rgba(255, 255, 255, 0.9);
+      
+      --accent-cyan: #0284c7;
+      --accent-blue: #2563eb;
+      --accent-glow: rgba(2, 132, 199, 0.25);
+      --accent-violet: #7c3aed;
+      --accent-amber: #d97706;
+      
+      --text-pri: #0f172a;
+      --text-sec: #334155;
+      --text-muted: #64748b;
+
+      --svg-dial-track: rgba(226, 232, 240, 0.9);
+      --svg-major-tick: #0f172a;
+      --svg-minor-tick: #94a3b8;
+      --svg-tick-text: #475569;
+      --svg-speed-digit: #0f172a;
+      --svg-odo-bg: #0f172a;
+      --svg-odo-border: #cbd5e1;
+      --svg-odo-text: #38bdf8;
+      --needle-hub-ring: #ffffff;
+      
+      --danger: #ef4444;
+      --danger-glow: rgba(239, 68, 68, 0.35);
+      --success: #059669;
+      --success-glow: rgba(5, 150, 105, 0.3);
+      --bar-track-bg: rgba(226, 232, 240, 0.85);
+
+      --btn-primary-bg: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      --btn-primary-shadow: 0 12px 28px -6px rgba(37, 99, 235, 0.35);
+    }
+
+    html.dark {
       --color-scheme: dark;
-      --bg-ambient-1: #090d16;
-      --bg-ambient-2: #020617;
+      --bg-ambient-1: #060911;
+      --bg-ambient-2: #010309;
+      --bg-gradient: radial-gradient(circle at 50% 0%, var(--bg-ambient-1) 0%, var(--bg-ambient-2) 100%);
+
       --orb-1: rgba(6, 182, 212, 0.22);
       --orb-2: rgba(139, 92, 246, 0.20);
       --orb-3: rgba(59, 130, 246, 0.18);
 
-      --glass-bg: rgba(15, 23, 42, 0.68);
-      --glass-card: rgba(30, 41, 59, 0.52);
-      --glass-inset: rgba(10, 15, 29, 0.65);
-      --glass-modal: rgba(15, 23, 42, 0.88);
+      --glass-bg: rgba(13, 20, 36, 0.72);
+      --glass-card: rgba(26, 36, 56, 0.55);
+      --glass-inset: rgba(8, 12, 24, 0.75);
+      --glass-modal: rgba(11, 17, 32, 0.92);
       --glass-border: rgba(255, 255, 255, 0.12);
+      --glass-border-subtle: rgba(255, 255, 255, 0.08);
       --glass-border-strong: rgba(255, 255, 255, 0.24);
       --glass-specular: rgba(255, 255, 255, 0.10);
-      --glass-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.70), inset 0 1px 1px 0 rgba(255, 255, 255, 0.20);
+      --glass-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.75), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.25);
+      --card-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.1);
       
       --accent-cyan: #06b6d4;
       --accent-blue: #3b82f6;
       --accent-glow: rgba(6, 182, 212, 0.45);
       --accent-violet: #8b5cf6;
+      --accent-amber: #f59e0b;
       
       --text-pri: #f8fafc;
       --text-sec: #94a3b8;
       --text-muted: #64748b;
 
-      --svg-dial-track: rgba(255, 255, 255, 0.09);
-      --svg-major-tick: rgba(255, 255, 255, 0.90);
+      --svg-dial-track: rgba(255, 255, 255, 0.08);
+      --svg-major-tick: rgba(255, 255, 255, 0.92);
       --svg-minor-tick: rgba(148, 163, 184, 0.40);
       --svg-tick-text: #94a3b8;
-      --svg-speed-digit: #f8fafc;
-      --svg-odo-bg: rgba(2, 6, 23, 0.92);
-      --svg-odo-border: rgba(255, 255, 255, 0.18);
-      --svg-odo-text: #f8fafc;
+      --svg-speed-digit: #ffffff;
+      --svg-odo-bg: rgba(2, 6, 23, 0.95);
+      --svg-odo-border: rgba(255, 255, 255, 0.22);
+      --svg-odo-text: #38bdf8;
       --needle-hub-ring: #ffffff;
       
       --danger: #ef4444;
       --danger-glow: rgba(239, 68, 68, 0.55);
       --success: #10b981;
       --success-glow: rgba(16, 185, 129, 0.45);
-      --bar-track-bg: rgba(10, 15, 29, 0.75);
-    }
+      --bar-track-bg: rgba(8, 14, 28, 0.85);
 
-    html.light {
-      --color-scheme: light;
-      --bg-ambient-1: #dbeafe;
-      --bg-ambient-2: #e2e8f0;
-      --orb-1: rgba(6, 182, 212, 0.32);
-      --orb-2: rgba(147, 51, 234, 0.25);
-      --orb-3: rgba(37, 99, 235, 0.28);
-
-      --glass-bg: rgba(255, 255, 255, 0.72);
-      --glass-card: rgba(255, 255, 255, 0.65);
-      --glass-inset: rgba(241, 245, 249, 0.85);
-      --glass-modal: rgba(255, 255, 255, 0.92);
-      --glass-border: rgba(255, 255, 255, 0.85);
-      --glass-border-strong: rgba(255, 255, 255, 0.98);
-      --glass-specular: rgba(255, 255, 255, 0.95);
-      --glass-shadow: 0 20px 45px -10px rgba(100, 116, 139, 0.28), inset 0 1px 2px 0 rgba(255, 255, 255, 0.95);
-      
-      --accent-cyan: #0891b2;
-      --accent-blue: #2563eb;
-      --accent-glow: rgba(8, 145, 178, 0.35);
-      --accent-violet: #7c3aed;
-      
-      --text-pri: #0f172a;
-      --text-sec: #334155;
-      --text-muted: #64748b;
-
-      --svg-dial-track: rgba(15, 23, 42, 0.08);
-      --svg-major-tick: #0f172a;
-      --svg-minor-tick: #94a3b8;
-      --svg-tick-text: #475569;
-      --svg-speed-digit: #0f172a;
-      --svg-odo-bg: #0f172a;
-      --svg-odo-border: #475569;
-      --svg-odo-text: #f8fafc;
-      --needle-hub-ring: #ffffff;
-      
-      --danger: #dc2626;
-      --danger-glow: rgba(220, 38, 38, 0.40);
-      --success: #059669;
-      --success-glow: rgba(5, 150, 105, 0.35);
-      --bar-track-bg: rgba(203, 213, 225, 0.7);
+      --btn-primary-bg: linear-gradient(135deg, rgba(6, 182, 212, 0.9), rgba(37, 99, 235, 0.9));
+      --btn-primary-shadow: 0 10px 25px -5px var(--accent-glow);
     }
 
     * {
@@ -103,9 +129,9 @@
     }
 
     body {
-      background: radial-gradient(circle at 50% 0%, var(--bg-ambient-1) 0%, var(--bg-ambient-2) 100%);
+      background: var(--bg-gradient);
       color: var(--text-pri);
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -113,6 +139,8 @@
       overflow-x: hidden;
       position: relative;
       transition: background 0.45s ease, color 0.35s ease;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
     }
 
     /* Ambient Glowing Glass Orbs in Background */
@@ -129,32 +157,32 @@
     .ambient-orb {
       position: absolute;
       border-radius: 50%;
-      filter: blur(85px);
-      opacity: 0.85;
+      filter: blur(95px);
+      opacity: 0.95;
       animation: floatOrb 18s infinite alternate ease-in-out;
       transition: background 0.5s ease;
     }
     .orb-cyan {
-      width: 320px;
-      height: 320px;
+      width: 380px;
+      height: 380px;
       background: var(--orb-1);
-      top: -60px;
-      left: -40px;
+      top: -80px;
+      left: -60px;
     }
     .orb-purple {
-      width: 340px;
-      height: 340px;
+      width: 400px;
+      height: 400px;
       background: var(--orb-2);
-      bottom: 10%;
-      right: -80px;
+      bottom: 5%;
+      right: -100px;
       animation-delay: -6s;
     }
     .orb-blue {
-      width: 280px;
-      height: 280px;
+      width: 320px;
+      height: 320px;
       background: var(--orb-3);
-      top: 45%;
-      left: 20%;
+      top: 35%;
+      left: 15%;
       animation-delay: -11s;
     }
     @keyframes floatOrb {
@@ -163,18 +191,62 @@
       100% { transform: translate(-25px, -30px) scale(0.95); }
     }
 
+    /* iPhone 14 Dynamic Island / Floating Notch Status Capsule (Positioned below header) */
+    .dynamic-island-shell {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+      margin-bottom: 6px;
+      z-index: 40;
+      position: relative;
+    }
+    .island-capsule {
+      background: rgba(15, 23, 42, 0.88);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(32px);
+      -webkit-backdrop-filter: blur(32px);
+      padding: 6px 18px;
+      border-radius: 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .island-capsule.alert-burst {
+      background: rgba(220, 38, 38, 0.95);
+      box-shadow: 0 0 25px rgba(239, 68, 68, 0.7);
+      transform: scale(1.04);
+    }
+    .island-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+      transition: background 0.3s;
+    }
+    .island-dot.idle {
+      background: #94a3b8;
+      box-shadow: none;
+    }
+
     /* Glass Header */
     header {
       position: sticky;
       top: 0;
       z-index: 50;
       width: 100%;
-      padding: 12px 18px;
+      padding: 10px 18px;
       background: var(--glass-bg);
-      backdrop-filter: blur(28px) saturate(180%);
-      -webkit-backdrop-filter: blur(28px) saturate(180%);
-      border-bottom: 1px solid var(--glass-border);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+      backdrop-filter: blur(32px) saturate(200%);
+      -webkit-backdrop-filter: blur(32px) saturate(200%);
+      border-bottom: 1px solid var(--glass-border-subtle);
+      box-shadow: 0 8px 30px rgba(15, 23, 42, 0.05);
       transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
     }
     .header-shell {
@@ -190,28 +262,19 @@
       gap: 12px;
     }
     .brand-hex {
-      width: 40px;
-      height: 40px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, rgba(6, 182, 212, 0.85), rgba(59, 130, 246, 0.75));
+      width: 38px;
+      height: 38px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
       border: 1px solid var(--glass-border-strong);
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
-      font-size: 19px;
+      font-size: 18px;
       box-shadow: 0 8px 20px -4px var(--accent-glow), inset 0 1px 1px rgba(255, 255, 255, 0.5);
       position: relative;
       overflow: hidden;
-    }
-    .brand-hex::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 50%;
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.45), transparent);
     }
     .brand-name {
       font-size: 13px;
@@ -230,20 +293,20 @@
     .header-buttons {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
     .glass-btn-pill {
       background: var(--glass-card);
       border: 1px solid var(--glass-border);
       color: var(--text-pri);
-      padding: 7px 13px;
+      padding: 6px 12px;
       border-radius: 20px;
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 800;
-      letter-spacing: 0.5px;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      box-shadow: inset 0 1px 1px var(--glass-specular);
+      letter-spacing: 0.4px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05), inset 0 1px 1px var(--glass-specular);
       cursor: pointer;
       display: inline-flex;
       align-items: center;
@@ -251,7 +314,7 @@
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .glass-btn-pill:active {
-      transform: scale(0.93);
+      transform: scale(0.92);
       border-color: var(--accent-cyan);
     }
 
@@ -262,7 +325,7 @@
       width: 100%;
       max-width: 440px;
       margin: 0 auto;
-      padding: 14px 14px 20px 14px;
+      padding: 10px 14px 20px 14px;
       flex: 1;
       display: flex;
       flex-direction: column;
@@ -271,35 +334,26 @@
 
     .glass-cockpit-frame {
       background: var(--glass-bg);
-      backdrop-filter: blur(36px) saturate(200%);
-      -webkit-backdrop-filter: blur(36px) saturate(200%);
-      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(40px) saturate(220%);
+      -webkit-backdrop-filter: blur(40px) saturate(220%);
+      border: 1.5px solid var(--glass-border);
       border-radius: 36px;
-      padding: 20px 18px;
+      padding: 18px 16px;
       box-shadow: var(--glass-shadow);
       position: relative;
       overflow: hidden;
       transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
     }
-    .glass-cockpit-frame::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 10%;
-      right: 10%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--glass-specular), transparent);
-    }
 
     /* Overspeed Danger Warning State */
     .glass-cockpit-frame.overspeed-alert {
       border-color: var(--danger) !important;
-      box-shadow: 0 0 50px -5px var(--danger-glow), 0 24px 48px -12px rgba(0, 0, 0, 0.55), inset 0 0 25px rgba(239, 68, 68, 0.2) !important;
+      box-shadow: 0 0 50px -5px var(--danger-glow), 0 24px 48px -12px rgba(0, 0, 0, 0.15), inset 0 0 25px rgba(239, 68, 68, 0.15) !important;
       animation: dangerGlassPulse 0.55s infinite alternate ease-in-out;
     }
     @keyframes dangerGlassPulse {
       0% { background: var(--glass-bg); }
-      100% { background: rgba(239, 68, 68, 0.16); }
+      100% { background: rgba(254, 226, 226, 0.65); }
     }
 
     /* Top Sub-Telemetry Header */
@@ -307,47 +361,33 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
     .glass-state-badge {
       display: inline-flex;
       align-items: center;
       gap: 7px;
       background: var(--glass-inset);
-      border: 1px solid var(--glass-border);
-      padding: 5px 12px;
+      border: 1px solid var(--glass-border-subtle);
+      padding: 4px 12px;
       border-radius: 20px;
       font-size: 9.5px;
       font-weight: 800;
       color: var(--text-sec);
       letter-spacing: 0.6px;
+      box-shadow: inset 0 1px 1px var(--glass-specular);
       transition: background 0.3s ease, border-color 0.3s ease;
     }
     .live-pulse-emitter {
       width: 7px;
       height: 7px;
       border-radius: 50%;
-      background: #64748b;
+      background: #94a3b8;
       position: relative;
     }
     .glass-state-badge.active .live-pulse-emitter {
       background: var(--success);
       box-shadow: 0 0 10px var(--success);
-    }
-    .glass-state-badge.active .live-pulse-emitter::after {
-      content: '';
-      position: absolute;
-      top: -3px;
-      left: -3px;
-      width: 13px;
-      height: 13px;
-      border-radius: 50%;
-      border: 1px solid var(--success);
-      animation: emitterRing 1.4s infinite ease-out;
-    }
-    @keyframes emitterRing {
-      0% { transform: scale(0.6); opacity: 1; }
-      100% { transform: scale(1.7); opacity: 0; }
     }
     .glass-state-badge.active {
       color: var(--success);
@@ -357,12 +397,13 @@
       font-family: "SF Mono", "Courier New", monospace;
       font-size: 11px;
       font-weight: 800;
-      color: var(--text-sec);
+      color: var(--text-pri);
       background: var(--glass-inset);
-      border: 1px solid var(--glass-border);
-      padding: 5px 11px;
+      border: 1px solid var(--glass-border-subtle);
+      padding: 4px 10px;
       border-radius: 20px;
       letter-spacing: 1px;
+      box-shadow: inset 0 1px 1px var(--glass-specular);
     }
 
     /* Glass Speedometer Dome */
@@ -370,10 +411,13 @@
       position: relative;
       width: 100%;
       max-width: 320px;
-      margin: 2px auto 6px auto;
-      background: radial-gradient(circle at 50% 60%, var(--glass-specular) 0%, transparent 70%);
+      margin: 2px auto 4px auto;
+      background: radial-gradient(circle at 50% 60%, rgba(255, 255, 255, 0.9) 0%, rgba(241, 245, 249, 0.45) 75%);
+      border: 1px solid var(--glass-border);
       border-radius: 32px;
-      padding: 6px 4px 4px 4px;
+      padding: 8px 6px 6px 6px;
+      box-shadow: 0 10px 24px -6px rgba(15, 23, 42, 0.05), inset 0 2px 4px rgba(255, 255, 255, 0.95);
+      transition: transform 0.3s ease;
     }
     .gauge-svg {
       width: 100%;
@@ -390,35 +434,37 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 16px;
+      padding: 2px 14px 4px 14px;
       margin-top: 2px;
     }
     .glass-motion-chip {
-      font-size: 9px;
+      font-size: 9.5px;
       font-weight: 900;
-      padding: 4px 11px;
+      padding: 4px 12px;
       border-radius: 12px;
       letter-spacing: 0.8px;
       background: var(--glass-inset);
-      border: 1px solid var(--glass-border);
+      border: 1px solid var(--glass-border-subtle);
       color: var(--text-muted);
+      box-shadow: inset 0 1px 1px var(--glass-specular);
       transition: all 0.25s ease;
     }
     .glass-motion-chip.moving {
-      background: rgba(16, 185, 129, 0.2);
+      background: rgba(16, 185, 129, 0.15);
       color: var(--success);
       border-color: var(--success-glow);
-      box-shadow: 0 0 14px var(--success-glow);
+      box-shadow: 0 2px 8px var(--success-glow);
     }
     .glass-limit-chip {
-      font-size: 9px;
+      font-size: 9.5px;
       font-weight: 900;
-      padding: 4px 11px;
+      padding: 4px 12px;
       border-radius: 12px;
       letter-spacing: 0.8px;
-      background: rgba(16, 185, 129, 0.18);
+      background: rgba(16, 185, 129, 0.15);
       color: var(--success);
       border: 1px solid var(--success-glow);
+      box-shadow: inset 0 1px 1px var(--glass-specular);
       transition: all 0.25s ease;
     }
     .glass-limit-chip.breached {
@@ -428,28 +474,25 @@
       box-shadow: 0 0 16px var(--danger-glow);
       animation: alertBlink 0.5s infinite alternate;
     }
-    @keyframes alertBlink {
-      0% { transform: scale(1); }
-      100% { transform: scale(1.06); }
-    }
 
     /* Glass Location Strip */
     .glass-location-strip {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: var(--glass-inset);
-      border: 1px solid var(--glass-border);
-      padding: 9px 14px;
+      background: var(--glass-card);
+      border: 1.5px solid var(--glass-border);
+      padding: 9px 13px;
       border-radius: 18px;
-      margin-top: 10px;
+      margin-top: 8px;
       gap: 10px;
+      box-shadow: var(--card-shadow);
       transition: background 0.3s ease, border-color 0.3s ease;
     }
     .loc-caption {
       display: flex;
       align-items: center;
-      gap: 7px;
+      gap: 8px;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -458,20 +501,17 @@
       color: var(--text-pri);
     }
     .btn-maps-action {
-      background: rgba(6, 182, 212, 0.18);
-      border: 1px solid rgba(6, 182, 212, 0.4);
+      background: rgba(2, 132, 199, 0.12);
+      border: 1px solid rgba(2, 132, 199, 0.35);
       color: var(--accent-cyan);
-      font-size: 9.5px;
+      font-size: 10px;
       font-weight: 900;
       padding: 5px 10px;
       border-radius: 10px;
       cursor: pointer;
       white-space: nowrap;
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.8);
       transition: all 0.2s ease;
-    }
-    .btn-maps-action:active {
-      transform: scale(0.93);
-      background: rgba(6, 182, 212, 0.3);
     }
 
     /* Glass Inputs */
@@ -479,15 +519,14 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
-      margin-top: 10px;
+      margin-top: 8px;
     }
     .glass-input-card {
       background: var(--glass-card);
-      border: 1px solid var(--glass-border);
+      border: 1.5px solid var(--glass-border);
       border-radius: 20px;
-      padding: 10px 12px;
-      box-shadow: inset 0 1px 1px var(--glass-specular);
-      transition: background 0.3s ease, border-color 0.3s ease;
+      padding: 10px 13px;
+      box-shadow: var(--card-shadow);
     }
     .glass-input-header {
       display: flex;
@@ -502,57 +541,53 @@
     }
     .glass-toggle-pill {
       border: none;
-      font-size: 8px;
+      font-size: 8.5px;
       font-weight: 900;
       padding: 3px 8px;
       border-radius: 8px;
       cursor: pointer;
-      transition: all 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     }
-    .glass-toggle-pill.on { background: rgba(16, 185, 129, 0.25); color: var(--success); border: 1px solid var(--success-glow); }
+    .glass-toggle-pill.on { background: rgba(5, 150, 105, 0.2); color: var(--success); border: 1px solid var(--success-glow); }
     .glass-toggle-pill.off { background: rgba(148, 163, 184, 0.25); color: var(--text-muted); border: 1px solid rgba(148, 163, 184, 0.3); }
 
     .glass-number-box {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
     }
     .glass-number-box input {
-      width: 64px;
+      width: 62px;
       background: var(--glass-inset);
-      border: 1px solid var(--glass-border);
+      border: 1px solid var(--glass-border-subtle);
       color: var(--text-pri);
       border-radius: 10px;
-      padding: 5px 8px;
+      padding: 4px 8px;
       font-size: 13px;
       font-weight: 900;
       font-family: "SF Mono", monospace;
       outline: none;
-      transition: border-color 0.2s ease, background 0.3s ease, color 0.3s ease;
-    }
-    .glass-number-box input:focus {
-      border-color: var(--accent-cyan);
+      box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.05);
     }
     .glass-number-box span {
-      font-size: 10.5px;
+      font-size: 11px;
       font-weight: 800;
       color: var(--text-sec);
     }
 
-    /* 2x2 Cockpit Mini Gauges */
+    /* 4-CELL ADVANCED COCKPIT METERS (G-Force, Compass, Inclinometer & Sprint Timer) */
     .glass-cockpit-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
-      margin-top: 10px;
+      margin-top: 8px;
     }
     .glass-sub-gauge {
       background: var(--glass-card);
-      border: 1px solid var(--glass-border);
-      border-radius: 18px;
-      padding: 9px 12px;
-      box-shadow: inset 0 1px 1px var(--glass-specular);
-      transition: background 0.3s ease, border-color 0.3s ease;
+      border: 1.5px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 10px 12px;
+      box-shadow: var(--card-shadow);
     }
     .gauge-top-row {
       display: flex;
@@ -561,64 +596,83 @@
       font-weight: 900;
       color: var(--text-sec);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.6px;
       margin-bottom: 6px;
     }
     .gauge-readout {
-      font-size: 9.5px;
+      font-size: 10.5px;
       font-weight: 900;
       color: var(--text-pri);
       font-family: "SF Mono", monospace;
     }
     .glass-bar-track {
       width: 100%;
-      height: 6px;
+      height: 7px;
       background: var(--bar-track-bg);
-      border-radius: 5px;
+      border-radius: 6px;
       overflow: hidden;
       position: relative;
-      border: 1px solid var(--glass-border);
-      transition: background 0.3s ease;
+      border: 1px solid var(--glass-border-subtle);
     }
     .glass-bar-progress {
       height: 100%;
       width: 0%;
       transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .bar-alt-gradient { background: linear-gradient(90deg, #6366f1, #3b82f6, #06b6d4); }
-    .bar-goal-gradient { background: linear-gradient(90deg, #0284c7, #10b981); }
 
-    /* Core Metrics Glass Cards */
+    /* Inclinometer Horizon Visualizer */
+    .incline-horizon-bar {
+      width: 100%;
+      height: 7px;
+      background: var(--bar-track-bg);
+      border-radius: 5px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--glass-border-subtle);
+    }
+    .incline-bubble {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 13px;
+      height: 100%;
+      background: #d97706;
+      border-radius: 4px;
+      transform: translateX(-50%);
+      transition: left 0.15s ease-out;
+      box-shadow: 0 0 8px rgba(217, 119, 6, 0.6);
+    }
+
+    /* Core Metrics Glass Cards (Extended 3x2 Grid) */
     .glass-metrics-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-top: 10px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+      margin-top: 8px;
     }
     .glass-metric-cell {
       background: var(--glass-card);
-      border: 1px solid var(--glass-border);
-      border-radius: 20px;
-      padding: 10px 14px;
-      box-shadow: inset 0 1px 1px var(--glass-specular);
-      transition: background 0.3s ease, border-color 0.3s ease;
+      border: 1.5px solid var(--glass-border);
+      border-radius: 18px;
+      padding: 9px 10px;
+      box-shadow: var(--card-shadow);
     }
     .metric-caption {
-      font-size: 8.5px;
+      font-size: 8px;
       font-weight: 900;
       color: var(--text-sec);
       text-transform: uppercase;
-      letter-spacing: 0.7px;
+      letter-spacing: 0.6px;
     }
     .metric-digits {
-      font-size: 17px;
+      font-size: 14.5px;
       font-weight: 900;
       color: var(--text-pri);
       font-family: "SF Mono", monospace;
       margin-top: 3px;
     }
     .metric-digits small {
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 800;
       color: var(--text-sec);
     }
@@ -629,24 +683,24 @@
       justify-content: space-between;
       align-items: center;
       background: var(--glass-inset);
-      border: 1px solid var(--glass-border);
+      border: 1px solid var(--glass-border-subtle);
       border-radius: 16px;
       padding: 7px 14px;
       font-size: 10px;
-      margin-top: 10px;
-      transition: background 0.3s ease, border-color 0.3s ease;
+      margin-top: 8px;
+      box-shadow: inset 0 1px 1px var(--glass-specular);
     }
     .signal-ladder {
       display: inline-flex;
-      gap: 2.5px;
+      gap: 3px;
       align-items: flex-end;
       height: 12px;
       vertical-align: middle;
-      margin-left: 5px;
+      margin-left: 6px;
     }
     .signal-ladder span {
       width: 3.5px;
-      background: rgba(148, 163, 184, 0.35);
+      background: rgba(148, 163, 184, 0.45);
       border-radius: 1.5px;
       transition: background 0.3s ease;
     }
@@ -662,21 +716,21 @@
     /* Floating Action Controls */
     .glass-action-row {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       margin-top: 14px;
     }
     .btn-glass-primary {
       flex: 1;
-      padding: 15px 20px;
+      padding: 14px 20px;
       border-radius: 22px;
-      border: 1px solid rgba(255, 255, 255, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.6);
       font-size: 14px;
       font-weight: 900;
       color: #ffffff;
-      background: linear-gradient(135deg, rgba(6, 182, 212, 0.9), rgba(37, 99, 235, 0.9));
+      background: var(--btn-primary-bg);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      box-shadow: 0 12px 30px -6px var(--accent-glow), inset 0 1px 2px rgba(255, 255, 255, 0.5);
+      box-shadow: var(--btn-primary-shadow), inset 0 1px 2px rgba(255, 255, 255, 0.6);
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -685,28 +739,23 @@
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .btn-glass-primary:active {
-      transform: scale(0.97);
+      transform: scale(0.96);
     }
     .btn-glass-primary.active {
-      background: linear-gradient(135deg, rgba(239, 68, 68, 0.92), rgba(220, 38, 38, 0.92)) !important;
-      box-shadow: 0 12px 30px -4px var(--danger-glow), inset 0 1px 2px rgba(255, 255, 255, 0.5) !important;
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+      box-shadow: 0 12px 28px -4px var(--danger-glow), inset 0 1px 2px rgba(255, 255, 255, 0.6) !important;
     }
     .btn-glass-pause {
       display: none;
-      padding: 15px 18px;
+      padding: 14px 18px;
       border-radius: 22px;
-      border: 1px solid rgba(255, 255, 255, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.6);
       font-size: 12.5px;
       font-weight: 800;
       color: #fff;
-      background: rgba(234, 179, 8, 0.9);
-      backdrop-filter: blur(20px);
-      box-shadow: 0 10px 24px -4px rgba(234, 179, 8, 0.4);
+      background: #d97706;
+      box-shadow: 0 8px 20px -4px rgba(217, 119, 6, 0.4);
       cursor: pointer;
-      transition: transform 0.2s ease;
-    }
-    .btn-glass-pause:active {
-      transform: scale(0.96);
     }
 
     .glass-status-message {
@@ -715,33 +764,33 @@
       font-weight: 700;
       color: var(--text-sec);
       margin-top: 9px;
-      min-height: 18px;
+      min-height: 16px;
     }
 
     /* Sub Actions Bar */
     .glass-sub-toolbar {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       gap: 6px;
       margin-top: 14px;
       padding-top: 14px;
-      border-top: 1px solid var(--glass-border);
+      border-top: 1px solid var(--glass-border-subtle);
     }
     .btn-glass-tool {
-      padding: 9px 5px;
+      padding: 9px 4px;
       border-radius: 14px;
-      font-size: 10px;
+      font-size: 9.5px;
       font-weight: 800;
-      border: 1px solid var(--glass-border);
+      border: 1.5px solid var(--glass-border);
       background: var(--glass-card);
       color: var(--text-pri);
       backdrop-filter: blur(14px);
-      box-shadow: inset 0 1px 1px var(--glass-specular);
+      box-shadow: var(--card-shadow);
       cursor: pointer;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .btn-glass-tool:active {
-      transform: scale(0.94);
+      transform: scale(0.93);
       border-color: var(--accent-cyan);
     }
 
@@ -750,11 +799,11 @@
       position: relative;
       z-index: 10;
       width: 100%;
-      border-top: 1px solid var(--glass-border);
+      border-top: 1px solid var(--glass-border-subtle);
       background: var(--glass-bg);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      padding: 11px 18px;
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      padding: 10px 18px;
       text-align: center;
       font-size: 11px;
       font-weight: 800;
@@ -835,20 +884,48 @@
     <div class="ambient-orb orb-blue"></div>
   </div>
 
-  <!-- Glass Top Header -->
+  <!-- Glass Top Header with Vector SVG Icons -->
   <header>
     <div class="header-shell">
       <div class="brand-cluster">
-        <div class="brand-hex">⚡</div>
+        <div class="brand-hex">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+        </div>
         <div>
           <div class="brand-name">THE AMIT MTO</div>
-          <div class="brand-desc">Glass Cockpit HUD</div>
+          <div class="brand-desc">iPhone Glass HUD</div>
         </div>
       </div>
       <div class="header-buttons">
-        <button id="btnUnitToggle" type="button" class="glass-btn-pill">KM/H</button>
+        <button id="btnUnitToggle" type="button" class="glass-btn-pill">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+            <path d="M2 12h20"></path>
+          </svg>
+          <span id="unitBtnLabel">KM/H</span>
+        </button>
+        <button id="btnFullscreenToggle" type="button" class="glass-btn-pill" title="Immersive Cockpit Fullscreen">
+          <svg id="fullscreenSvgIcon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+          </svg>
+        </button>
         <button id="btnThemeToggle" type="button" class="glass-btn-pill" aria-label="Toggle Theme">
-          <span id="themeIcon">☀️</span>
+          <span id="themeIconWrap">
+            <svg id="themeSvgIcon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </span>
           <span id="themeText">Light</span>
         </button>
       </div>
@@ -857,6 +934,16 @@
 
   <!-- Cockpit Main Display -->
   <main>
+    <!-- iPhone Dynamic Island Telemetry HUD (Now cleanly positioned below Header) -->
+    <div class="dynamic-island-shell">
+      <div class="island-capsule" id="dynamicIsland">
+        <span class="island-dot idle" id="islandDot"></span>
+        <span id="islandSpeed">0.0 KM/H</span>
+        <span style="opacity:0.35;">|</span>
+        <span id="islandStatus">STANDBY</span>
+      </div>
+    </div>
+
     <div class="glass-cockpit-frame" id="cockpitCard">
 
       <!-- Live GPS Fix & Local Time Sub-bar -->
@@ -865,7 +952,10 @@
           <span class="live-pulse-emitter"></span>
           <span id="gpsStateLabel">STANDBY</span>
         </div>
-        <div class="glass-clock-chip" id="liveClockVal">00:00:00</div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span id="gearIndicator" class="glass-clock-chip" style="color:var(--accent-cyan); font-weight:900;">GEAR 1</span>
+          <div class="glass-clock-chip" id="liveClockVal">00:00:00</div>
+        </div>
       </div>
 
       <!-- ANALOG SPEEDOMETER (EXACT PHYSICAL NEEDLE GAUGE) -->
@@ -923,20 +1013,49 @@
         </div>
       </div>
 
-      <!-- Real GPS Location Address -->
+      <!-- Live Speed Telemetry Sparkline Graph Canvas -->
+      <div style="margin-top: 8px; background: var(--glass-inset); border: 1px solid var(--glass-border); border-radius: 18px; padding: 7px 10px; position:relative; overflow:hidden;">
+        <div style="display:flex; justify-content:space-between; align-items:center; font-size:8px; font-weight:900; color:var(--text-sec); text-transform:uppercase; letter-spacing:0.6px; margin-bottom:3px;">
+          <span style="display:flex; align-items:center; gap:4px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+            </svg>
+            Live Speed Profile (60s Trace)
+          </span>
+          <span id="liveGraphSpeed" style="color:var(--accent-cyan); font-family:'SF Mono', monospace; font-size:9px;">0.0 KM/H</span>
+        </div>
+        <canvas id="speedTraceCanvas" width="380" height="48" style="width:100%; height:46px; display:block;"></canvas>
+      </div>
+
+      <!-- Real GPS Location Address with SVG Pin -->
       <div class="glass-location-strip">
         <div class="loc-caption">
-          <span>📍</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
           <span id="locAddressText">Tap 'Start Telemetry' for GPS lock</span>
         </div>
-        <button id="btnOpenMaps" type="button" class="btn-maps-action">Maps ↗</button>
+        <button id="btnOpenMaps" type="button" class="btn-maps-action">
+          <span>Maps</span>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" style="margin-left:2px; vertical-align:middle;">
+            <line x1="7" y1="17" x2="17" y2="7"></line>
+            <polyline points="7 7 17 7 17 17"></polyline>
+          </svg>
+        </button>
       </div>
 
       <!-- Settings & Alert Panel -->
       <div class="glass-inputs-grid">
         <div class="glass-input-card">
           <div class="glass-input-header">
-            <span>Speed Alarm</span>
+            <span style="display:flex; align-items:center; gap:4px;">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+              Speed Alarm
+            </span>
             <button id="btnAlarmToggle" class="glass-toggle-pill on">ON</button>
           </div>
           <div class="glass-number-box">
@@ -946,8 +1065,15 @@
         </div>
         <div class="glass-input-card">
           <div class="glass-input-header">
-            <span>Trip Target</span>
-            <span id="targetGoalPctText" style="color:var(--accent-cyan);">0%</span>
+            <span style="display:flex; align-items:center; gap:4px;">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <circle cx="12" cy="12" r="6"></circle>
+                <circle cx="12" cy="12" r="2"></circle>
+              </svg>
+              Target & ETA
+            </span>
+            <span id="targetEtaText" style="color:var(--accent-cyan); font-family:'SF Mono', monospace; font-size:9.5px;">ETA: --</span>
           </div>
           <div class="glass-number-box">
             <input type="number" id="inputTargetVal" value="5" min="1" max="500">
@@ -956,65 +1082,159 @@
         </div>
       </div>
 
-      <!-- 2x2 Cockpit Mini Gauges -->
+      <!-- ADVANCED 4-CELL COCKPIT METERS -->
       <div class="glass-cockpit-grid">
-        <div class="glass-sub-gauge">
+        <!-- Meter 1: F1 Style 2D G-Bowl Matrix -->
+        <div class="glass-sub-gauge" style="position:relative;">
           <div class="gauge-top-row">
-            <span>G-Force</span>
+            <span style="display:flex; align-items:center; gap:3px;">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="22" y1="12" x2="18" y2="12"></line>
+                <line x1="6" y1="12" x2="2" y2="12"></line>
+                <line x1="12" y1="6" x2="12" y2="2"></line>
+                <line x1="12" y1="22" x2="12" y2="18"></line>
+              </svg>
+              F1 G-Bowl
+            </span>
             <span id="valGForce" class="gauge-readout">0.00 g</span>
           </div>
-          <div class="glass-bar-track">
-            <div id="gForceThumb" style="position: absolute; width: 8px; height: 10px; top: -2px; left: 50%; background: var(--accent-cyan); border-radius: 3px; transform: translateX(-50%); transition: left 0.2s; box-shadow: 0 0 6px var(--accent-glow);"></div>
-          </div>
-        </div>
-        <div class="glass-sub-gauge">
-          <div class="gauge-top-row">
-            <span>Compass</span>
-            <span id="valCompass" class="gauge-readout">0° N</span>
-          </div>
-          <div style="display:flex; justify-content:center; align-items:center; height:12px;">
-            <div id="compassDisk" style="width:18px; height:18px; border:1.5px solid var(--glass-border-strong); border-radius:50%; position:relative; transition: transform 0.25s; box-shadow: inset 0 0 4px rgba(0,0,0,0.2);">
-              <span style="position:absolute; top:-3px; left:50%; transform:translateX(-50%); font-size:8px; color:#ef4444;">▲</span>
+          <div style="display:flex; justify-content:center; align-items:center; height:34px;">
+            <div style="width:34px; height:34px; border-radius:50%; border:1px dashed var(--glass-border-strong); position:relative; background:var(--bar-track-bg); display:flex; align-items:center; justify-content:center;">
+              <div style="position:absolute; width:1px; height:100%; background:var(--glass-border);"></div>
+              <div style="position:absolute; height:1px; width:100%; background:var(--glass-border);"></div>
+              <div id="gBowlDot" style="width:7px; height:7px; border-radius:50%; background:var(--accent-cyan); box-shadow:0 0 8px var(--accent-cyan); position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); transition:left 0.12s, top 0.12s;"></div>
             </div>
           </div>
         </div>
+
+        <!-- Meter 2: Digital Compass -->
         <div class="glass-sub-gauge">
           <div class="gauge-top-row">
-            <span>Altitude</span>
-            <span id="valAltitude" class="gauge-readout">-- m</span>
+            <span style="display:flex; align-items:center; gap:3px;">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+              </svg>
+              Compass
+            </span>
+            <span id="valCompass" class="gauge-readout">0° N</span>
           </div>
-          <div class="glass-bar-track">
-            <div id="barAltitude" class="glass-bar-progress bar-alt-gradient"></div>
+          <div style="display:flex; justify-content:center; align-items:center; height:34px;">
+            <div id="compassDisk" style="width:26px; height:26px; border:1.5px solid var(--glass-border-strong); border-radius:50%; position:relative; transition: transform 0.25s; box-shadow: inset 0 0 6px rgba(0,0,0,0.3); background:var(--glass-inset);">
+              <span style="position:absolute; top:-2px; left:50%; transform:translateX(-50%); font-size:9px; color:#ef4444; font-weight:900;">▲</span>
+              <span style="position:absolute; bottom:1px; left:50%; transform:translateX(-50%); font-size:6px; color:var(--text-sec);">S</span>
+            </div>
           </div>
         </div>
+
+        <!-- Meter 3: Inclinometer / Bike Lean Angle -->
         <div class="glass-sub-gauge">
           <div class="gauge-top-row">
-            <span>Goal Fill</span>
-            <span id="valGoalPct" class="gauge-readout">0%</span>
+            <span style="display:flex; align-items:center; gap:3px;">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <path d="M12 3a9 9 0 0 1 9 9"></path>
+              </svg>
+              Lean Angle
+            </span>
+            <span id="valIncline" class="gauge-readout">0°</span>
           </div>
-          <div class="glass-bar-track">
-            <div id="barGoal" class="glass-bar-progress bar-goal-gradient"></div>
+          <div style="display:flex; flex-direction:column; justify-content:center; height:34px; gap:4px;">
+            <div class="incline-horizon-bar">
+              <div class="incline-bubble" id="inclineBubble"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:7px; color:var(--text-muted); font-weight:800;">
+              <span>-45°</span>
+              <span>0°</span>
+              <span>+45°</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Meter 4: 0-60 Sprint / Acceleration Timer -->
+        <div class="glass-sub-gauge">
+          <div class="gauge-top-row">
+            <span id="lblSprint" style="display:flex; align-items:center; gap:3px;">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--accent-amber)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+              0-60 Sprint
+            </span>
+            <span id="valSprintTimer" class="gauge-readout" style="color:var(--accent-amber);">-- s</span>
+          </div>
+          <div style="display:flex; flex-direction:column; justify-content:center; height:34px; gap:4px;">
+            <div class="glass-bar-track">
+              <div id="barSprint" class="glass-bar-progress" style="background:linear-gradient(90deg, #f59e0b, #ef4444);"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:7px; color:var(--text-muted); font-weight:800;">
+              <span>0</span>
+              <span id="sprintMidLabel">30</span>
+              <span id="sprintMaxLabel">60</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Core Metrics 2x2 Glass Cards -->
+      <!-- Core Metrics 6-Cell Extended Glass Grid with Vector Icons -->
       <div class="glass-metrics-grid">
         <div class="glass-metric-cell">
-          <div class="metric-caption">Distance</div>
+          <div class="metric-caption" style="display:flex; align-items:center; gap:3px;">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 14 14"></polyline>
+            </svg>
+            Distance
+          </div>
           <div class="metric-digits" id="cardDistance">0.00 <small class="dist-span">km</small></div>
         </div>
         <div class="glass-metric-cell">
-          <div class="metric-caption">Duration</div>
+          <div class="metric-caption" style="display:flex; align-items:center; gap:3px;">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="6" x2="12" y2="12"></line>
+              <line x1="12" y1="12" x2="16" y2="14"></line>
+            </svg>
+            Duration
+          </div>
           <div class="metric-digits" id="cardDuration">00:00</div>
         </div>
         <div class="glass-metric-cell">
-          <div class="metric-caption">Top Speed</div>
+          <div class="metric-caption" style="display:flex; align-items:center; gap:3px;">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"></path>
+            </svg>
+            Top Speed
+          </div>
           <div class="metric-digits" id="cardTopSpeed">0.0 <small class="unit-span">km/h</small></div>
         </div>
         <div class="glass-metric-cell">
-          <div class="metric-caption">Avg Speed</div>
+          <div class="metric-caption" style="display:flex; align-items:center; gap:3px;">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+              <line x1="4" y1="22" x2="4" y2="15"></line>
+            </svg>
+            Avg Speed
+          </div>
           <div class="metric-digits" id="cardAvgSpeed">0.0 <small class="unit-span">km/h</small></div>
+        </div>
+        <div class="glass-metric-cell">
+          <div class="metric-caption" style="display:flex; align-items:center; gap:3px;">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m8 3 4 8 5-5 5 15H2L8 3z"></path>
+            </svg>
+            Altitude
+          </div>
+          <div class="metric-digits" id="cardAltitude">-- <small>m</small></div>
+        </div>
+        <div class="glass-metric-cell">
+          <div class="metric-caption" style="display:flex; align-items:center; gap:3px;">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path>
+            </svg>
+            Calories
+          </div>
+          <div class="metric-digits" id="cardCalories">0 <small>kcal</small></div>
         </div>
       </div>
 
@@ -1036,22 +1256,58 @@
         </div>
       </div>
 
-      <!-- Action Buttons -->
+      <!-- Action Buttons with SVGs -->
       <div class="glass-action-row">
         <button id="btnMainTelemetry" class="btn-glass-primary" type="button">
-          <span id="mainBtnIcon">▶</span>
+          <span id="mainBtnIcon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+          </span>
           <span id="mainBtnLabel">Start Telemetry</span>
         </button>
         <button id="btnPauseTelemetry" class="btn-glass-pause" type="button">Pause</button>
       </div>
       <div class="glass-status-message" id="liveMsgStatus">Tap button to start 100% Real Hardware GPS</div>
 
-      <!-- Sub Actions Toolbar -->
+      <!-- Sub Actions Toolbar with Handcrafted Vector SVGs -->
       <div class="glass-sub-toolbar">
-        <button id="btnLap" type="button" class="btn-glass-tool">⏱️ Lap (<span id="lapVal">0</span>)</button>
-        <button id="btnCsv" type="button" class="btn-glass-tool">📥 CSV</button>
-        <button id="btnLogs" type="button" class="btn-glass-tool">📊 Logs (<span id="logVal">0</span>)</button>
-        <button id="btnReset" type="button" class="btn-glass-tool">🔄 Reset</button>
+        <button id="btnLap" type="button" class="btn-glass-tool">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:2px;">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <div>Lap (<span id="lapVal">0</span>)</div>
+        </button>
+        <button id="btnSprintReset" type="button" class="btn-glass-tool">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:2px;">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+          <div>Sprint</div>
+        </button>
+        <button id="btnCsv" type="button" class="btn-glass-tool">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:2px;">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <div>CSV</div>
+        </button>
+        <button id="btnLogs" type="button" class="btn-glass-tool">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:2px;">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          <div>Logs (<span id="logVal">0</span>)</div>
+        </button>
+        <button id="btnReset" type="button" class="btn-glass-tool">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:2px;">
+            <polyline points="1 4 1 10 7 10"></polyline>
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+          </svg>
+          <div>Reset</div>
+        </button>
       </div>
 
     </div>
@@ -1063,7 +1319,7 @@
       <span>The Amit MTO</span>
       <span style="display:flex; align-items:center; gap:6px;">
         <span style="width:7px; height:7px; background:var(--success); border-radius:50%; display:inline-block; box-shadow:0 0 8px var(--success);"></span>
-        Hardware GPS v4.5
+        iPhone Pro Telemetry v5.0
       </span>
     </div>
   </footer>
@@ -1085,9 +1341,16 @@
       // 1. Elements Mapping
       const els = {
         cockpitCard: document.getElementById('cockpitCard'),
+        dynamicIsland: document.getElementById('dynamicIsland'),
+        islandDot: document.getElementById('islandDot'),
+        islandSpeed: document.getElementById('islandSpeed'),
+        islandStatus: document.getElementById('islandStatus'),
+        gearIndicator: document.getElementById('gearIndicator'),
         gpsStatePill: document.getElementById('gpsStatePill'),
         gpsStateLabel: document.getElementById('gpsStateLabel'),
         liveClockVal: document.getElementById('liveClockVal'),
+        speedTraceCanvas: document.getElementById('speedTraceCanvas'),
+        liveGraphSpeed: document.getElementById('liveGraphSpeed'),
         dialTicksGroup: document.getElementById('dialTicksGroup'),
         dialUnitText: document.getElementById('dialUnitText'),
         dialSpeedDigital: document.getElementById('dialSpeedDigital'),
@@ -1099,20 +1362,24 @@
         btnOpenMaps: document.getElementById('btnOpenMaps'),
         btnAlarmToggle: document.getElementById('btnAlarmToggle'),
         inputLimitVal: document.getElementById('inputLimitVal'),
-        targetGoalPctText: document.getElementById('targetGoalPctText'),
+        targetEtaText: document.getElementById('targetEtaText'),
         inputTargetVal: document.getElementById('inputTargetVal'),
         valGForce: document.getElementById('valGForce'),
-        gForceThumb: document.getElementById('gForceThumb'),
+        gBowlDot: document.getElementById('gBowlDot'),
         valCompass: document.getElementById('valCompass'),
         compassDisk: document.getElementById('compassDisk'),
-        valAltitude: document.getElementById('valAltitude'),
-        barAltitude: document.getElementById('barAltitude'),
-        valGoalPct: document.getElementById('valGoalPct'),
-        barGoal: document.getElementById('barGoal'),
+        valIncline: document.getElementById('valIncline'),
+        inclineBubble: document.getElementById('inclineBubble'),
+        lblSprint: document.getElementById('lblSprint'),
+        valSprintTimer: document.getElementById('valSprintTimer'),
+        barSprint: document.getElementById('barSprint'),
+        btnSprintReset: document.getElementById('btnSprintReset'),
         cardDistance: document.getElementById('cardDistance'),
         cardDuration: document.getElementById('cardDuration'),
         cardTopSpeed: document.getElementById('cardTopSpeed'),
         cardAvgSpeed: document.getElementById('cardAvgSpeed'),
+        cardAltitude: document.getElementById('cardAltitude'),
+        cardCalories: document.getElementById('cardCalories'),
         valAccuracy: document.getElementById('valAccuracy'),
         gpsSignalText: document.getElementById('gpsSignalText'),
         signalBars: document.getElementById('signalBars'),
@@ -1122,6 +1389,7 @@
         btnPauseTelemetry: document.getElementById('btnPauseTelemetry'),
         liveMsgStatus: document.getElementById('liveMsgStatus'),
         btnUnitToggle: document.getElementById('btnUnitToggle'),
+        btnFullscreenToggle: document.getElementById('btnFullscreenToggle'),
         btnThemeToggle: document.getElementById('btnThemeToggle'),
         themeIcon: document.getElementById('themeIcon'),
         themeText: document.getElementById('themeText'),
@@ -1151,21 +1419,71 @@
         tripSeconds: 0,
         totalDistMeters: 0,
         maxSpeedKmh: 0,
-        rawTargetSpeedKmh: 0,   // Target speed from GPS
-        smoothedSpeedKmh: 0,    // Physics filtered speed
-        displayedSpeed: 0,      // 60fps interpolated speed for dial & needle
+        rawTargetSpeedKmh: 0,
+        smoothedSpeedKmh: 0,
+        displayedSpeed: 0,
         currentLat: null,
         currentLon: null,
         lastPoint: null,
         lastSpeedMs: 0,
         lastSpeedTime: null,
         speedSamples: [],
+        speedHistory: new Array(50).fill(0),
+        lastGraphPushTime: 0,
         laps: 0,
         lastGeocodeTime: 0,
-        dialMax: 160
+        dialMax: 160,
+        currentGear: 1,
+        // G-Bowl vector states
+        gLat: 0,
+        gLon: 0,
+        // Sprint 0-60/100 Timer State
+        sprintTarget: 60,
+        sprintActive: false,
+        sprintStartTime: null,
+        sprintFinalTime: null
       };
 
-      // 3. Audio Siren Synthesizer
+      // 3. iPhone Haptic Feedback
+      function triggerHaptic(type = "light") {
+        if (!navigator.vibrate) return;
+        if (type === "light") navigator.vibrate(12);
+        else if (type === "heavy") navigator.vibrate([30, 40, 30]);
+        else if (type === "success") navigator.vibrate([20, 30, 40]);
+      }
+
+      // 4. Inclinometer & 2D G-Bowl Lateral Motion
+      if (window.DeviceOrientationEvent) {
+        window.addEventListener('deviceorientation', (e) => {
+          if (e.gamma !== null && !isNaN(e.gamma)) {
+            const roll = Math.round(e.gamma);
+            const clampedRoll = Math.max(-45, Math.min(45, roll));
+            els.valIncline.textContent = `${clampedRoll > 0 ? '+' : ''}${clampedRoll}°`;
+            const pos = 50 + (clampedRoll / 45) * 50;
+            els.inclineBubble.style.left = `${pos}%`;
+
+            // Calculate Lateral G component for G-Bowl
+            state.gLat = Math.sin((clampedRoll * Math.PI) / 180) * 0.95;
+            updateGBowlVisual();
+          }
+        }, true);
+      }
+
+      function updateGBowlVisual() {
+        // Clamped to range [-1.2g, 1.2g]
+        const clampedLat = Math.max(-1.2, Math.min(1.2, state.gLat));
+        const clampedLon = Math.max(-1.2, Math.min(1.2, state.gLon));
+        
+        const posX = 50 + (clampedLat / 1.2) * 40;
+        const posY = 50 - (clampedLon / 1.2) * 40;
+        
+        if (els.gBowlDot) {
+          els.gBowlDot.style.left = `${posX}%`;
+          els.gBowlDot.style.top = `${posY}%`;
+        }
+      }
+
+      // 5. Audio Siren Synthesizer
       let audioCtx = null;
       let sirenOsc = null;
       let sirenGain = null;
@@ -1221,8 +1539,9 @@
         isSirenOn = false;
       }
 
-      // 4. Modal Dialog Helpers
+      // 6. Modal Dialog Helpers
       function openModal(title, desc, customHtml = "") {
+        triggerHaptic("heavy");
         els.modalTitle.textContent = title;
         els.modalDesc.textContent = desc;
         els.modalCustomContent.innerHTML = customHtml;
@@ -1230,11 +1549,12 @@
       }
 
       function closeModal() {
+        triggerHaptic("light");
         els.genericModal.classList.remove('active');
       }
       els.btnModalClose.addEventListener('click', closeModal);
 
-      // 5. Dial Ticks Builder (Reads CSS variables dynamically)
+      // 7. Dial Ticks Builder
       function renderDialTicks() {
         els.dialTicksGroup.innerHTML = '';
         const cx = 160, cy = 185, r = 118;
@@ -1281,46 +1601,71 @@
         }
       }
 
-      // 6. Theme Switching System (Light / Dark)
+      // 8. Theme Switching System
       function applyTheme(themeName) {
         const root = document.documentElement;
         if (themeName === 'light') {
           root.classList.remove('dark');
           root.classList.add('light');
-          els.themeIcon.textContent = '🌙';
+          document.getElementById('themeSvgIcon').innerHTML = `
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          `;
           els.themeText.textContent = 'Dark';
         } else {
           root.classList.remove('light');
           root.classList.add('dark');
-          els.themeIcon.textContent = '☀️';
+          document.getElementById('themeSvgIcon').innerHTML = `
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          `;
           els.themeText.textContent = 'Light';
         }
         try {
           localStorage.setItem('mto_theme', themeName);
         } catch (e) {}
 
-        // Re-render SVG ticks with updated theme CSS custom variables
         renderDialTicks();
       }
 
       function initTheme() {
-        let savedTheme = 'dark';
+        let savedTheme = 'light';
         try {
           savedTheme = localStorage.getItem('mto_theme');
         } catch (e) {}
 
+        // Default to pure light crystal glass as requested
         if (!savedTheme) {
-          savedTheme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+          savedTheme = 'light';
         }
         applyTheme(savedTheme);
       }
 
       els.btnThemeToggle.addEventListener('click', () => {
+        triggerHaptic("light");
         const isCurrentLight = document.documentElement.classList.contains('light');
         applyTheme(isCurrentLight ? 'dark' : 'light');
       });
 
-      // 7. Haversine Displacement Math
+      // Fullscreen Cockpit Mode
+      els.btnFullscreenToggle.addEventListener('click', () => {
+        triggerHaptic("light");
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(() => {});
+          els.btnFullscreenToggle.style.borderColor = "var(--accent-cyan)";
+        } else {
+          if (document.exitFullscreen) document.exitFullscreen();
+          els.btnFullscreenToggle.style.borderColor = "";
+        }
+      });
+
+      // 10. Haversine Displacement Math
       function calcHaversine(lat1, lon1, lat2, lon2) {
         const R = 6371000;
         const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -1331,7 +1676,7 @@
         return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       }
 
-      // 8. Reverse Geocoding
+      // 11. Reverse Geocoding
       function reverseGeocode(lat, lon) {
         const now = Date.now();
         if (now - state.lastGeocodeTime < 25000) return;
@@ -1352,27 +1697,137 @@
           });
       }
 
-      // 9. 60FPS Ultra-Smooth Physics Rendering Loop (Zero-Lag Lerp)
+      // 12. 60FPS Ultra-Smooth Physics Rendering Loop & Sprint Timer
       function startPhysicsLoop() {
         if (state.animFrameId) cancelAnimationFrame(state.animFrameId);
 
         function renderFrame() {
-          // Linear interpolation (Lerp): glides towards target smoothly
           const target = state.smoothedSpeedKmh;
           const diff = target - state.displayedSpeed;
           
           if (Math.abs(diff) > 0.04) {
-            state.displayedSpeed += diff * 0.18; // Responsive 60fps damping factor
+            state.displayedSpeed += diff * 0.18;
           } else {
             state.displayedSpeed = target;
           }
 
           renderDialUI(state.displayedSpeed);
+          handleSprintLogic(state.displayedSpeed);
+          updateSpeedTraceGraph(state.displayedSpeed);
+          updateVirtualGear(state.displayedSpeed);
+
           state.animFrameId = requestAnimationFrame(renderFrame);
         }
 
         state.animFrameId = requestAnimationFrame(renderFrame);
       }
+
+      // Real-time Canvas Sparkline Graph
+      function updateSpeedTraceGraph(currentSpeed) {
+        const now = performance.now();
+        if (now - state.lastGraphPushTime > 150) {
+          state.lastGraphPushTime = now;
+          state.speedHistory.push(currentSpeed);
+          if (state.speedHistory.length > 50) state.speedHistory.shift();
+
+          const canvas = els.speedTraceCanvas;
+          if (!canvas) return;
+          const ctx = canvas.getContext('2d');
+          const w = canvas.width;
+          const h = canvas.height;
+
+          ctx.clearRect(0, 0, w, h);
+
+          // Gridline
+          ctx.strokeStyle = "rgba(255, 255, 255, 0.06)";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(0, h / 2);
+          ctx.lineTo(w, h / 2);
+          ctx.stroke();
+
+          // Gradient Curve
+          const grad = ctx.createLinearGradient(0, 0, 0, h);
+          grad.addColorStop(0, "rgba(6, 182, 212, 0.45)");
+          grad.addColorStop(1, "rgba(6, 182, 212, 0.0)");
+
+          const maxScale = Math.max(80, ...state.speedHistory);
+          const stepX = w / (state.speedHistory.length - 1);
+
+          ctx.beginPath();
+          state.speedHistory.forEach((val, idx) => {
+            const x = idx * stepX;
+            const y = h - (val / maxScale) * (h - 6) - 3;
+            if (idx === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          });
+
+          ctx.strokeStyle = "#06b6d4";
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          // Fill underneath curve
+          ctx.lineTo(w, h);
+          ctx.lineTo(0, h);
+          ctx.closePath();
+          ctx.fillStyle = grad;
+          ctx.fill();
+
+          const factor = state.useMiles ? 0.621371 : 1.0;
+          els.liveGraphSpeed.textContent = `${(currentSpeed * factor).toFixed(1)} ${els.dialUnitText.textContent}`;
+        }
+      }
+
+      // Dynamic Automotive Virtual Gear Logic
+      function updateVirtualGear(kmh) {
+        let gear = 1;
+        if (kmh > 120) gear = 6;
+        else if (kmh > 90) gear = 5;
+        else if (kmh > 65) gear = 4;
+        else if (kmh > 40) gear = 3;
+        else if (kmh > 18) gear = 2;
+        else gear = 1;
+
+        if (state.currentGear !== gear) {
+          state.currentGear = gear;
+          els.gearIndicator.textContent = `GEAR ${gear}`;
+          triggerHaptic("light");
+        }
+      }
+
+      // Sprint 0-60 / 0-100 Benchmark Engine
+      function handleSprintLogic(currentSpeed) {
+        const target = state.useMiles ? 60 : 60; // 0-60 km/h or mph
+        if (!state.sprintActive && currentSpeed > 2 && state.sprintFinalTime === null) {
+          state.sprintActive = true;
+          state.sprintStartTime = performance.now();
+        }
+
+        if (state.sprintActive) {
+          const elapsed = (performance.now() - state.sprintStartTime) / 1000;
+          els.valSprintTimer.textContent = `${elapsed.toFixed(2)} s`;
+          const pct = Math.min(100, (currentSpeed / target) * 100);
+          els.barSprint.style.width = `${pct}%`;
+
+          if (currentSpeed >= target) {
+            state.sprintActive = false;
+            state.sprintFinalTime = elapsed;
+            els.valSprintTimer.textContent = `⚡ ${elapsed.toFixed(2)} s`;
+            els.valSprintTimer.style.color = "var(--success)";
+            triggerHaptic("success");
+          }
+        }
+      }
+
+      els.btnSprintReset.addEventListener('click', () => {
+        triggerHaptic("light");
+        state.sprintActive = false;
+        state.sprintStartTime = null;
+        state.sprintFinalTime = null;
+        els.valSprintTimer.textContent = "-- s";
+        els.valSprintTimer.style.color = "var(--accent-amber)";
+        els.barSprint.style.width = "0%";
+      });
 
       function renderDialUI(speedKmh) {
         const factor = state.useMiles ? 0.621371 : 1.0;
@@ -1381,41 +1836,51 @@
         // Instant digital HUD
         els.dialSpeedDigital.textContent = displaySpeed.toFixed(1);
 
+        // Update Dynamic Island Pill
+        els.islandSpeed.textContent = `${displaySpeed.toFixed(1)} ${els.dialUnitText.textContent}`;
+
         // Needle rotation angle (-125deg at 0 to +125deg at dialMax)
         const clampedSpeed = Math.min(state.dialMax, displaySpeed);
         const angle = -125 + (clampedSpeed / state.dialMax) * 250;
         els.needlePivot.setAttribute("transform", `translate(160, 185) rotate(${angle.toFixed(2)})`);
 
-        // Motion badge
+        // Motion badge & Dynamic Island status
         if (displaySpeed > 1.2) {
           els.motionBadge.textContent = "MOVING";
           els.motionBadge.className = "glass-motion-chip moving";
+          els.islandDot.className = "island-dot";
+          els.islandStatus.textContent = "CRUISING";
         } else {
           els.motionBadge.textContent = "IDLE";
           els.motionBadge.className = "glass-motion-chip";
+          els.islandDot.className = "island-dot idle";
+          els.islandStatus.textContent = state.isTracking ? "STATIONARY" : "STANDBY";
         }
 
         // Speed Limit Alarm Trigger
         const limitVal = parseFloat(els.inputLimitVal.value) || 60;
         if (state.isAlarmEnabled && displaySpeed > limitVal) {
           els.cockpitCard.classList.add('overspeed-alert');
+          els.dynamicIsland.classList.add('alert-burst');
           els.limitBadge.textContent = "OVER LIMIT!";
           els.limitBadge.className = "glass-limit-chip breached";
+          els.islandStatus.textContent = "🚨 OVER LIMIT";
           els.liveMsgStatus.textContent = `🚨 OVERSPEED: Limit ${limitVal} ${els.dialUnitText.textContent} breached!`;
           startSiren();
-          if (navigator.vibrate) navigator.vibrate([160, 80, 160]);
+          triggerHaptic("heavy");
         } else {
           stopSiren();
           els.cockpitCard.classList.remove('overspeed-alert');
+          els.dynamicIsland.classList.remove('alert-burst');
           els.limitBadge.textContent = "SAFE";
           els.limitBadge.className = "glass-limit-chip";
           if (state.isTracking && !state.isPaused) {
-            els.liveMsgStatus.textContent = "🛰️ Real-Time Telemetry: Zero-Lag Stream Active";
+            els.liveMsgStatus.textContent = "🛰️ iPhone 14 Pro Satellite Telemetry Active";
           }
         }
       }
 
-      // 10. Hardware GPS Watcher with Noise Rejection & Spike Filter
+      // 13. Hardware GPS Watcher with Noise Rejection & Spike Filter
       function handleGPS(pos) {
         if (!pos || !pos.coords || state.isPaused) return;
         const coords = pos.coords;
@@ -1455,15 +1920,12 @@
         // Altitude
         if (coords.altitude !== null && !isNaN(coords.altitude)) {
           const alt = Math.round(coords.altitude);
-          els.valAltitude.textContent = `${alt} m`;
-          const pct = Math.min(100, Math.max(0, (alt / 1200) * 100));
-          els.barAltitude.style.width = `${pct}%`;
+          els.cardAltitude.innerHTML = `${alt} <small>m</small>`;
         }
 
         // --- SPEED CALCULATION & NOISE SPIKE SUPPRESSION ---
         let instantaneousKmh = 0;
 
-        // Prioritize hardware Doppler velocity if available
         if (typeof coords.speed === 'number' && !isNaN(coords.speed) && coords.speed >= 0) {
           instantaneousKmh = coords.speed * 3.6;
         } else if (state.lastPoint) {
@@ -1474,30 +1936,28 @@
           }
         }
 
-        // Deadband filter: Discard low-speed jitter when stationary (parking, stops, red lights)
         if (instantaneousKmh < 1.8) {
           instantaneousKmh = 0;
         }
 
-        // Outlier spike limiter: reject impossible teleports (> 220 km/h sudden jump)
         if (instantaneousKmh > 230) {
           instantaneousKmh = state.smoothedSpeedKmh;
         }
 
         state.rawTargetSpeedKmh = instantaneousKmh;
 
-        // Exponential Moving Average (EMA) to prevent sharp up/down bouncing:
-        // When accelerating fast, respond immediately (alpha = 0.65). When decelerating, glide down naturally (alpha = 0.45).
         const alpha = (instantaneousKmh > state.smoothedSpeedKmh) ? 0.65 : 0.45;
         state.smoothedSpeedKmh = (alpha * instantaneousKmh) + ((1 - alpha) * state.smoothedSpeedKmh);
 
         if (state.smoothedSpeedKmh < 0.2) state.smoothedSpeedKmh = 0;
 
-        // Distance accumulation (only count valid displacement above noise floor)
+        // Distance accumulation & Calories
         if (state.lastPoint) {
           const deltaDist = calcHaversine(state.lastPoint.lat, state.lastPoint.lon, coords.latitude, coords.longitude);
           if (deltaDist > 1.2 && deltaDist < 250) {
             state.totalDistMeters += deltaDist;
+            const kcal = Math.round((state.totalDistMeters / 1000) * 62);
+            els.cardCalories.innerHTML = `${kcal} <small>kcal</small>`;
           }
         }
         state.lastPoint = { lat: coords.latitude, lon: coords.longitude, time: now };
@@ -1518,10 +1978,10 @@
           if (dt > 0.2) {
             const acc = (curMs - state.lastSpeedMs) / dt;
             const g = acc / 9.80665;
-            const clampedG = Math.max(-1.5, Math.min(1.5, g));
-            els.valGForce.textContent = `${(g >= 0 ? "+" : "")}${g.toFixed(2)} g`;
-            const bPct = 50 + (clampedG / 1.5) * 50;
-            els.gForceThumb.style.left = `${bPct}%`;
+            state.gLon = Math.max(-1.5, Math.min(1.5, g));
+            const totalG = Math.sqrt(state.gLon * state.gLon + state.gLat * state.gLat);
+            els.valGForce.textContent = `${(state.gLon >= 0 ? "+" : "")}${state.gLon.toFixed(2)} g`;
+            updateGBowlVisual();
           }
         }
         state.lastSpeedMs = curMs;
@@ -1533,13 +1993,13 @@
       function handleGPSError(err) {
         if (err && err.code === 1) {
           els.liveMsgStatus.textContent = "Location permission denied. Please allow GPS access in settings.";
-          openModal("GPS Permission Required", "Please allow Location permission in your browser or phone settings so the speedometer can display your real speed.");
+          openModal("GPS Permission Required", "Please allow Location permission in your iPhone Safari settings so the speedometer can display your real speed.");
         } else {
           els.liveMsgStatus.textContent = "Searching for satellites (move to open sky)...";
         }
       }
 
-      // 11. Dashboard Telemetry Card Counters
+      // 14. Dashboard Telemetry Card Counters
       function updateTelemetryDashboard() {
         const factor = state.useMiles ? 0.621371 : 1.0;
         const distUnit = state.useMiles ? 'mi' : 'km';
@@ -1559,12 +2019,23 @@
         }
         els.cardAvgSpeed.innerHTML = `${avgVal.toFixed(1)} <small>${speedUnit}</small>`;
 
-        // Goal Progress
+        // Target Goal & ETA Prediction
         const targetKm = (parseFloat(els.inputTargetVal.value) || 5) * 1000;
-        const goalPct = Math.min(100, Math.round((state.totalDistMeters / targetKm) * 100));
-        els.targetGoalPctText.textContent = `${goalPct}%`;
-        els.valGoalPct.textContent = `${goalPct}%`;
-        els.barGoal.style.width = `${goalPct}%`;
+        const remainingMeters = Math.max(0, targetKm - state.totalDistMeters);
+        
+        if (remainingMeters <= 0) {
+          els.targetEtaText.textContent = "ARRIVED!";
+          els.targetEtaText.style.color = "var(--success)";
+        } else if (state.smoothedSpeedKmh > 3) {
+          const speedMs = state.smoothedSpeedKmh / 3.6;
+          const secsLeft = remainingMeters / speedMs;
+          const minsLeft = Math.ceil(secsLeft / 60);
+          els.targetEtaText.textContent = minsLeft > 60 ? `ETA: ${Math.floor(minsLeft/60)}h ${minsLeft%60}m` : `ETA: ~${minsLeft} min`;
+          els.targetEtaText.style.color = "var(--accent-cyan)";
+        } else {
+          els.targetEtaText.textContent = "ETA: --";
+          els.targetEtaText.style.color = "var(--text-sec)";
+        }
       }
 
       function formatDuration(sec) {
@@ -1573,7 +2044,7 @@
         return `${m}:${s}`;
       }
 
-      // Request Screen WakeLock to prevent browser throttling in background
+      // Request Screen WakeLock
       async function requestScreenWake() {
         try {
           if ('wakeLock' in navigator) {
@@ -1591,8 +2062,9 @@
         } catch (err) {}
       }
 
-      // 12. Start & Stop Telemetry Controls
+      // 15. Start & Stop Telemetry Controls
       function startTelemetry() {
+        triggerHaptic("heavy");
         unlockAudio();
         requestScreenWake();
 
@@ -1609,11 +2081,15 @@
         state.displayedSpeed = 0;
 
         els.btnMainTelemetry.classList.add('active');
-        els.mainBtnIcon.textContent = "⏹";
+        els.mainBtnIcon.innerHTML = `
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+          </svg>
+        `;
         els.mainBtnLabel.textContent = "Stop Telemetry";
         els.btnPauseTelemetry.style.display = 'inline-block';
         els.btnPauseTelemetry.textContent = "Pause";
-        els.liveMsgStatus.textContent = "🛰️ Connecting to high-precision hardware GPS...";
+        els.liveMsgStatus.textContent = "Connecting to high-precision hardware GPS...";
 
         startPhysicsLoop();
 
@@ -1665,7 +2141,11 @@
         state.displayedSpeed = 0;
 
         els.btnMainTelemetry.classList.remove('active');
-        els.mainBtnIcon.textContent = "▶";
+        els.mainBtnIcon.innerHTML = `
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+        `;
         els.mainBtnLabel.textContent = "Start Telemetry";
         els.btnPauseTelemetry.style.display = 'none';
         els.gpsStatePill.classList.remove('active');
@@ -1677,7 +2157,7 @@
         renderDialUI(0);
       }
 
-      // 13. Trip History Storage
+      // 16. Trip History Storage
       function saveTrip() {
         const trip = {
           date: new Date().toLocaleDateString(),
@@ -1707,7 +2187,7 @@
         els.logVal.textContent = logs.length;
       }
 
-      // 14. Event Listeners
+      // 17. Event Listeners
       els.btnMainTelemetry.addEventListener('click', () => {
         if (state.isTracking) {
           stopTelemetry();
@@ -1717,6 +2197,7 @@
       });
 
       els.btnPauseTelemetry.addEventListener('click', () => {
+        triggerHaptic("light");
         state.isPaused = !state.isPaused;
         els.btnPauseTelemetry.textContent = state.isPaused ? "Resume" : "Pause";
         els.btnPauseTelemetry.style.background = state.isPaused ? "var(--success)" : "#eab308";
@@ -1725,10 +2206,12 @@
       });
 
       els.btnUnitToggle.addEventListener('click', () => {
+        triggerHaptic("light");
         state.useMiles = !state.useMiles;
         state.dialMax = state.useMiles ? 100 : 160;
         els.btnUnitToggle.textContent = state.useMiles ? 'MPH' : 'KM/H';
         els.dialUnitText.textContent = state.useMiles ? 'MPH' : 'KM/H';
+        els.lblSprint.textContent = state.useMiles ? "0-60 MPH Sprint" : "0-60 KM/H Sprint";
 
         document.querySelectorAll('.unit-span').forEach(el => {
           el.textContent = state.useMiles ? 'mph' : 'km/h';
@@ -1743,6 +2226,7 @@
       });
 
       els.btnAlarmToggle.addEventListener('click', () => {
+        triggerHaptic("light");
         state.isAlarmEnabled = !state.isAlarmEnabled;
         if (state.isAlarmEnabled) {
           els.btnAlarmToggle.textContent = "ON";
@@ -1759,11 +2243,13 @@
 
       els.btnLap.addEventListener('click', () => {
         if (!state.isTracking) return;
+        triggerHaptic("light");
         state.laps++;
         els.lapVal.textContent = state.laps;
       });
 
       els.btnReset.addEventListener('click', () => {
+        triggerHaptic("heavy");
         state.tripSeconds = 0;
         state.totalDistMeters = 0;
         state.maxSpeedKmh = 0;
@@ -1774,11 +2260,13 @@
         state.displayedSpeed = 0;
         els.lapVal.textContent = '0';
         els.cardDuration.textContent = '00:00';
+        els.cardCalories.innerHTML = '0 <small>kcal</small>';
         updateTelemetryDashboard();
         renderDialUI(0);
       });
 
       els.btnOpenMaps.addEventListener('click', () => {
+        triggerHaptic("light");
         if (state.currentLat && state.currentLon) {
           window.open(`https://www.google.com/maps?q=${state.currentLat},${state.currentLon}`, '_blank');
         } else {
@@ -1787,6 +2275,7 @@
       });
 
       els.btnLogs.addEventListener('click', () => {
+        triggerHaptic("light");
         let logs = [];
         try {
           logs = JSON.parse(localStorage.getItem('mto_logs') || '[]');
@@ -1807,6 +2296,7 @@
       });
 
       els.btnCsv.addEventListener('click', () => {
+        triggerHaptic("success");
         const csv = `Metric,Value\nDistance,${els.cardDistance.textContent}\nDuration,${els.cardDuration.textContent}\nTopSpeed,${els.cardTopSpeed.textContent}\nLocation,"${els.locAddressText.textContent}"\nDate,"${new Date().toISOString()}"\n`;
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
@@ -1824,7 +2314,7 @@
         els.liveClockVal.textContent = d.toTimeString().split(' ')[0];
       }, 1000);
 
-      // 15. Initial Boot
+      // 18. Initial Boot
       initTheme();
       refreshLogsCount();
       renderDialUI(0);
