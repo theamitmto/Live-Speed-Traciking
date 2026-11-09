@@ -3,29 +3,97 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>The Amit MTO - Telemetry Cockpit</title>
+  <title>The Amit MTO - Dual-Theme Glass Telemetry Cockpit</title>
   <style>
-    /* Pure Zero-Dependency Automotive CSS */
-    :root {
-      --bg-main: #020617;
-      --card-bg: rgba(15, 23, 42, 0.92);
-      --card-border: rgba(51, 65, 85, 0.7);
-      --accent: #2563eb;
-      --accent-glow: rgba(37, 99, 235, 0.35);
-      --text-main: #f8fafc;
-      --text-sub: #94a3b8;
+    /* ==========================================================
+       DUAL-THEME FROSTED GLASS SYSTEM (LIGHT & DARK FIRST-CLASS)
+       ========================================================== */
+    :root, html.dark {
+      --color-scheme: dark;
+      --bg-ambient-1: #090d16;
+      --bg-ambient-2: #020617;
+      --orb-1: rgba(6, 182, 212, 0.22);
+      --orb-2: rgba(139, 92, 246, 0.20);
+      --orb-3: rgba(59, 130, 246, 0.18);
+
+      --glass-bg: rgba(15, 23, 42, 0.68);
+      --glass-card: rgba(30, 41, 59, 0.52);
+      --glass-inset: rgba(10, 15, 29, 0.65);
+      --glass-modal: rgba(15, 23, 42, 0.88);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --glass-border-strong: rgba(255, 255, 255, 0.24);
+      --glass-specular: rgba(255, 255, 255, 0.10);
+      --glass-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.70), inset 0 1px 1px 0 rgba(255, 255, 255, 0.20);
+      
+      --accent-cyan: #06b6d4;
+      --accent-blue: #3b82f6;
+      --accent-glow: rgba(6, 182, 212, 0.45);
+      --accent-violet: #8b5cf6;
+      
+      --text-pri: #f8fafc;
+      --text-sec: #94a3b8;
+      --text-muted: #64748b;
+
+      --svg-dial-track: rgba(255, 255, 255, 0.09);
+      --svg-major-tick: rgba(255, 255, 255, 0.90);
+      --svg-minor-tick: rgba(148, 163, 184, 0.40);
+      --svg-tick-text: #94a3b8;
+      --svg-speed-digit: #f8fafc;
+      --svg-odo-bg: rgba(2, 6, 23, 0.92);
+      --svg-odo-border: rgba(255, 255, 255, 0.18);
+      --svg-odo-text: #f8fafc;
+      --needle-hub-ring: #ffffff;
+      
       --danger: #ef4444;
+      --danger-glow: rgba(239, 68, 68, 0.55);
       --success: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.45);
+      --bar-track-bg: rgba(10, 15, 29, 0.75);
     }
-    .light {
-      --bg-main: #f1f5f9;
-      --card-bg: rgba(255, 255, 255, 0.96);
-      --card-border: rgba(203, 213, 225, 0.9);
-      --accent: #2563eb;
-      --accent-glow: rgba(37, 99, 235, 0.2);
-      --text-main: #0f172a;
-      --text-sub: #64748b;
+
+    html.light {
+      --color-scheme: light;
+      --bg-ambient-1: #dbeafe;
+      --bg-ambient-2: #e2e8f0;
+      --orb-1: rgba(6, 182, 212, 0.32);
+      --orb-2: rgba(147, 51, 234, 0.25);
+      --orb-3: rgba(37, 99, 235, 0.28);
+
+      --glass-bg: rgba(255, 255, 255, 0.72);
+      --glass-card: rgba(255, 255, 255, 0.65);
+      --glass-inset: rgba(241, 245, 249, 0.85);
+      --glass-modal: rgba(255, 255, 255, 0.92);
+      --glass-border: rgba(255, 255, 255, 0.85);
+      --glass-border-strong: rgba(255, 255, 255, 0.98);
+      --glass-specular: rgba(255, 255, 255, 0.95);
+      --glass-shadow: 0 20px 45px -10px rgba(100, 116, 139, 0.28), inset 0 1px 2px 0 rgba(255, 255, 255, 0.95);
+      
+      --accent-cyan: #0891b2;
+      --accent-blue: #2563eb;
+      --accent-glow: rgba(8, 145, 178, 0.35);
+      --accent-violet: #7c3aed;
+      
+      --text-pri: #0f172a;
+      --text-sec: #334155;
+      --text-muted: #64748b;
+
+      --svg-dial-track: rgba(15, 23, 42, 0.08);
+      --svg-major-tick: #0f172a;
+      --svg-minor-tick: #94a3b8;
+      --svg-tick-text: #475569;
+      --svg-speed-digit: #0f172a;
+      --svg-odo-bg: #0f172a;
+      --svg-odo-border: #475569;
+      --svg-odo-text: #f8fafc;
+      --needle-hub-ring: #ffffff;
+      
+      --danger: #dc2626;
+      --danger-glow: rgba(220, 38, 38, 0.40);
+      --success: #059669;
+      --success-glow: rgba(5, 150, 105, 0.35);
+      --bar-track-bg: rgba(203, 213, 225, 0.7);
     }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -33,513 +101,667 @@
       -webkit-tap-highlight-color: transparent;
       user-select: none;
     }
+
     body {
-      background-color: var(--bg-main);
-      color: var(--text-main);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      background: radial-gradient(circle at 50% 0%, var(--bg-ambient-1) 0%, var(--bg-ambient-2) 100%);
+      color: var(--text-pri);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       overflow-x: hidden;
-      transition: background-color 0.3s ease, color 0.3s ease;
+      position: relative;
+      transition: background 0.45s ease, color 0.35s ease;
     }
 
-    /* Executive Top Header */
+    /* Ambient Glowing Glass Orbs in Background */
+    .ambient-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .ambient-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(85px);
+      opacity: 0.85;
+      animation: floatOrb 18s infinite alternate ease-in-out;
+      transition: background 0.5s ease;
+    }
+    .orb-cyan {
+      width: 320px;
+      height: 320px;
+      background: var(--orb-1);
+      top: -60px;
+      left: -40px;
+    }
+    .orb-purple {
+      width: 340px;
+      height: 340px;
+      background: var(--orb-2);
+      bottom: 10%;
+      right: -80px;
+      animation-delay: -6s;
+    }
+    .orb-blue {
+      width: 280px;
+      height: 280px;
+      background: var(--orb-3);
+      top: 45%;
+      left: 20%;
+      animation-delay: -11s;
+    }
+    @keyframes floatOrb {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(30px, 40px) scale(1.08); }
+      100% { transform: translate(-25px, -30px) scale(0.95); }
+    }
+
+    /* Glass Header */
     header {
-      width: 100%;
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--card-border);
-      padding: 10px 16px;
       position: sticky;
       top: 0;
       z-index: 50;
+      width: 100%;
+      padding: 12px 18px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border-bottom: 1px solid var(--glass-border);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+      transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
     }
-    .light header {
-      background: rgba(255, 255, 255, 0.88);
-    }
-    .header-inner {
+    .header-shell {
       max-width: 440px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    .brand-group {
+    .brand-cluster {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
-    .brand-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #2563eb, #6366f1);
+    .brand-hex {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.85), rgba(59, 130, 246, 0.75));
+      border: 1px solid var(--glass-border-strong);
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
-      font-size: 18px;
-      box-shadow: 0 4px 14px var(--accent-glow);
+      font-size: 19px;
+      box-shadow: 0 8px 20px -4px var(--accent-glow), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+      position: relative;
+      overflow: hidden;
     }
-    .brand-title {
+    .brand-hex::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 50%;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.45), transparent);
+    }
+    .brand-name {
       font-size: 13px;
       font-weight: 900;
-      letter-spacing: 0.8px;
+      letter-spacing: 1.2px;
       line-height: 1.1;
-      color: var(--text-main);
+      color: var(--text-pri);
       text-transform: uppercase;
     }
-    .brand-sub {
+    .brand-desc {
       font-size: 10px;
       font-weight: 700;
-      color: var(--text-sub);
+      color: var(--text-sec);
+      letter-spacing: 0.5px;
     }
-    .header-ctrls {
+    .header-buttons {
       display: flex;
       align-items: center;
       gap: 8px;
     }
-    .ctrl-pill-btn {
-      background: rgba(30, 41, 59, 0.7);
-      border: 1px solid var(--card-border);
-      color: var(--text-main);
-      padding: 6px 12px;
-      border-radius: 12px;
+    .glass-btn-pill {
+      background: var(--glass-card);
+      border: 1px solid var(--glass-border);
+      color: var(--text-pri);
+      padding: 7px 13px;
+      border-radius: 20px;
       font-size: 11px;
       font-weight: 800;
+      letter-spacing: 0.5px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: inset 0 1px 1px var(--glass-specular);
       cursor: pointer;
-      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .light .ctrl-pill-btn {
-      background: rgba(241, 245, 249, 0.8);
-    }
-    .ctrl-pill-btn:active {
-      transform: scale(0.95);
+    .glass-btn-pill:active {
+      transform: scale(0.93);
+      border-color: var(--accent-cyan);
     }
 
-    /* Main Dashboard Layout */
+    /* Main Ergonomic Glass Cockpit */
     main {
+      position: relative;
+      z-index: 10;
       width: 100%;
       max-width: 440px;
       margin: 0 auto;
-      padding: 12px 14px;
+      padding: 14px 14px 20px 14px;
       flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
     }
-    .cockpit-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 32px;
-      padding: 18px 16px;
-      box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.4);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    .glass-cockpit-frame {
+      background: var(--glass-bg);
+      backdrop-filter: blur(36px) saturate(200%);
+      -webkit-backdrop-filter: blur(36px) saturate(200%);
+      border: 1px solid var(--glass-border);
+      border-radius: 36px;
+      padding: 20px 18px;
+      box-shadow: var(--glass-shadow);
       position: relative;
+      overflow: hidden;
+      transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
     }
-    .cockpit-card.overspeed-alarm {
-      border-color: var(--danger) !important;
-      box-shadow: 0 0 35px rgba(239, 68, 68, 0.45), 0 0 0 2px var(--danger) !important;
-      animation: dangerPulse 0.5s infinite alternate;
-    }
-    @keyframes dangerPulse {
-      0% { background: var(--card-bg); }
-      100% { background: rgba(239, 68, 68, 0.08); }
+    .glass-cockpit-frame::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 10%;
+      right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--glass-specular), transparent);
     }
 
-    /* Sub-bar: GPS Live Signal & Time */
-    .cockpit-sub-bar {
+    /* Overspeed Danger Warning State */
+    .glass-cockpit-frame.overspeed-alert {
+      border-color: var(--danger) !important;
+      box-shadow: 0 0 50px -5px var(--danger-glow), 0 24px 48px -12px rgba(0, 0, 0, 0.55), inset 0 0 25px rgba(239, 68, 68, 0.2) !important;
+      animation: dangerGlassPulse 0.55s infinite alternate ease-in-out;
+    }
+    @keyframes dangerGlassPulse {
+      0% { background: var(--glass-bg); }
+      100% { background: rgba(239, 68, 68, 0.16); }
+    }
+
+    /* Top Sub-Telemetry Header */
+    .tele-top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
-    .gps-state-pill {
-      display: flex;
+    .glass-state-badge {
+      display: inline-flex;
       align-items: center;
-      gap: 6px;
-      background: rgba(30, 41, 59, 0.6);
-      border: 1px solid var(--card-border);
-      padding: 4px 10px;
+      gap: 7px;
+      background: var(--glass-inset);
+      border: 1px solid var(--glass-border);
+      padding: 5px 12px;
       border-radius: 20px;
-      font-size: 9px;
+      font-size: 9.5px;
       font-weight: 800;
-      letter-spacing: 0.5px;
-      color: var(--text-sub);
+      color: var(--text-sec);
+      letter-spacing: 0.6px;
+      transition: background 0.3s ease, border-color 0.3s ease;
     }
-    .pulse-dot {
+    .live-pulse-emitter {
       width: 7px;
       height: 7px;
       border-radius: 50%;
-      background: #94a3b8;
+      background: #64748b;
+      position: relative;
     }
-    .gps-state-pill.live .pulse-dot {
-      background: #10b981;
-      box-shadow: 0 0 8px #10b981;
+    .glass-state-badge.active .live-pulse-emitter {
+      background: var(--success);
+      box-shadow: 0 0 10px var(--success);
     }
-    .gps-state-pill.live {
-      color: #10b981;
-      border-color: rgba(16, 185, 129, 0.4);
+    .glass-state-badge.active .live-pulse-emitter::after {
+      content: '';
+      position: absolute;
+      top: -3px;
+      left: -3px;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      border: 1px solid var(--success);
+      animation: emitterRing 1.4s infinite ease-out;
     }
-    .clock-badge {
+    @keyframes emitterRing {
+      0% { transform: scale(0.6); opacity: 1; }
+      100% { transform: scale(1.7); opacity: 0; }
+    }
+    .glass-state-badge.active {
+      color: var(--success);
+      border-color: var(--success-glow);
+    }
+    .glass-clock-chip {
       font-family: "SF Mono", "Courier New", monospace;
       font-size: 11px;
       font-weight: 800;
-      color: var(--text-sub);
-      background: rgba(30, 41, 59, 0.6);
-      padding: 4px 9px;
+      color: var(--text-sec);
+      background: var(--glass-inset);
+      border: 1px solid var(--glass-border);
+      padding: 5px 11px;
       border-radius: 20px;
-      border: 1px solid var(--card-border);
+      letter-spacing: 1px;
     }
 
-    /* Analog Dial SVG */
-    .analog-wrapper {
+    /* Glass Speedometer Dome */
+    .glass-gauge-dome {
       position: relative;
       width: 100%;
       max-width: 320px;
-      margin: 0 auto;
+      margin: 2px auto 6px auto;
+      background: radial-gradient(circle at 50% 60%, var(--glass-specular) 0%, transparent 70%);
+      border-radius: 32px;
+      padding: 6px 4px 4px 4px;
     }
-    .analog-svg {
+    .gauge-svg {
       width: 100%;
       height: auto;
       display: block;
       overflow: visible;
     }
-    .needle-element {
-      transition: transform 0.28s cubic-bezier(0.1, 0.9, 0.2, 1);
+    .needle-pivot-group {
+      transition: transform 0.28s cubic-bezier(0.12, 0.88, 0.25, 1);
     }
 
-    /* Dial Status Row */
-    .dial-status-row {
+    /* Motion & Alert Sub-badges */
+    .dome-sub-status {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 12px;
-      margin-top: 4px;
+      padding: 0 16px;
+      margin-top: 2px;
     }
-    .status-pill {
+    .glass-motion-chip {
       font-size: 9px;
       font-weight: 900;
-      padding: 3px 10px;
-      border-radius: 8px;
-      letter-spacing: 0.5px;
+      padding: 4px 11px;
+      border-radius: 12px;
+      letter-spacing: 0.8px;
+      background: var(--glass-inset);
+      border: 1px solid var(--glass-border);
+      color: var(--text-muted);
+      transition: all 0.25s ease;
     }
-    .motion-idle {
-      background: rgba(51, 65, 85, 0.4);
-      color: var(--text-sub);
-    }
-    .motion-moving {
+    .glass-motion-chip.moving {
       background: rgba(16, 185, 129, 0.2);
-      color: #10b981;
-      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: var(--success);
+      border-color: var(--success-glow);
+      box-shadow: 0 0 14px var(--success-glow);
     }
-    .alert-safe {
-      background: rgba(16, 185, 129, 0.2);
-      color: #10b981;
-      border: 1px solid rgba(16, 185, 129, 0.4);
+    .glass-limit-chip {
+      font-size: 9px;
+      font-weight: 900;
+      padding: 4px 11px;
+      border-radius: 12px;
+      letter-spacing: 0.8px;
+      background: rgba(16, 185, 129, 0.18);
+      color: var(--success);
+      border: 1px solid var(--success-glow);
+      transition: all 0.25s ease;
     }
-    .alert-danger {
-      background: #ef4444 !important;
+    .glass-limit-chip.breached {
+      background: var(--danger) !important;
       color: #ffffff !important;
+      border-color: var(--danger) !important;
+      box-shadow: 0 0 16px var(--danger-glow);
       animation: alertBlink 0.5s infinite alternate;
     }
     @keyframes alertBlink {
-      0% { opacity: 0.85; transform: scale(1); }
-      100% { opacity: 1; transform: scale(1.05); }
+      0% { transform: scale(1); }
+      100% { transform: scale(1.06); }
     }
 
-    /* Location Card */
-    .loc-bar {
+    /* Glass Location Strip */
+    .glass-location-strip {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: rgba(30, 41, 59, 0.4);
-      border: 1px solid var(--card-border);
-      padding: 8px 12px;
-      border-radius: 16px;
+      background: var(--glass-inset);
+      border: 1px solid var(--glass-border);
+      padding: 9px 14px;
+      border-radius: 18px;
       margin-top: 10px;
-      gap: 8px;
+      gap: 10px;
+      transition: background 0.3s ease, border-color 0.3s ease;
     }
-    .loc-info {
+    .loc-caption {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
       font-size: 11px;
       font-weight: 700;
-      color: var(--text-main);
+      color: var(--text-pri);
     }
-    .btn-map-link {
-      background: rgba(37, 99, 235, 0.15);
-      border: 1px solid rgba(37, 99, 235, 0.35);
-      color: #60a5fa;
-      font-size: 9px;
-      font-weight: 800;
-      padding: 4px 8px;
-      border-radius: 8px;
+    .btn-maps-action {
+      background: rgba(6, 182, 212, 0.18);
+      border: 1px solid rgba(6, 182, 212, 0.4);
+      color: var(--accent-cyan);
+      font-size: 9.5px;
+      font-weight: 900;
+      padding: 5px 10px;
+      border-radius: 10px;
       cursor: pointer;
       white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+    .btn-maps-action:active {
+      transform: scale(0.93);
+      background: rgba(6, 182, 212, 0.3);
     }
 
-    /* Control Inputs Grid */
-    .inputs-grid {
+    /* Glass Inputs */
+    .glass-inputs-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
       margin-top: 10px;
     }
-    .input-box {
-      background: rgba(30, 41, 59, 0.4);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 8px 10px;
+    .glass-input-card {
+      background: var(--glass-card);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 10px 12px;
+      box-shadow: inset 0 1px 1px var(--glass-specular);
+      transition: background 0.3s ease, border-color 0.3s ease;
     }
-    .input-box-head {
+    .glass-input-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-size: 9px;
-      font-weight: 800;
-      color: var(--text-sub);
+      font-weight: 900;
+      color: var(--text-sec);
       text-transform: uppercase;
-      margin-bottom: 4px;
+      letter-spacing: 0.6px;
+      margin-bottom: 5px;
     }
-    .toggle-alert-btn {
+    .glass-toggle-pill {
       border: none;
       font-size: 8px;
       font-weight: 900;
-      padding: 2px 6px;
-      border-radius: 6px;
+      padding: 3px 8px;
+      border-radius: 8px;
       cursor: pointer;
+      transition: all 0.2s;
     }
-    .toggle-alert-btn.on { background: rgba(16, 185, 129, 0.25); color: #10b981; }
-    .toggle-alert-btn.off { background: rgba(100, 116, 139, 0.25); color: #94a3b8; }
-    .num-input-wrap {
+    .glass-toggle-pill.on { background: rgba(16, 185, 129, 0.25); color: var(--success); border: 1px solid var(--success-glow); }
+    .glass-toggle-pill.off { background: rgba(148, 163, 184, 0.25); color: var(--text-muted); border: 1px solid rgba(148, 163, 184, 0.3); }
+
+    .glass-number-box {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
     }
-    .num-input-wrap input {
-      width: 58px;
-      background: rgba(2, 6, 23, 0.6);
-      border: 1px solid var(--card-border);
-      color: var(--text-main);
-      border-radius: 8px;
-      padding: 4px 6px;
-      font-size: 12px;
+    .glass-number-box input {
+      width: 64px;
+      background: var(--glass-inset);
+      border: 1px solid var(--glass-border);
+      color: var(--text-pri);
+      border-radius: 10px;
+      padding: 5px 8px;
+      font-size: 13px;
       font-weight: 900;
-      font-family: monospace;
+      font-family: "SF Mono", monospace;
       outline: none;
+      transition: border-color 0.2s ease, background 0.3s ease, color 0.3s ease;
     }
-    .num-input-wrap span {
-      font-size: 10px;
+    .glass-number-box input:focus {
+      border-color: var(--accent-cyan);
+    }
+    .glass-number-box span {
+      font-size: 10.5px;
       font-weight: 800;
-      color: var(--text-sub);
+      color: var(--text-sec);
     }
 
-    /* 2x2 Cockpit Mini Meters */
-    .cockpit-grid {
+    /* 2x2 Cockpit Mini Gauges */
+    .glass-cockpit-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
       margin-top: 10px;
     }
-    .meter-tile {
-      background: rgba(30, 41, 59, 0.35);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 8px 10px;
+    .glass-sub-gauge {
+      background: var(--glass-card);
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      padding: 9px 12px;
+      box-shadow: inset 0 1px 1px var(--glass-specular);
+      transition: background 0.3s ease, border-color 0.3s ease;
     }
-    .meter-head {
+    .gauge-top-row {
       display: flex;
       justify-content: space-between;
       font-size: 8.5px;
-      font-weight: 800;
-      color: var(--text-sub);
+      font-weight: 900;
+      color: var(--text-sec);
       text-transform: uppercase;
+      letter-spacing: 0.5px;
       margin-bottom: 6px;
     }
-    .meter-val {
+    .gauge-readout {
       font-size: 9.5px;
       font-weight: 900;
-      color: var(--text-main);
-      font-family: monospace;
+      color: var(--text-pri);
+      font-family: "SF Mono", monospace;
     }
-    .bar-track {
+    .glass-bar-track {
       width: 100%;
       height: 6px;
-      background: rgba(51, 65, 85, 0.4);
-      border-radius: 4px;
+      background: var(--bar-track-bg);
+      border-radius: 5px;
       overflow: hidden;
       position: relative;
+      border: 1px solid var(--glass-border);
+      transition: background 0.3s ease;
     }
-    .bar-fill {
+    .glass-bar-progress {
       height: 100%;
       width: 0%;
-      transition: width 0.3s ease;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .fill-alt { background: linear-gradient(90deg, #6366f1, #3b82f6); }
-    .fill-goal { background: linear-gradient(90deg, #0284c7, #10b981); }
+    .bar-alt-gradient { background: linear-gradient(90deg, #6366f1, #3b82f6, #06b6d4); }
+    .bar-goal-gradient { background: linear-gradient(90deg, #0284c7, #10b981); }
 
-    /* Core Metrics 2x2 */
-    .metrics-grid {
+    /* Core Metrics Glass Cards */
+    .glass-metrics-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
       margin-top: 10px;
     }
-    .metric-card {
-      background: rgba(30, 41, 59, 0.3);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 9px 12px;
+    .glass-metric-cell {
+      background: var(--glass-card);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 10px 14px;
+      box-shadow: inset 0 1px 1px var(--glass-specular);
+      transition: background 0.3s ease, border-color 0.3s ease;
     }
-    .metric-label {
+    .metric-caption {
       font-size: 8.5px;
-      font-weight: 800;
-      color: var(--text-sub);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .metric-number {
-      font-size: 16px;
       font-weight: 900;
-      color: var(--text-main);
-      font-family: "SF Mono", monospace;
-      margin-top: 2px;
+      color: var(--text-sec);
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
     }
-    .metric-number small {
+    .metric-digits {
+      font-size: 17px;
+      font-weight: 900;
+      color: var(--text-pri);
+      font-family: "SF Mono", monospace;
+      margin-top: 3px;
+    }
+    .metric-digits small {
       font-size: 10px;
-      font-weight: 700;
-      color: var(--text-sub);
+      font-weight: 800;
+      color: var(--text-sec);
     }
 
     /* Accuracy & Signal Bar */
-    .signal-strip {
+    .glass-signal-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(30, 41, 59, 0.4);
-      border: 1px solid var(--card-border);
-      border-radius: 14px;
-      padding: 6px 14px;
+      background: var(--glass-inset);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 7px 14px;
       font-size: 10px;
       margin-top: 10px;
+      transition: background 0.3s ease, border-color 0.3s ease;
     }
-    .sig-bars {
+    .signal-ladder {
       display: inline-flex;
-      gap: 2px;
+      gap: 2.5px;
       align-items: flex-end;
-      height: 11px;
+      height: 12px;
       vertical-align: middle;
-      margin-left: 4px;
+      margin-left: 5px;
     }
-    .sig-bars span {
-      width: 3px;
-      background: #475569;
-      border-radius: 1px;
+    .signal-ladder span {
+      width: 3.5px;
+      background: rgba(148, 163, 184, 0.35);
+      border-radius: 1.5px;
+      transition: background 0.3s ease;
     }
-    .sig-bars .b1 { height: 3px; }
-    .sig-bars .b2 { height: 6px; }
-    .sig-bars .b3 { height: 8px; }
-    .sig-bars .b4 { height: 11px; }
-    .sig-active span { background: #10b981 !important; }
+    .signal-ladder .b1 { height: 3px; }
+    .signal-ladder .b2 { height: 6px; }
+    .signal-ladder .b3 { height: 9px; }
+    .signal-ladder .b4 { height: 12px; }
+    .signal-active span {
+      background: var(--success) !important;
+      box-shadow: 0 0 6px var(--success-glow);
+    }
 
-    /* Action Buttons */
-    .action-row {
+    /* Floating Action Controls */
+    .glass-action-row {
       display: flex;
-      gap: 8px;
-      margin-top: 12px;
+      gap: 10px;
+      margin-top: 14px;
     }
-    .btn-main-tele {
+    .btn-glass-primary {
       flex: 1;
-      padding: 14px 16px;
-      border-radius: 18px;
-      border: none;
+      padding: 15px 20px;
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
       font-size: 14px;
       font-weight: 900;
-      color: #fff;
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      box-shadow: 0 8px 24px -4px var(--accent-glow);
+      color: #ffffff;
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.9), rgba(37, 99, 235, 0.9));
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 12px 30px -6px var(--accent-glow), inset 0 1px 2px rgba(255, 255, 255, 0.5);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      transition: transform 0.15s ease, background 0.25s ease;
+      gap: 8px;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .btn-main-tele:active {
+    .btn-glass-primary:active {
       transform: scale(0.97);
     }
-    .btn-main-tele.active {
-      background: linear-gradient(135deg, #ef4444, #dc2626) !important;
-      box-shadow: 0 8px 24px -2px rgba(239, 68, 68, 0.5) !important;
+    .btn-glass-primary.active {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.92), rgba(220, 38, 38, 0.92)) !important;
+      box-shadow: 0 12px 30px -4px var(--danger-glow), inset 0 1px 2px rgba(255, 255, 255, 0.5) !important;
     }
-    .btn-pause-tele {
+    .btn-glass-pause {
       display: none;
-      padding: 14px 16px;
-      border-radius: 18px;
-      border: none;
-      font-size: 12px;
+      padding: 15px 18px;
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      font-size: 12.5px;
       font-weight: 800;
       color: #fff;
-      background: #eab308;
+      background: rgba(234, 179, 8, 0.9);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 10px 24px -4px rgba(234, 179, 8, 0.4);
       cursor: pointer;
-      transition: transform 0.15s ease;
+      transition: transform 0.2s ease;
     }
-    .btn-pause-tele:active {
-      transform: scale(0.97);
+    .btn-glass-pause:active {
+      transform: scale(0.96);
     }
-    .live-msg-status {
+
+    .glass-status-message {
       text-align: center;
       font-size: 11px;
       font-weight: 700;
-      color: var(--text-sub);
-      margin-top: 8px;
-      min-height: 16px;
+      color: var(--text-sec);
+      margin-top: 9px;
+      min-height: 18px;
     }
 
-    /* Sub Actions */
-    .sub-action-row {
+    /* Sub Actions Bar */
+    .glass-sub-toolbar {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 6px;
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid var(--card-border);
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--glass-border);
     }
-    .btn-sub {
-      padding: 8px 4px;
-      border-radius: 12px;
+    .btn-glass-tool {
+      padding: 9px 5px;
+      border-radius: 14px;
       font-size: 10px;
       font-weight: 800;
-      border: 1px solid var(--card-border);
-      background: rgba(30, 41, 59, 0.4);
-      color: var(--text-main);
+      border: 1px solid var(--glass-border);
+      background: var(--glass-card);
+      color: var(--text-pri);
+      backdrop-filter: blur(14px);
+      box-shadow: inset 0 1px 1px var(--glass-specular);
       cursor: pointer;
-      transition: transform 0.15s ease;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .btn-sub:active {
-      transform: scale(0.95);
+    .btn-glass-tool:active {
+      transform: scale(0.94);
+      border-color: var(--accent-cyan);
     }
 
-    /* Footer */
+    /* Glass Footer */
     footer {
+      position: relative;
+      z-index: 10;
       width: 100%;
-      border-top: 1px solid var(--card-border);
-      background: rgba(15, 23, 42, 0.7);
-      padding: 10px 16px;
+      border-top: 1px solid var(--glass-border);
+      background: var(--glass-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      padding: 11px 18px;
       text-align: center;
       font-size: 11px;
       font-weight: 800;
-      color: var(--text-sub);
+      color: var(--text-sec);
+      transition: background 0.35s ease, border-color 0.35s ease;
     }
-    .footer-inner {
+    .footer-shell {
       max-width: 440px;
       margin: 0 auto;
       display: flex;
@@ -547,7 +769,7 @@
       align-items: center;
     }
 
-    /* STRICT MODAL STYLING - NEVER DISPLAY BY DEFAULT */
+    /* STRICT MODAL OVERLAY */
     .modal-overlay {
       display: none !important;
       position: fixed !important;
@@ -555,10 +777,10 @@
       left: 0 !important;
       right: 0 !important;
       bottom: 0 !important;
-      background: rgba(2, 6, 23, 0.8) !important;
-      backdrop-filter: blur(6px) !important;
-      -webkit-backdrop-filter: blur(6px) !important;
-      z-index: 9999 !important;
+      background: rgba(2, 6, 23, 0.65) !important;
+      backdrop-filter: blur(18px) !important;
+      -webkit-backdrop-filter: blur(18px) !important;
+      z-index: 99999 !important;
       justify-content: center !important;
       align-items: center !important;
       padding: 16px !important;
@@ -566,147 +788,168 @@
     .modal-overlay.active {
       display: flex !important;
     }
-    .modal-sheet {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 24px;
-      padding: 20px;
-      width: 100%;
-      max-width: 360px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
-      text-align: left;
+    .glass-modal-card {
+      background: var(--glass-modal) !important;
+      backdrop-filter: blur(36px) saturate(200%) !important;
+      -webkit-backdrop-filter: blur(36px) saturate(200%) !important;
+      border: 1px solid var(--glass-border-strong) !important;
+      border-radius: 28px !important;
+      padding: 22px !important;
+      width: 100% !important;
+      max-width: 360px !important;
+      box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.45), inset 0 1px 2px var(--glass-specular) !important;
+      text-align: left !important;
     }
-    .modal-sheet h3 {
-      font-size: 14px;
+    .glass-modal-card h3 {
+      font-size: 15px;
       font-weight: 900;
-      color: var(--text-main);
+      color: var(--text-pri);
       margin-bottom: 8px;
     }
-    .modal-sheet p {
+    .glass-modal-card p {
       font-size: 12px;
-      color: var(--text-sub);
-      line-height: 1.5;
-      margin-bottom: 14px;
+      color: var(--text-sec);
+      line-height: 1.55;
+      margin-bottom: 16px;
     }
-    .btn-modal-action {
+    .btn-modal-dismiss {
       width: 100%;
-      padding: 11px;
-      background: #2563eb;
+      padding: 12px;
+      background: linear-gradient(135deg, #06b6d4, #2563eb);
       color: #fff;
-      border: none;
-      border-radius: 14px;
-      font-size: 12px;
-      font-weight: 800;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 16px;
+      font-size: 12.5px;
+      font-weight: 900;
       cursor: pointer;
+      box-shadow: 0 8px 20px -4px var(--accent-glow);
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Executive Header -->
+  <!-- Ambient Blurred Glow Elements for Depth -->
+  <div class="ambient-canvas">
+    <div class="ambient-orb orb-cyan"></div>
+    <div class="ambient-orb orb-purple"></div>
+    <div class="ambient-orb orb-blue"></div>
+  </div>
+
+  <!-- Glass Top Header -->
   <header>
-    <div class="header-inner">
-      <div class="brand-group">
-        <div class="brand-icon">⚡</div>
+    <div class="header-shell">
+      <div class="brand-cluster">
+        <div class="brand-hex">⚡</div>
         <div>
-          <div class="brand-title">THE AMIT MTO</div>
-          <div class="brand-sub">Cockpit Dashboard</div>
+          <div class="brand-name">THE AMIT MTO</div>
+          <div class="brand-desc">Glass Cockpit HUD</div>
         </div>
       </div>
-      <div class="header-ctrls">
-        <button id="btnUnitToggle" type="button" class="ctrl-pill-btn">KM/H</button>
-        <button id="btnThemeToggle" type="button" class="ctrl-pill-btn">☀️</button>
+      <div class="header-buttons">
+        <button id="btnUnitToggle" type="button" class="glass-btn-pill">KM/H</button>
+        <button id="btnThemeToggle" type="button" class="glass-btn-pill" aria-label="Toggle Theme">
+          <span id="themeIcon">☀️</span>
+          <span id="themeText">Light</span>
+        </button>
       </div>
     </div>
   </header>
 
   <!-- Cockpit Main Display -->
   <main>
-    <div class="cockpit-card" id="cockpitCard">
+    <div class="glass-cockpit-frame" id="cockpitCard">
 
       <!-- Live GPS Fix & Local Time Sub-bar -->
-      <div class="cockpit-sub-bar">
-        <div class="gps-state-pill" id="gpsStatePill">
-          <span class="pulse-dot"></span>
+      <div class="tele-top-bar">
+        <div class="glass-state-badge" id="gpsStatePill">
+          <span class="live-pulse-emitter"></span>
           <span id="gpsStateLabel">STANDBY</span>
         </div>
-        <div class="clock-badge" id="liveClockVal">00:00:00</div>
+        <div class="glass-clock-chip" id="liveClockVal">00:00:00</div>
       </div>
 
       <!-- ANALOG SPEEDOMETER (EXACT PHYSICAL NEEDLE GAUGE) -->
-      <div class="analog-wrapper">
-        <svg class="analog-svg" viewBox="0 0 320 280">
+      <div class="glass-gauge-dome">
+        <svg class="gauge-svg" viewBox="0 0 320 280">
           <defs>
+            <!-- High-definition Gradient Arc -->
             <linearGradient id="gaugeGradient" x1="0%" y1="100%" x2="100%" y2="100%">
               <stop offset="0%" stop-color="#10b981" />
-              <stop offset="45%" stop-color="#3b82f6" />
-              <stop offset="75%" stop-color="#eab308" />
+              <stop offset="30%" stop-color="#06b6d4" />
+              <stop offset="60%" stop-color="#3b82f6" />
+              <stop offset="85%" stop-color="#eab308" />
               <stop offset="100%" stop-color="#ef4444" />
             </linearGradient>
+
+            <!-- Glow Filters for Glass Specular Reflections -->
             <filter id="needleGlow" x="-30%" y="-30%" width="160%" height="160%">
-              <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#ef4444" flood-opacity="0.8"/>
+              <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#ef4444" flood-opacity="0.8"/>
+            </filter>
+            <filter id="arcGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#06b6d4" flood-opacity="0.45"/>
             </filter>
           </defs>
 
-          <!-- Outer Background Track -->
-          <path d="M 45 220 A 120 120 0 1 1 275 220" fill="none" stroke="#1e293b" stroke-width="20" stroke-linecap="round" />
-          <!-- Rainbow Gradient Gauge Arc -->
-          <path d="M 45 220 A 120 120 0 1 1 275 220" fill="none" stroke="url(#gaugeGradient)" stroke-width="20" stroke-linecap="round" />
+          <!-- Outer Frosted Gauge Track -->
+          <path id="svgGaugeTrack" d="M 45 220 A 120 120 0 1 1 275 220" fill="none" stroke="var(--svg-dial-track)" stroke-width="22" stroke-linecap="round" />
+          <!-- Rainbow Gradient Gauge Arc with Specular Glow -->
+          <path d="M 45 220 A 120 120 0 1 1 275 220" fill="none" stroke="url(#gaugeGradient)" stroke-width="20" stroke-linecap="round" filter="url(#arcGlow)" />
 
           <!-- Dynamic SVG Dial Ticks & Digits -->
           <g id="dialTicksGroup"></g>
 
-          <!-- Unit Label & Digital Speed -->
-          <text x="160" y="112" text-anchor="middle" font-size="13" font-weight="900" fill="#94a3b8" id="dialUnitText" letter-spacing="1">KM/H</text>
-          <text x="160" y="152" text-anchor="middle" font-size="42" font-weight="900" fill="#f8fafc" font-family="'SF Mono', monospace" id="dialSpeedDigital">0.0</text>
+          <!-- Unit Label & Digital Speed Value -->
+          <text x="160" y="112" text-anchor="middle" font-size="13" font-weight="900" fill="var(--svg-tick-text)" id="dialUnitText" letter-spacing="1">KM/H</text>
+          <text x="160" y="152" text-anchor="middle" font-size="44" font-weight="900" fill="var(--svg-speed-digit)" font-family="'SF Mono', monospace" id="dialSpeedDigital">0.0</text>
 
-          <!-- Roller-Style Odometer Box -->
+          <!-- Roller-Style Mechanical Odometer Box with Frosted Edge -->
           <g transform="translate(105, 224)">
-            <rect width="110" height="24" rx="6" fill="#020617" stroke="#334155" stroke-width="1.5"/>
-            <text x="55" y="17" text-anchor="middle" font-size="12" font-weight="900" fill="#f8fafc" font-family="'SF Mono', monospace" letter-spacing="2" id="valOdometer">0000.00</text>
+            <rect width="110" height="24" rx="7" fill="var(--svg-odo-bg)" stroke="var(--svg-odo-border)" stroke-width="1.2"/>
+            <text x="55" y="17" text-anchor="middle" font-size="12" font-weight="900" fill="var(--svg-odo-text)" font-family="'SF Mono', monospace" letter-spacing="2" id="valOdometer">0000.00</text>
           </g>
 
           <!-- Physical Red Pointer Needle (Rotates -125deg to +125deg) -->
-          <g id="needlePivot" class="needle-element" transform="translate(160, 185) rotate(-125)">
-            <polygon points="-3,-10 0,-115 3,-10" fill="#ef4444" filter="url(#needleGlow)" />
+          <g id="needlePivot" class="needle-pivot-group" transform="translate(160, 185) rotate(-125)">
+            <polygon points="-3.5,-10 0,-115 3.5,-10" fill="#ef4444" filter="url(#needleGlow)" />
             <circle cx="0" cy="0" r="16" fill="#ef4444" />
-            <circle cx="0" cy="0" r="7" fill="#ffffff" />
+            <circle cx="0" cy="0" r="7" fill="var(--needle-hub-ring)" />
+            <circle cx="0" cy="0" r="3" fill="#b91c1c" />
           </g>
         </svg>
 
-        <div class="dial-status-row">
-          <span class="status-pill motion-idle" id="motionBadge">IDLE</span>
-          <span class="status-pill alert-safe" id="limitBadge">SAFE</span>
+        <div class="dome-sub-status">
+          <span class="glass-motion-chip" id="motionBadge">IDLE</span>
+          <span class="glass-limit-chip" id="limitBadge">SAFE</span>
         </div>
       </div>
 
       <!-- Real GPS Location Address -->
-      <div class="loc-bar">
-        <div class="loc-info">
+      <div class="glass-location-strip">
+        <div class="loc-caption">
           <span>📍</span>
           <span id="locAddressText">Tap 'Start Telemetry' for GPS lock</span>
         </div>
-        <button id="btnOpenMaps" type="button" class="btn-map-link">Map ↗</button>
+        <button id="btnOpenMaps" type="button" class="btn-maps-action">Maps ↗</button>
       </div>
 
       <!-- Settings & Alert Panel -->
-      <div class="inputs-grid">
-        <div class="input-box">
-          <div class="input-box-head">
+      <div class="glass-inputs-grid">
+        <div class="glass-input-card">
+          <div class="glass-input-header">
             <span>Speed Alarm</span>
-            <button id="btnAlarmToggle" class="toggle-alert-btn on">ON</button>
+            <button id="btnAlarmToggle" class="glass-toggle-pill on">ON</button>
           </div>
-          <div class="num-input-wrap">
+          <div class="glass-number-box">
             <input type="number" id="inputLimitVal" value="60" min="5" max="220">
             <span class="unit-span">km/h</span>
           </div>
         </div>
-        <div class="input-box">
-          <div class="input-box-head">
+        <div class="glass-input-card">
+          <div class="glass-input-header">
             <span>Trip Target</span>
-            <span id="targetGoalPctText" style="color:#38bdf8;">0%</span>
+            <span id="targetGoalPctText" style="color:var(--accent-cyan);">0%</span>
           </div>
-          <div class="num-input-wrap">
+          <div class="glass-number-box">
             <input type="number" id="inputTargetVal" value="5" min="1" max="500">
             <span class="dist-span">km</span>
           </div>
@@ -714,77 +957,77 @@
       </div>
 
       <!-- 2x2 Cockpit Mini Gauges -->
-      <div class="cockpit-grid">
-        <div class="meter-tile">
-          <div class="meter-head">
+      <div class="glass-cockpit-grid">
+        <div class="glass-sub-gauge">
+          <div class="gauge-top-row">
             <span>G-Force</span>
-            <span id="valGForce" class="meter-val">0.00 g</span>
+            <span id="valGForce" class="gauge-readout">0.00 g</span>
           </div>
-          <div class="bar-track">
-            <div id="gForceThumb" style="position: absolute; width: 8px; height: 10px; top: -2px; left: 50%; background: #3b82f6; border-radius: 3px; transform: translateX(-50%); transition: left 0.2s;"></div>
+          <div class="glass-bar-track">
+            <div id="gForceThumb" style="position: absolute; width: 8px; height: 10px; top: -2px; left: 50%; background: var(--accent-cyan); border-radius: 3px; transform: translateX(-50%); transition: left 0.2s; box-shadow: 0 0 6px var(--accent-glow);"></div>
           </div>
         </div>
-        <div class="meter-tile">
-          <div class="meter-head">
+        <div class="glass-sub-gauge">
+          <div class="gauge-top-row">
             <span>Compass</span>
-            <span id="valCompass" class="meter-val">0° N</span>
+            <span id="valCompass" class="gauge-readout">0° N</span>
           </div>
           <div style="display:flex; justify-content:center; align-items:center; height:12px;">
-            <div id="compassDisk" style="width:16px; height:16px; border:1px solid #64748b; border-radius:50%; position:relative; transition: transform 0.25s;">
-              <span style="position:absolute; top:-2px; left:50%; transform:translateX(-50%); font-size:8px; color:#ef4444;">▲</span>
+            <div id="compassDisk" style="width:18px; height:18px; border:1.5px solid var(--glass-border-strong); border-radius:50%; position:relative; transition: transform 0.25s; box-shadow: inset 0 0 4px rgba(0,0,0,0.2);">
+              <span style="position:absolute; top:-3px; left:50%; transform:translateX(-50%); font-size:8px; color:#ef4444;">▲</span>
             </div>
           </div>
         </div>
-        <div class="meter-tile">
-          <div class="meter-head">
+        <div class="glass-sub-gauge">
+          <div class="gauge-top-row">
             <span>Altitude</span>
-            <span id="valAltitude" class="meter-val">-- m</span>
+            <span id="valAltitude" class="gauge-readout">-- m</span>
           </div>
-          <div class="bar-track">
-            <div id="barAltitude" class="bar-fill fill-alt"></div>
+          <div class="glass-bar-track">
+            <div id="barAltitude" class="glass-bar-progress bar-alt-gradient"></div>
           </div>
         </div>
-        <div class="meter-tile">
-          <div class="meter-head">
+        <div class="glass-sub-gauge">
+          <div class="gauge-top-row">
             <span>Goal Fill</span>
-            <span id="valGoalPct" class="meter-val">0%</span>
+            <span id="valGoalPct" class="gauge-readout">0%</span>
           </div>
-          <div class="bar-track">
-            <div id="barGoal" class="bar-fill fill-goal"></div>
+          <div class="glass-bar-track">
+            <div id="barGoal" class="glass-bar-progress bar-goal-gradient"></div>
           </div>
         </div>
       </div>
 
-      <!-- Core Metrics 2x2 -->
-      <div class="metrics-grid">
-        <div class="metric-card">
-          <div class="metric-label">Distance</div>
-          <div class="metric-number" id="cardDistance">0.00 <small class="dist-span">km</small></div>
+      <!-- Core Metrics 2x2 Glass Cards -->
+      <div class="glass-metrics-grid">
+        <div class="glass-metric-cell">
+          <div class="metric-caption">Distance</div>
+          <div class="metric-digits" id="cardDistance">0.00 <small class="dist-span">km</small></div>
         </div>
-        <div class="metric-card">
-          <div class="metric-label">Duration</div>
-          <div class="metric-number" id="cardDuration">00:00</div>
+        <div class="glass-metric-cell">
+          <div class="metric-caption">Duration</div>
+          <div class="metric-digits" id="cardDuration">00:00</div>
         </div>
-        <div class="metric-card">
-          <div class="metric-label">Top Speed</div>
-          <div class="metric-number" id="cardTopSpeed">0.0 <small class="unit-span">km/h</small></div>
+        <div class="glass-metric-cell">
+          <div class="metric-caption">Top Speed</div>
+          <div class="metric-digits" id="cardTopSpeed">0.0 <small class="unit-span">km/h</small></div>
         </div>
-        <div class="metric-card">
-          <div class="metric-label">Avg Speed</div>
-          <div class="metric-number" id="cardAvgSpeed">0.0 <small class="unit-span">km/h</small></div>
+        <div class="glass-metric-cell">
+          <div class="metric-caption">Avg Speed</div>
+          <div class="metric-digits" id="cardAvgSpeed">0.0 <small class="unit-span">km/h</small></div>
         </div>
       </div>
 
       <!-- Accuracy & Signal Indicator -->
-      <div class="signal-strip">
+      <div class="glass-signal-bar">
         <div>
-          <span style="color:var(--text-sub); font-weight:800;">ACCURACY:</span>
+          <span style="color:var(--text-sec); font-weight:800;">ACCURACY:</span>
           <span id="valAccuracy" style="font-weight:900; font-family:monospace; margin-left:3px;">--</span> m
         </div>
         <div>
-          <span style="color:var(--text-sub); font-weight:800;">GPS:</span>
-          <span id="gpsSignalText" style="font-weight:900; color:#10b981;">STANDBY</span>
-          <div class="sig-bars" id="signalBars">
+          <span style="color:var(--text-sec); font-weight:800;">GPS:</span>
+          <span id="gpsSignalText" style="font-weight:900; color:var(--success);">STANDBY</span>
+          <div class="signal-ladder" id="signalBars">
             <span class="b1"></span>
             <span class="b2"></span>
             <span class="b3"></span>
@@ -794,21 +1037,21 @@
       </div>
 
       <!-- Action Buttons -->
-      <div class="action-row">
-        <button id="btnMainTelemetry" class="btn-main-tele" type="button">
+      <div class="glass-action-row">
+        <button id="btnMainTelemetry" class="btn-glass-primary" type="button">
           <span id="mainBtnIcon">▶</span>
           <span id="mainBtnLabel">Start Telemetry</span>
         </button>
-        <button id="btnPauseTelemetry" class="btn-pause-tele" type="button">Pause</button>
+        <button id="btnPauseTelemetry" class="btn-glass-pause" type="button">Pause</button>
       </div>
-      <div class="live-msg-status" id="liveMsgStatus">Tap button to start 100% Real Hardware GPS</div>
+      <div class="glass-status-message" id="liveMsgStatus">Tap button to start 100% Real Hardware GPS</div>
 
-      <!-- Sub Actions Grid -->
-      <div class="sub-action-row">
-        <button id="btnLap" type="button" class="btn-sub">⏱️ Lap (<span id="lapVal">0</span>)</button>
-        <button id="btnCsv" type="button" class="btn-sub">📥 CSV</button>
-        <button id="btnLogs" type="button" class="btn-sub">📊 Logs (<span id="logVal">0</span>)</button>
-        <button id="btnReset" type="button" class="btn-sub">🔄 Reset</button>
+      <!-- Sub Actions Toolbar -->
+      <div class="glass-sub-toolbar">
+        <button id="btnLap" type="button" class="btn-glass-tool">⏱️ Lap (<span id="lapVal">0</span>)</button>
+        <button id="btnCsv" type="button" class="btn-glass-tool">📥 CSV</button>
+        <button id="btnLogs" type="button" class="btn-glass-tool">📊 Logs (<span id="logVal">0</span>)</button>
+        <button id="btnReset" type="button" class="btn-glass-tool">🔄 Reset</button>
       </div>
 
     </div>
@@ -816,22 +1059,22 @@
 
   <!-- Bottom Footer -->
   <footer>
-    <div class="footer-inner">
+    <div class="footer-shell">
       <span>The Amit MTO</span>
-      <span style="display:flex; align-items:center; gap:5px;">
-        <span style="width:7px; height:7px; background:#10b981; border-radius:50%; display:inline-block;"></span>
-        Hardware GPS v3.2
+      <span style="display:flex; align-items:center; gap:6px;">
+        <span style="width:7px; height:7px; background:var(--success); border-radius:50%; display:inline-block; box-shadow:0 0 8px var(--success);"></span>
+        Hardware GPS v4.5
       </span>
     </div>
   </footer>
 
-  <!-- Modal Dialog (Hidden by Default) -->
+  <!-- Modal Dialog -->
   <div class="modal-overlay" id="genericModal">
-    <div class="modal-sheet">
+    <div class="glass-modal-card">
       <h3 id="modalTitle">Notice</h3>
       <p id="modalDesc">Message details...</p>
       <div id="modalCustomContent"></div>
-      <button id="btnModalClose" type="button" class="btn-modal-action">Close</button>
+      <button id="btnModalClose" type="button" class="btn-modal-dismiss">Dismiss</button>
     </div>
   </div>
 
@@ -880,6 +1123,8 @@
         liveMsgStatus: document.getElementById('liveMsgStatus'),
         btnUnitToggle: document.getElementById('btnUnitToggle'),
         btnThemeToggle: document.getElementById('btnThemeToggle'),
+        themeIcon: document.getElementById('themeIcon'),
+        themeText: document.getElementById('themeText'),
         btnLap: document.getElementById('btnLap'),
         lapVal: document.getElementById('lapVal'),
         btnCsv: document.getElementById('btnCsv'),
@@ -972,7 +1217,7 @@
         isSirenOn = false;
       }
 
-      // 4. Modal Helper
+      // 4. Modal Dialog Helpers
       function openModal(title, desc, customHtml = "") {
         els.modalTitle.textContent = title;
         els.modalDesc.textContent = desc;
@@ -985,7 +1230,7 @@
       }
       els.btnModalClose.addEventListener('click', closeModal);
 
-      // 5. Dial Ticks Builder
+      // 5. Dial Ticks Builder (Reads CSS variables dynamically)
       function renderDialTicks() {
         els.dialTicksGroup.innerHTML = '';
         const cx = 160, cy = 185, r = 118;
@@ -1008,7 +1253,7 @@
           line.setAttribute("y1", y1);
           line.setAttribute("x2", x2);
           line.setAttribute("y2", y2);
-          line.setAttribute("stroke", isMajor ? "#f8fafc" : "#64748b");
+          line.setAttribute("stroke", isMajor ? "var(--svg-major-tick)" : "var(--svg-minor-tick)");
           line.setAttribute("stroke-width", isMajor ? "2.2" : "1.2");
           line.setAttribute("stroke-linecap", "round");
           els.dialTicksGroup.appendChild(line);
@@ -1025,14 +1270,53 @@
             text.setAttribute("text-anchor", "middle");
             text.setAttribute("font-size", "10");
             text.setAttribute("font-weight", "900");
-            text.setAttribute("fill", "#94a3b8");
+            text.setAttribute("fill", "var(--svg-tick-text)");
             text.textContent = val;
             els.dialTicksGroup.appendChild(text);
           }
         }
       }
 
-      // 6. Haversine Distance Formula
+      // 6. Theme Switching System (Light / Dark)
+      function applyTheme(themeName) {
+        const root = document.documentElement;
+        if (themeName === 'light') {
+          root.classList.remove('dark');
+          root.classList.add('light');
+          els.themeIcon.textContent = '🌙';
+          els.themeText.textContent = 'Dark';
+        } else {
+          root.classList.remove('light');
+          root.classList.add('dark');
+          els.themeIcon.textContent = '☀️';
+          els.themeText.textContent = 'Light';
+        }
+        try {
+          localStorage.setItem('mto_theme', themeName);
+        } catch (e) {}
+
+        // Re-render SVG ticks with updated theme CSS custom variables
+        renderDialTicks();
+      }
+
+      function initTheme() {
+        let savedTheme = 'dark';
+        try {
+          savedTheme = localStorage.getItem('mto_theme');
+        } catch (e) {}
+
+        if (!savedTheme) {
+          savedTheme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+        }
+        applyTheme(savedTheme);
+      }
+
+      els.btnThemeToggle.addEventListener('click', () => {
+        const isCurrentLight = document.documentElement.classList.contains('light');
+        applyTheme(isCurrentLight ? 'dark' : 'light');
+      });
+
+      // 7. Haversine Displacement Math
       function calcHaversine(lat1, lon1, lat2, lon2) {
         const R = 6371000;
         const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -1043,7 +1327,7 @@
         return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       }
 
-      // 7. Reverse Geocode Area
+      // 8. Reverse Geocoding
       function reverseGeocode(lat, lon) {
         const now = Date.now();
         if (now - state.lastGeocodeTime < 25000) return;
@@ -1064,7 +1348,7 @@
           });
       }
 
-      // 8. Update Analog Needle and Digital Readouts
+      // 9. Update Speedometer Display & Needle
       function updateSpeedVisuals(rawKmh) {
         const factor = state.useMiles ? 0.621371 : 1.0;
         const displaySpeed = rawKmh * factor;
@@ -1076,36 +1360,36 @@
         const angle = -125 + (clampedSpeed / state.dialMax) * 250;
         els.needlePivot.setAttribute("transform", `translate(160, 185) rotate(${angle.toFixed(1)})`);
 
-        // Motion status badge
+        // Motion badge
         if (rawKmh > 1.2) {
           els.motionBadge.textContent = "MOVING";
-          els.motionBadge.className = "status-pill motion-moving";
+          els.motionBadge.className = "glass-motion-chip moving";
         } else {
           els.motionBadge.textContent = "IDLE";
-          els.motionBadge.className = "status-pill motion-idle";
+          els.motionBadge.className = "glass-motion-chip";
         }
 
-        // Speed Limit Alarm
+        // Speed Limit Alarm Check
         const limitVal = parseFloat(els.inputLimitVal.value) || 60;
         if (state.isAlarmEnabled && displaySpeed > limitVal) {
-          els.cockpitCard.classList.add('overspeed-alarm');
+          els.cockpitCard.classList.add('overspeed-alert');
           els.limitBadge.textContent = "OVER LIMIT!";
-          els.limitBadge.className = "status-pill alert-danger";
+          els.limitBadge.className = "glass-limit-chip breached";
           els.liveMsgStatus.textContent = `🚨 OVERSPEED: Limit ${limitVal} ${els.dialUnitText.textContent} breached!`;
           startSiren();
-          if (navigator.vibrate) navigator.vibrate([150, 75, 150]);
+          if (navigator.vibrate) navigator.vibrate([160, 80, 160]);
         } else {
           stopSiren();
-          els.cockpitCard.classList.remove('overspeed-alarm');
+          els.cockpitCard.classList.remove('overspeed-alert');
           els.limitBadge.textContent = "SAFE";
-          els.limitBadge.className = "status-pill alert-safe";
+          els.limitBadge.className = "glass-limit-chip";
           if (state.isTracking && !state.isPaused) {
             els.liveMsgStatus.textContent = "🛰️ Live GPS Connected: High-precision velocity streaming";
           }
         }
       }
 
-      // 9. Position GPS Watcher Callback
+      // 10. Hardware GPS Watcher Callback
       function handleGPS(pos) {
         if (!pos || !pos.coords || state.isPaused) return;
         const coords = pos.coords;
@@ -1119,18 +1403,18 @@
         const acc = Math.round(coords.accuracy || 0);
         els.valAccuracy.textContent = acc;
 
-        els.gpsStatePill.classList.add('live');
+        els.gpsStatePill.classList.add('active');
         els.gpsStateLabel.textContent = "LIVE";
 
         if (acc <= 15) {
           els.gpsSignalText.textContent = "EXCELLENT";
-          els.signalBars.className = "sig-bars sig-active";
+          els.signalBars.className = "signal-ladder signal-active";
         } else if (acc <= 35) {
           els.gpsSignalText.textContent = "GOOD";
-          els.signalBars.className = "sig-bars sig-active";
+          els.signalBars.className = "signal-ladder signal-active";
         } else {
           els.gpsSignalText.textContent = "WEAK";
-          els.signalBars.className = "sig-bars";
+          els.signalBars.className = "signal-ladder";
         }
 
         // Compass Heading
@@ -1150,7 +1434,7 @@
           els.barAltitude.style.width = `${pct}%`;
         }
 
-        // 100% REAL HARDWARE SPEED
+        // 100% REAL HARDWARE GPS SPEED
         let speedKmh = 0;
         if (typeof coords.speed === 'number' && !isNaN(coords.speed) && coords.speed >= 0) {
           speedKmh = coords.speed * 3.6;
@@ -1208,11 +1492,11 @@
           els.liveMsgStatus.textContent = "Location permission denied. Please allow GPS access in settings.";
           openModal("GPS Permission Required", "Please allow Location permission in your browser or phone settings so the speedometer can display your real speed.");
         } else {
-          els.liveMsgStatus.textContent = "Searching for satellites (move to open area)...";
+          els.liveMsgStatus.textContent = "Searching for satellites (move to open sky)...";
         }
       }
 
-      // 10. Dashboard Telemetry Card Counters
+      // 11. Dashboard Telemetry Card Counters
       function updateTelemetryDashboard() {
         const factor = state.useMiles ? 0.621371 : 1.0;
         const distUnit = state.useMiles ? 'mi' : 'km';
@@ -1246,7 +1530,7 @@
         return `${m}:${s}`;
       }
 
-      // 11. Start & Stop Telemetry Controls
+      // 12. Start & Stop Telemetry Controls
       function startTelemetry() {
         unlockAudio();
 
@@ -1309,16 +1593,16 @@
         els.mainBtnIcon.textContent = "▶";
         els.mainBtnLabel.textContent = "Start Telemetry";
         els.btnPauseTelemetry.style.display = 'none';
-        els.gpsStatePill.classList.remove('live');
+        els.gpsStatePill.classList.remove('active');
         els.gpsStateLabel.textContent = "STANDBY";
         els.gpsSignalText.textContent = "STANDBY";
-        els.signalBars.className = "sig-bars";
+        els.signalBars.className = "signal-ladder";
         els.liveMsgStatus.textContent = "Tracking stopped. Speedometer reset to 0.";
 
         updateSpeedVisuals(0);
       }
 
-      // 12. Trip History Storage
+      // 13. Trip History Storage
       function saveTrip() {
         const trip = {
           date: new Date().toLocaleDateString(),
@@ -1328,19 +1612,27 @@
           topSpeed: els.cardTopSpeed.textContent,
           location: els.locAddressText.textContent
         };
-        const logs = JSON.parse(localStorage.getItem('mto_logs') || '[]');
+        let logs = [];
+        try {
+          logs = JSON.parse(localStorage.getItem('mto_logs') || '[]');
+        } catch (e) {}
         logs.unshift(trip);
         if (logs.length > 25) logs.pop();
-        localStorage.setItem('mto_logs', JSON.stringify(logs));
+        try {
+          localStorage.setItem('mto_logs', JSON.stringify(logs));
+        } catch (e) {}
         refreshLogsCount();
       }
 
       function refreshLogsCount() {
-        const logs = JSON.parse(localStorage.getItem('mto_logs') || '[]');
+        let logs = [];
+        try {
+          logs = JSON.parse(localStorage.getItem('mto_logs') || '[]');
+        } catch (e) {}
         els.logVal.textContent = logs.length;
       }
 
-      // 13. Event Listeners
+      // 14. Event Listeners
       els.btnMainTelemetry.addEventListener('click', () => {
         if (state.isTracking) {
           stopTelemetry();
@@ -1352,7 +1644,7 @@
       els.btnPauseTelemetry.addEventListener('click', () => {
         state.isPaused = !state.isPaused;
         els.btnPauseTelemetry.textContent = state.isPaused ? "Resume" : "Pause";
-        els.btnPauseTelemetry.style.background = state.isPaused ? "#10b981" : "#eab308";
+        els.btnPauseTelemetry.style.background = state.isPaused ? "var(--success)" : "#eab308";
         els.liveMsgStatus.textContent = state.isPaused ? "Trip paused" : "Tracking resumed";
         if (state.isPaused) stopSiren();
       });
@@ -1379,14 +1671,14 @@
         state.isAlarmEnabled = !state.isAlarmEnabled;
         if (state.isAlarmEnabled) {
           els.btnAlarmToggle.textContent = "ON";
-          els.btnAlarmToggle.className = "toggle-alert-btn on";
+          els.btnAlarmToggle.className = "glass-toggle-pill on";
         } else {
           els.btnAlarmToggle.textContent = "OFF";
-          els.btnAlarmToggle.className = "toggle-alert-btn off";
+          els.btnAlarmToggle.className = "glass-toggle-pill off";
           stopSiren();
-          els.cockpitCard.classList.remove('overspeed-alarm');
+          els.cockpitCard.classList.remove('overspeed-alert');
           els.limitBadge.textContent = "OFF";
-          els.limitBadge.className = "status-pill motion-idle";
+          els.limitBadge.className = "glass-motion-chip";
         }
       });
 
@@ -1417,15 +1709,19 @@
       });
 
       els.btnLogs.addEventListener('click', () => {
-        const logs = JSON.parse(localStorage.getItem('mto_logs') || '[]');
+        let logs = [];
+        try {
+          logs = JSON.parse(localStorage.getItem('mto_logs') || '[]');
+        } catch (e) {}
+
         if (logs.length === 0) {
           openModal("Saved Trips History", "No saved trip logs found yet.");
         } else {
           const listHtml = logs.map((l, i) => `
-            <div style="background:rgba(30,41,59,0.5); padding:8px 10px; border-radius:12px; margin-bottom:6px; font-size:11px; border:1px solid rgba(51,65,85,0.6);">
-              <div style="font-weight:900; color:#60a5fa;">#${i+1} - ${l.date} (${l.time})</div>
-              <div style="color:var(--text-main); margin:2px 0;">📍 ${l.location}</div>
-              <div style="color:var(--text-sub); font-size:10px;">Dist: ${l.distance} | Top: ${l.topSpeed} | Time: ${l.duration}</div>
+            <div style="background:var(--glass-inset); padding:10px 12px; border-radius:14px; margin-bottom:8px; font-size:11px; border:1px solid var(--glass-border); backdrop-filter:blur(10px);">
+              <div style="font-weight:900; color:var(--accent-cyan);">#${i+1} - ${l.date} (${l.time})</div>
+              <div style="color:var(--text-pri); margin:3px 0;">📍 ${l.location}</div>
+              <div style="color:var(--text-sec); font-size:10px;">Dist: ${l.distance} | Top: ${l.topSpeed} | Time: ${l.duration}</div>
             </div>
           `).join('');
           openModal("Saved Trips History", "", listHtml);
@@ -1444,25 +1740,14 @@
         document.body.removeChild(a);
       });
 
-      els.btnThemeToggle.addEventListener('click', () => {
-        const isDark = document.documentElement.classList.toggle('dark');
-        if (!isDark) {
-          document.documentElement.classList.add('light');
-          els.btnThemeToggle.textContent = '🌙';
-        } else {
-          document.documentElement.classList.remove('light');
-          els.btnThemeToggle.textContent = '☀️';
-        }
-      });
-
       // Live Clock
       setInterval(() => {
         const d = new Date();
         els.liveClockVal.textContent = d.toTimeString().split(' ')[0];
       }, 1000);
 
-      // 14. Initial Boot
-      renderDialTicks();
+      // 15. Initial Boot
+      initTheme();
       refreshLogsCount();
       updateSpeedVisuals(0);
       updateTelemetryDashboard();
